@@ -65,7 +65,7 @@ properties_data = [
     bathrooms: 2.0,
     square_feet: 1200,
     property_type: 'apartment',
-    available: true,
+    availability_status: 'available',
     user: lanlord1
   },
   {
@@ -79,8 +79,8 @@ properties_data = [
     bedrooms: 0,
     bathrooms: 1.0,
     square_feet: 500,
-    property_type: 'studio',
-    available: true,
+    property_type: 'apartment',
+    availability_status: 'available',
     user: lanlord1
   },
   {
@@ -95,7 +95,7 @@ properties_data = [
     bathrooms: 3.5,
     square_feet: 2800,
     property_type: 'house',
-    available: true,
+    availability_status: 'available',
     user: lanlord2
   },
   {
@@ -110,7 +110,7 @@ properties_data = [
     bathrooms: 2.5,
     square_feet: 1800,
     property_type: 'condo',
-    available: true,
+    availability_status: 'available',
     user: lanlord2
   },
   {
@@ -125,7 +125,7 @@ properties_data = [
     bathrooms: 2.5,
     square_feet: 1600,
     property_type: 'townhouse',
-    available: false,
+    availability_status: 'rented',
     user: lanlord1
   }
 ]
