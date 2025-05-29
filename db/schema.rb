@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_29_010202) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_29_013153) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -72,7 +72,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_010202) do
     t.string "role", default: "tenant", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "email_verified", default: false, null: false
+    t.string "email_verification_token"
+    t.datetime "email_verification_sent_at"
+    t.string "password_reset_token"
+    t.datetime "password_reset_sent_at"
+    t.string "provider"
+    t.string "uid"
+    t.string "refresh_token"
+    t.datetime "refresh_token_expires_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email_verification_token"], name: "index_users_on_email_verification_token", unique: true
+    t.index ["password_reset_token"], name: "index_users_on_password_reset_token", unique: true
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
+    t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

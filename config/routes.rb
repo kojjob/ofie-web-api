@@ -5,6 +5,18 @@ Rails.application.routes.draw do
       # Authentication routes
       post "auth/register", to: "auth#register"
       post "auth/login", to: "auth#login"
+      post "auth/refresh", to: "auth#refresh_token"
+
+      # Email verification routes
+      get "auth/verify/:token", to: "auth#verify_email", as: "verify_email"
+      post "auth/resend_verification", to: "auth#resend_verification"
+
+      # Password reset routes
+      post "auth/password_reset", to: "auth#request_password_reset"
+      patch "auth/password_reset/:token", to: "auth#reset_password", as: "reset_password"
+
+      # OAuth routes
+      get "auth/:provider/callback", to: "auth#:provider", constraints: { provider: /google_oauth2|facebook/ }
 
       # User profile routes
       get "profile", to: "users#show"

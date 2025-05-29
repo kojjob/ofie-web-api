@@ -6,11 +6,18 @@ class User < ApplicationRecord
   enum :role, { tenant: "tenant", landlord: "landlord" }
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, presence: true, length: { minimum: 6 }, on: :create # only validate on create
-  validates :role, presence: true, inclusion: { in: roles.keys } # Ensure valid role
+  validates :password, presence: true, length: { minimum: 6 }, on: :create, unless: :oauth_user?
+  validates :role, presence: true, inclusion: { in: roles.keys }
+  validates :provider, presence: true, if: :oauth_user?
+  validates :uid, presence: true, if: :oauth_user?
+
+  # Callbacks
+  before_create :generate_email_verification_token
+  after_create :send_email_verification, unless: :oauth_user?
 
   # JWT encoding/decoding helper
-  def self.encode_token(payload)
+  def self.encode_token(payload, expires_in = 24.hours)
+    payload[:exp] = expires_in.from_now.to_i
     JWT.encode(payload, Rails.application.credentials.secret_key_base)
   end
 
@@ -18,5 +25,93 @@ class User < ApplicationRecord
     JWT.decode(token, Rails.application.credentials.secret_key_base, true, algorithm: "HS256")
   rescue JWT::DecodeError
     nil # Handle invalid token
+  end
+
+  # Generate refresh token
+  def generate_refresh_token
+    self.refresh_token = SecureRandom.hex(32)
+    self.refresh_token_expires_at = 30.days.from_now
+    save!
+    refresh_token
+  end
+
+  # Check if refresh token is valid
+  def refresh_token_valid?
+    refresh_token.present? && refresh_token_expires_at > Time.current
+  end
+
+  # Generate password reset token
+  def generate_password_reset_token
+    self.password_reset_token = SecureRandom.urlsafe_base64(32)
+    self.password_reset_sent_at = Time.current
+    save!
+  end
+
+  # Check if password reset token is valid (expires in 2 hours)
+  def password_reset_token_valid?
+    password_reset_token.present? && password_reset_sent_at > 2.hours.ago
+  end
+
+  # Generate email verification token
+  def generate_email_verification_token
+    self.email_verification_token = SecureRandom.urlsafe_base64(32)
+    self.email_verification_sent_at = Time.current
+  end
+
+  # Check if email verification token is valid (expires in 24 hours)
+  def email_verification_token_valid?
+    email_verification_token.present? && email_verification_sent_at > 24.hours.ago
+  end
+
+  # Verify email
+  def verify_email!
+    self.email_verified = true
+    self.email_verification_token = nil
+    self.email_verification_sent_at = nil
+    save!
+  end
+
+  # Check if user is OAuth user
+  def oauth_user?
+    provider.present? && uid.present?
+  end
+
+  # Find or create user from OAuth data
+  def self.from_oauth(auth_hash)
+    user = find_by(provider: auth_hash.provider, uid: auth_hash.uid)
+
+    if user
+      user
+    else
+      # Try to find existing user by email
+      existing_user = find_by(email: auth_hash.info.email)
+
+      if existing_user
+        # Link OAuth account to existing user
+        existing_user.update!(
+          provider: auth_hash.provider,
+          uid: auth_hash.uid,
+          email_verified: true
+        )
+        existing_user
+      else
+        # Create new user
+        create!(
+          email: auth_hash.info.email,
+          provider: auth_hash.provider,
+          uid: auth_hash.uid,
+          email_verified: true,
+          role: "tenant" # Default role for OAuth users
+        )
+      end
+    end
+  end
+
+  private
+
+  def send_email_verification
+    UserMailer.email_verification(self).deliver_now
+  rescue => e
+    Rails.logger.error "Failed to send email verification: #{e.message}"
   end
 end

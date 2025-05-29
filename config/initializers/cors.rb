@@ -25,4 +25,14 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
       methods: [ :get, :post, :put, :patch, :delete, :options, :head ],
       credentials: false
   end
+
+  # Specific configuration for OAuth callbacks
+  allow do
+    origins "accounts.google.com", "www.facebook.com", "facebook.com"
+
+    resource "/api/v1/auth/*",
+      headers: :any,
+      methods: [ :get, :post, :options ],
+      credentials: true
+  end
 end
