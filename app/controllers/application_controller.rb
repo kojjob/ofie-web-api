@@ -10,24 +10,50 @@ class ApplicationController < ActionController::Base
     current_user.present?
   end
 
+  def current_user
+    @current_user ||= find_current_user
+  end
+
   private
+
+  def find_current_user
+    if html_request? && session[:user_id]
+      # For HTML requests, use session-based authentication
+      User.find_by(id: session[:user_id])
+    elsif !html_request?
+      # For API requests, use JWT authentication
+      authenticate_with_jwt
+    end
+  end
 
   def html_request?
     request.format.html?
   end
 
   def authenticate_request
+    if html_request?
+      # For HTML requests, redirect to login if not authenticated
+      unless current_user
+        redirect_to login_path, alert: "Please sign in to continue"
+      end
+    else
+      # For API requests, use JWT authentication
+      authenticate_with_jwt || render_unauthorized
+    end
+  end
+
+  def authenticate_with_jwt
     header = request.headers["Authorization"]
     token = header.split(" ").last if header
     if token && (decoded_token = User.decode_token(token))
-      @current_user = User.find(decoded_token[0]["user_id"])
-    else
-      render json: { error: "Not Authorized" }, status: :unauthorized
+      User.find(decoded_token[0]["user_id"])
     end
-  rescue ActiveRecord::RecordNotFound => e
-    render json: { errors: e.message }, status: :unauthorized
-  rescue JWT::DecodeError => e
-    render json: { errors: e.message }, status: :unauthorized
+  rescue ActiveRecord::RecordNotFound, JWT::DecodeError
+    nil
+  end
+
+  def render_unauthorized
+    render json: { error: "Not Authorized" }, status: :unauthorized
   end
 
   def authorize_role(role)

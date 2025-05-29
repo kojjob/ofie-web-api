@@ -42,6 +42,45 @@ class PropertiesController < ApplicationController
     end
   end
 
+  # GET /properties/search
+  def search
+    query = params[:q]&.strip
+
+    if query.blank?
+      @properties = Property.none
+    else
+      search_term = "%#{query}%"
+      @properties = Property.available
+                           .includes(:user, photos_attachments: :blob)
+                           .where(
+                             "title ILIKE ? OR description ILIKE ? OR address ILIKE ? OR city ILIKE ?",
+                             search_term, search_term, search_term, search_term
+                           )
+                           .limit(10)
+                           .order(:title)
+    end
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          properties: @properties.map do |property|
+            {
+              id: property.id,
+              title: property.title,
+              location: "#{property.address}, #{property.city}",
+              price: property.price,
+              property_type: property.property_type,
+              bedrooms: property.bedrooms,
+              bathrooms: property.bathrooms,
+              image_url: property.photos.attached? ? url_for(property.photos.first) : nil
+            }
+          end
+        }
+      end
+      format.html { redirect_to properties_path(search: query) }
+    end
+  end
+
   # GET /properties/:id
   def show
     respond_to do |format|
@@ -69,7 +108,10 @@ class PropertiesController < ApplicationController
 
     if @property.save
       respond_to do |format|
-        format.html { redirect_to @property, notice: "Property was successfully created." }
+        format.html {
+          flash[:success] = "🎉 Property '#{@property.title}' was successfully created and is now live!"
+          redirect_to @property
+        }
         format.json {
           render json: {
             message: "Property created successfully",
@@ -79,7 +121,10 @@ class PropertiesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render :new, status: :unprocessable_entity }
+        format.html {
+          flash.now[:error] = "❌ Unable to create property. Please check the form for errors."
+          render :new, status: :unprocessable_entity
+        }
         format.json { render json: { errors: @property.errors.full_messages }, status: :unprocessable_entity }
       end
     end
@@ -89,7 +134,10 @@ class PropertiesController < ApplicationController
   def update
     if @property.update(property_params)
       respond_to do |format|
-        format.html { redirect_to @property, notice: "Property was successfully updated." }
+        format.html {
+          flash[:success] = "✅ Property '#{@property.title}' has been successfully updated!"
+          redirect_to @property
+        }
         format.json {
           render json: {
             message: "Property updated successfully",
@@ -99,7 +147,10 @@ class PropertiesController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html {
+          flash.now[:error] = "❌ Failed to update property. Please review the errors below."
+          render :edit, status: :unprocessable_entity
+        }
         format.json { render json: { errors: @property.errors.full_messages }, status: :unprocessable_entity }
       end
     end
@@ -107,9 +158,13 @@ class PropertiesController < ApplicationController
 
   # DELETE /properties/:id
   def destroy
+    property_title = @property.title
     @property.destroy
     respond_to do |format|
-      format.html { redirect_to properties_path, notice: "Property was successfully deleted." }
+      format.html {
+        flash[:warning] = "🗑️ Property '#{property_title}' has been permanently deleted."
+        redirect_to properties_path
+      }
       format.json { render json: { message: "Property deleted successfully" } }
     end
   end

@@ -1,0 +1,190 @@
+<!-- Enhanced Flash Messages -->
+<div id="flash-container" class="flash-container">
+  <% flash.each do |type, message| %>
+    <% next if message.blank? %>
+    
+    <div class="flash-message-wrapper flash-message" 
+         data-controller="flash" 
+         data-flash-type-value="<%= type %>"
+         data-flash-duration-value="5000"
+         data-flash-position-value="inline"
+         data-flash-animation-value="slide"
+         data-flash-dismissible-value="true"
+         data-action="mouseenter->flash#pauseAutoHide mouseleave->flash#resumeAutoHide">
+      
+      <div class="flash-content">
+        <%= message %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- Toast Container for Programmatic Messages -->
+<div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2">
+  <!-- Toasts will be dynamically added here -->
+</div>
+
+<style>
+  .flash-container {
+    position: relative;
+    z-index: 40;
+  }
+  
+  .flash-message-wrapper {
+    margin: 1rem;
+    margin-top: 0.5rem;
+  }
+  
+  /* Custom animations for different message types */
+  .flash-message.success {
+    animation: successPulse 0.6s ease-out;
+  }
+  
+  .flash-message.error {
+    animation: errorShake 0.6s ease-out;
+  }
+  
+  .flash-message.warning {
+    animation: warningBounce 0.6s ease-out;
+  }
+  
+  .flash-message.info {
+    animation: infoSlide 0.4s ease-out;
+  }
+  
+  @keyframes successPulse {
+    0% { transform: scale(0.95); opacity: 0; }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  @keyframes errorShake {
+    0%, 100% { transform: translateX(0); opacity: 0; }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+    20%, 40%, 60%, 80% { transform: translateX(2px); }
+    100% { opacity: 1; }
+  }
+  
+  @keyframes warningBounce {
+    0% { transform: translateY(-20px); opacity: 0; }
+    60% { transform: translateY(5px); }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  
+  @keyframes infoSlide {
+    0% { transform: translateX(-100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+  }
+  
+  /* Hover effects */
+  .flash-message:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 640px) {
+    .flash-message-wrapper {
+      margin: 0.5rem;
+    }
+    
+    #toast-container {
+      top: 1rem;
+      right: 1rem;
+      left: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // Enhanced flash message functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Auto-hide flash messages after delay
+    const flashMessages = document.querySelectorAll('[data-controller="flash"]');
+    
+    flashMessages.forEach(function(message) {
+      const duration = parseInt(message.dataset.flashDurationValue) || 5000;
+      
+      if (duration > 0) {
+        setTimeout(function() {
+          if (message.parentNode) {
+            message.style.transition = 'all 0.3s ease-out';
+            message.style.transform = 'translateX(100%)';
+            message.style.opacity = '0';
+            
+            setTimeout(function() {
+              if (message.parentNode) {
+                message.remove();
+              }
+            }, 300);
+          }
+        }, duration);
+      }
+    });
+  });
+  
+  // Global function to show toast messages
+  window.showToast = function(message, type = 'info', options = {}) {
+    const toastContainer = document.getElementById('toast-container');
+    if (!toastContainer) return;
+    
+    const toast = document.createElement('div');
+    toast.setAttribute('data-controller', 'flash');
+    toast.setAttribute('data-flash-type-value', type);
+    toast.setAttribute('data-flash-duration-value', options.duration || 4000);
+    toast.setAttribute('data-flash-position-value', 'top-right');
+    toast.setAttribute('data-flash-animation-value', options.animation || 'slide');
+    toast.setAttribute('data-flash-dismissible-value', options.dismissible !== false);
+    
+    const toastContent = document.createElement('div');
+    toastContent.className = 'flash-content';
+    toastContent.innerHTML = message;
+    
+    toast.appendChild(toastContent);
+    toastContainer.appendChild(toast);
+    
+    return toast;
+  };
+  
+  // Global functions for different message types
+  window.showSuccess = function(message, options = {}) {
+    return window.showToast(message, 'success', options);
+  };
+  
+  window.showError = function(message, options = {}) {
+    return window.showToast(message, 'error', options);
+  };
+  
+  window.showWarning = function(message, options = {}) {
+    return window.showToast(message, 'warning', options);
+  };
+  
+  window.showInfo = function(message, options = {}) {
+    return window.showToast(message, 'info', options);
+  };
+  
+  // Listen for custom events to show toasts
+  document.addEventListener('flash:show', function(event) {
+    const { message, type, options } = event.detail;
+    window.showToast(message, type, options);
+  });
+  
+  // AJAX success/error handlers
+  document.addEventListener('ajax:success', function(event) {
+    const response = event.detail[0];
+    if (response && response.flash) {
+      Object.keys(response.flash).forEach(function(type) {
+        window.showToast(response.flash[type], type);
+      });
+    }
+  });
+  
+  document.addEventListener('ajax:error', function(event) {
+    const response = event.detail[0];
+    if (response && response.responseJSON && response.responseJSON.error) {
+      window.showError(response.responseJSON.error);
+    } else {
+      window.showError('An error occurred. Please try again.');
+    }
+  });
+</script>

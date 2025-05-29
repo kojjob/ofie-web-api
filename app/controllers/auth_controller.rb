@@ -1,29 +1,41 @@
 class AuthController < ApplicationController
   skip_before_action :authenticate_request, only: [
     :register, :login, :verify_email, :request_password_reset,
-    :reset_password, :google_oauth2, :facebook
+    :reset_password, :google_oauth2, :facebook, :login_form, :register_form
   ]
 
   def register
     user = User.new(user_params)
 
     if user.save
-      token = User.encode_token({ user_id: user.id })
-      refresh_token = user.generate_refresh_token
+      respond_to do |format|
+        format.html do
+          session[:user_id] = user.id
+          redirect_to root_path, notice: "Welcome to Ofie, #{user.name}! Please check your email to verify your account."
+        end
+        format.json do
+          token = User.encode_token({ user_id: user.id })
+          refresh_token = user.generate_refresh_token
 
-      render json: {
-        message: "User created successfully. Please check your email to verify your account.",
-        user: {
-          id: user.id,
-          email: user.email,
-          role: user.role,
-          email_verified: user.email_verified
-        },
-        token: token,
-        refresh_token: refresh_token
-      }, status: :created
+          render json: {
+            message: "User created successfully. Please check your email to verify your account.",
+            user: {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user.role,
+              email_verified: user.email_verified
+            },
+            token: token,
+            refresh_token: refresh_token
+          }, status: :created
+        end
+      end
     else
-      render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { redirect_to register_path, alert: user.errors.full_messages.join(", ") }
+        format.json { render json: { errors: user.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -32,28 +44,44 @@ class AuthController < ApplicationController
 
     if user && user.authenticate(params[:password])
       unless user.email_verified
-        return render json: {
-          error: "Please verify your email address before logging in.",
-          email_verification_required: true
-        }, status: :unauthorized
+        error_message = "Please verify your email address before logging in."
+
+        respond_to do |format|
+          format.json { render json: { error: error_message, email_verification_required: true }, status: :unauthorized }
+          format.html { redirect_to login_path, alert: error_message }
+        end
+        return
       end
 
-      token = User.encode_token({ user_id: user.id })
-      refresh_token = user.generate_refresh_token
+      # For HTML requests, use session-based authentication
+      if request.format.html?
+        session[:user_id] = user.id
+        redirect_to root_path, notice: "Welcome back, #{user.name}!"
+      else
+        # For API requests, use JWT tokens
+        token = User.encode_token({ user_id: user.id })
+        refresh_token = user.generate_refresh_token
 
-      render json: {
-        message: "Login successful",
-        user: {
-          id: user.id,
-          email: user.email,
-          role: user.role,
-          email_verified: user.email_verified
-        },
-        token: token,
-        refresh_token: refresh_token
-      }, status: :ok
+        render json: {
+          message: "Login successful",
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            email_verified: user.email_verified
+          },
+          token: token,
+          refresh_token: refresh_token
+        }, status: :ok
+      end
     else
-      render json: { error: "Invalid email or password" }, status: :unauthorized
+      error_message = "Invalid email or password"
+
+      respond_to do |format|
+        format.json { render json: { error: error_message }, status: :unauthorized }
+        format.html { redirect_to login_path, alert: error_message }
+      end
     end
   end
 
@@ -152,13 +180,30 @@ class AuthController < ApplicationController
       current_user.update(refresh_token: nil, refresh_token_expires_at: nil)
     end
 
-    redirect_to root_path, notice: "Logged out successfully"
+    respond_to do |format|
+      format.html do
+        session[:user_id] = nil
+        redirect_to root_path, notice: "Logged out successfully"
+      end
+      format.json do
+        render json: { message: "Logged out successfully" }, status: :ok
+      end
+    end
   end
 
   private
 
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :role)
+    # Handle both nested user params and flat params from forms
+    if params[:user].present?
+      params.require(:user).permit(:name, :email, :password, :password_confirmation, :role, :user_type)
+    else
+      # Handle flat params from HTML forms
+      permitted_params = params.permit(:name, :email, :password, :password_confirmation, :user_type)
+      # Map user_type to role for consistency
+      permitted_params[:role] = permitted_params.delete(:user_type) if permitted_params[:user_type]
+      permitted_params
+    end
   end
 
   def handle_oauth_callback

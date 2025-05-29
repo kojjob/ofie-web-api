@@ -2,12 +2,20 @@ class User < ApplicationRecord
   has_secure_password # Provides password hashing and authentication methods
   has_many :properties, dependent: :destroy
 
+  # New associations for property features
+  has_many :property_favorites, dependent: :destroy
+  has_many :favorite_properties, through: :property_favorites, source: :property
+  has_many :property_viewings, dependent: :destroy
+  has_many :property_reviews, dependent: :destroy
+  has_many :notifications, dependent: :destroy
+
   # Define roles as an enum for easy management and validation
   enum :role, { tenant: "tenant", landlord: "landlord" }
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, presence: true, length: { minimum: 6 }, on: :create, unless: :oauth_user?
   validates :role, presence: true, inclusion: { in: roles.keys }
+  validates :name, presence: true, length: { minimum: 2, maximum: 100 }
   validates :provider, presence: true, if: :oauth_user?
   validates :uid, presence: true, if: :oauth_user?
 

@@ -1,0 +1,185 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Flash Message System Demo</h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Experience our comprehensive flash message system with various types, animations, and interactive features.
+        Each message type has its own styling, icon, and behavior.
+      </p>
+    </div>
+
+    <!-- Demo Controls -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6">Test Different Message Types</h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <%= link_to demo_test_success_path, method: :post, class: "bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 text-center" do %>
+          🎉 Success Message
+        <% end %>
+        
+        <%= link_to demo_test_error_path, method: :post, class: "bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 text-center" do %>
+          ❌ Error Message
+        <% end %>
+        
+        <%= link_to demo_test_warning_path, method: :post, class: "bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 text-center" do %>
+          ⚠️ Warning Message
+        <% end %>
+        
+        <%= link_to demo_test_info_path, method: :post, class: "bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 text-center" do %>
+          ℹ️ Info Message
+        <% end %>
+        
+        <%= link_to demo_test_notice_path, method: :post, class: "bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 text-center" do %>
+          📢 Notice Message
+        <% end %>
+        
+        <%= link_to demo_test_alert_path, method: :post, class: "bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 text-center" do %>
+          🚨 Alert Message
+        <% end %>
+      </div>
+      
+      <div class="border-t pt-4">
+        <%= link_to demo_test_multiple_path, method: :post, class: "bg-purple-500 hover:bg-purple-600 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200 inline-block" do %>
+          🎭 Show Multiple Messages
+        <% end %>
+      </div>
+    </div>
+
+    <!-- JavaScript Demo Controls -->
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6">JavaScript Toast Messages</h2>
+      <p class="text-gray-600 mb-4">These messages appear as floating toasts and can be triggered programmatically.</p>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <button onclick="showSuccess('🎉 JavaScript success toast!')" class="bg-green-500 hover:bg-green-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200">
+          Success Toast
+        </button>
+        
+        <button onclick="showError('❌ JavaScript error toast!')" class="bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200">
+          Error Toast
+        </button>
+        
+        <button onclick="showWarning('⚠️ JavaScript warning toast!')" class="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200">
+          Warning Toast
+        </button>
+        
+        <button onclick="showInfo('ℹ️ JavaScript info toast!')" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200">
+          Info Toast
+        </button>
+      </div>
+    </div>
+
+    <!-- Features Overview -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6">Flash Message Features</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-3">✨ Key Features</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li class="flex items-center">
+              <span class="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+              Auto-dismiss with customizable duration
+            </li>
+            <li class="flex items-center">
+              <span class="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+              Pause on hover, resume on mouse leave
+            </li>
+            <li class="flex items-center">
+              <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+              Manual dismiss with close button
+            </li>
+            <li class="flex items-center">
+              <span class="w-2 h-2 bg-yellow-500 rounded-full mr-3"></span>
+              Smooth entrance and exit animations
+            </li>
+            <li class="flex items-center">
+              <span class="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+              Multiple positioning options
+            </li>
+            <li class="flex items-center">
+              <span class="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
+              Responsive design for mobile devices
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-3">🎨 Message Types</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li class="flex items-center">
+              <span class="w-4 h-4 bg-green-500 rounded mr-3"></span>
+              <strong>Success:</strong> Positive actions and confirmations
+            </li>
+            <li class="flex items-center">
+              <span class="w-4 h-4 bg-red-500 rounded mr-3"></span>
+              <strong>Error:</strong> Failed operations and validation errors
+            </li>
+            <li class="flex items-center">
+              <span class="w-4 h-4 bg-yellow-500 rounded mr-3"></span>
+              <strong>Warning:</strong> Cautions and important notices
+            </li>
+            <li class="flex items-center">
+              <span class="w-4 h-4 bg-blue-500 rounded mr-3"></span>
+              <strong>Info:</strong> General information and tips
+            </li>
+            <li class="flex items-center">
+              <span class="w-4 h-4 bg-indigo-500 rounded mr-3"></span>
+              <strong>Notice:</strong> System notifications and updates
+            </li>
+            <li class="flex items-center">
+              <span class="w-4 h-4 bg-red-600 rounded mr-3"></span>
+              <strong>Alert:</strong> Urgent attention required
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to Properties -->
+    <div class="text-center mt-8">
+      <%= link_to properties_path, class: "inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-200" do %>
+        <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Properties
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Custom event examples
+  function triggerCustomFlash() {
+    document.dispatchEvent(new CustomEvent('flash:show', {
+      detail: {
+        message: '🎯 Custom event flash message!',
+        type: 'info',
+        options: { duration: 3000 }
+      }
+    }));
+  }
+  
+  // Simulate AJAX success
+  function simulateAjaxSuccess() {
+    document.dispatchEvent(new CustomEvent('ajax:success', {
+      detail: [{
+        flash: {
+          success: '🚀 AJAX operation completed successfully!'
+        }
+      }]
+    }));
+  }
+  
+  // Simulate AJAX error
+  function simulateAjaxError() {
+    document.dispatchEvent(new CustomEvent('ajax:error', {
+      detail: [{
+        responseJSON: {
+          error: '💥 AJAX operation failed!'
+        }
+      }]
+    }));
+  }
+</script>
