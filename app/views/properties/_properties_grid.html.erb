@@ -1,0 +1,108 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <% if properties.any? %>
+    <% properties.each do |property| %>
+      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-200">
+        <!-- Property Image -->
+        <div class="h-48 bg-gray-200 relative">
+          <% if property.photos.attached? %>
+            <%= image_tag property.photos.first, 
+                          class: "w-full h-full object-cover", 
+                          alt: property.title %>
+          <% else %>
+            <div class="w-full h-full flex items-center justify-center">
+              <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+          <% end %>
+          
+          <!-- Availability Badge -->
+          <div class="absolute top-3 right-3">
+            <% if property.availability_status == 'available' %>
+              <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                Available
+              </span>
+            <% else %>
+              <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                Rented
+              </span>
+            <% end %>
+          </div>
+        </div>
+        
+        <!-- Property Details -->
+        <div class="p-6">
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">
+            <%= link_to property.title, property_path(property), 
+                        class: "hover:text-blue-600 transition duration-200" %>
+          </h3>
+          
+          <p class="text-gray-600 mb-3">
+            <%= property.address %>, <%= property.city %>, <%= property.state %>
+          </p>
+          
+          <% if property.description.present? %>
+            <p class="text-gray-700 text-sm mb-4 line-clamp-2">
+              <%= truncate(property.description, length: 100) %>
+            </p>
+          <% end %>
+          
+          <!-- Property Features -->
+          <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+            <div class="flex space-x-4">
+              <span class="flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                </svg>
+                <%= property.bedrooms == 0 ? 'Studio' : "#{property.bedrooms} BR" %>
+              </span>
+              
+              <span class="flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <%= property.bathrooms %> BA
+              </span>
+              
+              <% if property.square_feet %>
+                <span class="flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 012 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 010 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clip-rule="evenodd"></path>
+                  </svg>
+                  <%= number_with_delimiter(property.square_feet) %> sq ft
+                </span>
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Price and Action -->
+          <div class="flex items-center justify-between">
+            <div class="text-2xl font-bold text-blue-600">
+              $<%= number_with_delimiter(property.price) %>
+              <span class="text-sm font-normal text-gray-600">/month</span>
+            </div>
+            
+            <%= link_to "View Details", property_path(property), 
+                        class: "bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <!-- Empty State -->
+    <div class="col-span-full text-center py-12">
+      <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+      </svg>
+      <h3 class="mt-4 text-lg font-medium text-gray-900">No properties found</h3>
+      <p class="mt-2 text-gray-600">Try adjusting your search criteria or check back later for new listings.</p>
+      
+      <% if user_signed_in? && current_user.landlord? %>
+        <div class="mt-6">
+          <%= link_to "Add Your First Property", new_property_path, 
+                      class: "bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-200" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

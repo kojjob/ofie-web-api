@@ -1,0 +1,267 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" 
+     data-controller="search" 
+     data-search-url-value="<%= properties_path %>">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 mb-8 text-white">
+    <div class="max-w-3xl">
+      <h1 class="text-4xl font-bold mb-4">Find Your Perfect Home</h1>
+      <p class="text-xl text-blue-100 mb-6">Discover amazing properties in your desired location with the best amenities and competitive prices.</p>
+      
+      <% if user_signed_in? && current_user.landlord? %>
+        <div class="flex flex-wrap gap-4">
+          <%= link_to "Add New Property", new_property_path, 
+                      class: "bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200 flex items-center space-x-2" do %>
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <span>Add Property</span>
+          <% end %>
+          <%= link_to "Dashboard", my_properties_path, 
+                      class: "border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-200" %>
+        </div>
+      <% else %>
+        <div class="flex flex-wrap gap-4">
+          <div class="flex items-center space-x-4 text-blue-100">
+            <div class="flex items-center space-x-2">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span><%= @properties.count %> Properties Available</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Verified Listings</span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
+    <div class="mb-4">
+      <h2 class="text-lg font-semibold text-gray-900 mb-2">Search & Filter Properties</h2>
+      <p class="text-sm text-gray-600">Use the filters below to find your ideal property</p>
+    </div>
+    
+    <%= form_with url: properties_path, method: :get, local: true, 
+                  class: "space-y-6", 
+                  data: { 
+                    search_target: "form",
+                    action: "submit->search#submit input->search#input change->search#input"
+                  } do |form| %>
+      <!-- Main Search Bar -->
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+        <%= form.text_field :search, 
+                            value: params[:search],
+                            placeholder: "Search by title, description, address, or city...",
+                            class: "w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" %>
+      </div>
+      
+      <!-- Advanced Filters -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Location -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+          <%= form.text_field :city, 
+                              value: params[:city],
+                              placeholder: "Enter city",
+                              class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" %>
+        </div>
+        
+        <!-- Property Type -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
+          <%= form.select :property_type, 
+                          options_for_select([['Any Type', '']] + Property.property_types.map { |key, value| [key.humanize, key] }, params[:property_type]),
+                          {},
+                          { class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" } %>
+        </div>
+        
+        <!-- Bedrooms -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
+          <%= form.select :bedrooms, 
+                          options_for_select([['Any Bedrooms', '']] + (1..5).map { |i| ["#{i}+ Bedroom#{i > 1 ? 's' : ''}", i] }, params[:bedrooms]),
+                          {},
+                          { class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" } %>
+        </div>
+        
+        <!-- Bathrooms -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
+          <%= form.select :bathrooms, 
+                          options_for_select([['Any Bathrooms', '']] + (1..4).map { |i| ["#{i}+ Bathroom#{i > 1 ? 's' : ''}", i] }, params[:bathrooms]),
+                          {},
+                          { class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" } %>
+        </div>
+      </div>
+      
+      <!-- Price Range -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Min Price</label>
+          <%= form.number_field :min_price, 
+                                value: params[:min_price],
+                                placeholder: "Enter minimum price",
+                                class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" %>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Max Price</label>
+          <%= form.number_field :max_price, 
+                                value: params[:max_price],
+                                placeholder: "Enter maximum price",
+                                class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" %>
+        </div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <%= form.submit "Search Properties", 
+                        class: "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-8 rounded-lg transition duration-200 shadow-md hover:shadow-lg" %>
+        <%= link_to "Clear Filters", properties_path, 
+                    class: "bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-8 rounded-lg transition duration-200 border border-gray-300" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Properties Grid -->
+  <div data-search-target="results">
+    <!-- Results Summary -->
+    <div class="mb-6">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-900">
+          <%= pluralize(@properties.count, 'Property') %> Found
+        </h2>
+        <div class="text-sm text-gray-600">
+          Showing <%= @properties.count %> results
+        </div>
+      </div>
+    </div>
+
+    <!-- Properties Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% @properties.each do |property| %>
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
+          <!-- Property Image -->
+          <div class="h-56 bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+            <% if property.photos.any? %>
+               <%= image_tag property.photos.first, 
+                             alt: property.title,
+                             class: "w-full h-full object-cover transition-transform duration-300 hover:scale-105" %>
+            <% else %>
+              <div class="w-full h-full flex items-center justify-center text-gray-400">
+                <svg class="w-20 h-20" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            <% end %>
+            
+            <!-- Property Type Badge -->
+            <div class="absolute top-4 left-4">
+               <span class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg">
+                 <%= property.property_type&.humanize || 'Property' %>
+               </span>
+             </div>
+            
+            <!-- Price Badge -->
+            <div class="absolute top-4 right-4">
+              <span class="bg-white text-gray-900 px-3 py-1.5 rounded-full text-sm font-bold shadow-lg">
+                $<%= number_with_delimiter(property.price) %>/mo
+              </span>
+            </div>
+            
+            <!-- Favorite Button -->
+            <div class="absolute bottom-4 right-4">
+              <button class="bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600 hover:text-red-500 p-2 rounded-full shadow-lg transition-all duration-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+           
+           <!-- Property Content -->
+           <div class="p-6">
+             <!-- Title and Location -->
+             <div class="mb-4">
+               <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                 <%= link_to property.title, property_path(property), class: "hover:text-blue-600 transition-colors duration-200" %>
+               </h3>
+               <div class="flex items-center text-gray-600 text-sm">
+                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                 </svg>
+                 <%= property.address %>, <%= property.city %>
+               </div>
+             </div>
+             
+             <!-- Property Features -->
+             <div class="flex items-center justify-between mb-4 text-sm text-gray-600">
+               <div class="flex items-center space-x-4">
+                 <div class="flex items-center">
+                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 21v-4a2 2 0 012-2h4a2 2 0 012 2v4"></path>
+                   </svg>
+                   <%= property.bedrooms %> bed
+                 </div>
+                 <div class="flex items-center">
+                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"></path>
+                   </svg>
+                   <%= property.bathrooms %> bath
+                 </div>
+                 <div class="flex items-center">
+                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                   </svg>
+                   <%= property.square_feet %> sqft
+                 </div>
+               </div>
+             </div>
+             
+             <!-- Description -->
+             <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+               <%= truncate(property.description, length: 100) %>
+             </p>
+             
+             <!-- Property Features -->
+             <div class="mb-4">
+               <div class="flex flex-wrap gap-1">
+                 <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs font-medium">
+                   <%= property.square_feet ? "#{property.square_feet} sqft" : "Size Available" %>
+                 </span>
+                 <span class="bg-green-50 text-green-700 px-2 py-1 rounded-md text-xs font-medium">
+                   <%= property.availability_status&.humanize || 'Available' %>
+                 </span>
+               </div>
+             </div>
+             
+             <!-- Action Buttons -->
+             <div class="flex space-x-2">
+               <%= link_to "View Details", property_path(property), 
+                           class: "flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-center py-2.5 px-4 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg" %>
+               <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg transition-colors duration-200">
+                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                 </svg>
+               </button>
+             </div>
+           </div>
+         </div>
+       <% end %>
+     </div>
+    </div>
+  </div>
