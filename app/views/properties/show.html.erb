@@ -183,14 +183,15 @@
           <!-- Left Column - Main Content -->
           <div class="lg:col-span-2 space-y-6">
             <!-- Image Gallery -->
-            <div class="">
+            <div class="" data-controller="gallery">
               <% if @property.photos.attached? && @property.photos.any? %>
                 <div class="grid grid-cols-1 gap-4">
                   <!-- Main Image -->
                   <div class="relative">
                     <%= image_tag url_for(@property.photos.first), 
                                   alt: "#{@property.title} - Main Photo",
-                                  class: "w-full h-96 object-cover rounded-lg" %>
+                                  class: "w-full h-96 object-cover rounded-lg",
+                                  data: { gallery_target: "mainImage" } %>
                     <% if @property.photos.count > 1 %>
                       <div class="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-lg text-sm font-medium">
                         +<%= @property.photos.count - 1 %> more photos
@@ -202,11 +203,15 @@
                   <% if @property.photos.count > 1 %>
                     <div class="grid grid-cols-4 gap-2">
                       <% @property.photos.limit(4).each_with_index do |photo, index| %>
-                        <% next if index == 0 %>
                         <div class="relative">
                           <%= image_tag url_for(photo), 
                                         alt: "#{@property.title} - Photo #{index + 1}",
-                                        class: "w-full h-20 object-cover rounded-lg" %>
+                                        class: "w-full h-20 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity duration-200 #{'ring-2 ring-blue-500 ring-offset-2' if index == 0}",
+                                        data: { 
+                                          action: "click->gallery#changeMainImage",
+                                          gallery_target: "thumbnail",
+                                          image_url: url_for(photo)
+                                        } %>
                         </div>
                       <% end %>
                     </div>
