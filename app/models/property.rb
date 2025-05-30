@@ -2,6 +2,9 @@ class Property < ApplicationRecord
   belongs_to :user
   has_many_attached :photos
 
+  # Lease associations
+  has_many :lease_agreements, dependent: :destroy
+
   # New associations for property features
   has_many :property_favorites, dependent: :destroy
   has_many :favorited_by_users, through: :property_favorites, source: :user
