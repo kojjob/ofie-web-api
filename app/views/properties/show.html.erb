@@ -169,6 +169,9 @@
         <button class="tab-button border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="gallery" data-tabs-target="button" data-action="click->tabs#switch">
           Gallery
         </button>
+        <button class="tab-button border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="reviews" data-tabs-target="button" data-action="click->tabs#switch">
+          Reviews
+        </button>
       </nav>
     </div>
     
@@ -432,6 +435,11 @@
             <p class="mt-2 text-gray-600">Photos will be displayed here once uploaded.</p>
           </div>
         <% end %>
+      </div>
+      
+      <!-- Reviews Tab -->
+      <div id="reviews-tab" class="tab-content hidden" data-tabs-target="content">
+        <%= render 'property_reviews/reviews_section', property: @property %>
       </div>
     </div>
   </div>
