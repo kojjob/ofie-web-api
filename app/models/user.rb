@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_secure_password # Provides password hashing and authentication methods
+  has_one_attached :avatar
   has_many :properties, dependent: :destroy
 
   # New associations for property features
@@ -37,6 +38,10 @@ class User < ApplicationRecord
   validates :provider, presence: true, if: :oauth_user?
   validates :uid, presence: true, if: :oauth_user?
   validates :stripe_customer_id, uniqueness: true, allow_nil: true
+  validates :bio, length: { maximum: 500 }, allow_blank: true
+  validates :phone, format: { with: /\A[\+]?[1-9]?[0-9]{7,15}\z/ }, allow_blank: true
+  validates :language, inclusion: { in: %w[en es fr] }, allow_blank: true
+  validates :timezone, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }, allow_blank: true
 
   # Callbacks
   before_create :generate_email_verification_token
@@ -68,7 +73,7 @@ class User < ApplicationRecord
   end
 
   # Generate password reset token
-  def generate_password_reset_token
+  def generate_password_reset_token!
     self.password_reset_token = SecureRandom.urlsafe_base64(32)
     self.password_reset_sent_at = Time.current
     save!
@@ -77,6 +82,13 @@ class User < ApplicationRecord
   # Check if password reset token is valid (expires in 2 hours)
   def password_reset_token_valid?
     password_reset_token.present? && password_reset_sent_at > 2.hours.ago
+  end
+
+  # Clear password reset token
+  def clear_password_reset_token!
+    self.password_reset_token = nil
+    self.password_reset_sent_at = nil
+    save!
   end
 
   # Generate email verification token
@@ -166,6 +178,31 @@ class User < ApplicationRecord
 
   def tenant?(user = self)
     user.role == "tenant"
+  end
+
+  # Helper methods for profile display
+  def recent_reviews(limit = 5)
+    property_reviews.includes(:property).order(created_at: :desc).limit(limit)
+  end
+
+  def recent_favorites(limit = 5)
+    favorite_properties.includes(:property_images).order("property_favorites.created_at DESC").limit(limit)
+  end
+
+  def recent_viewings(limit = 5)
+    property_viewings.includes(:property).order(created_at: :desc).limit(limit)
+  end
+
+  def properties_count
+    properties.count
+  end
+
+  def reviews_count
+    property_reviews.count
+  end
+
+  def favorites_count
+    favorite_properties.count
   end
 
   private

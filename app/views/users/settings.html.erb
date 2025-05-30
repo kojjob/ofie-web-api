@@ -1,0 +1,376 @@
+<% content_for :title, "Account Settings" %>
+
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <%= link_to root_path, class: "inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600" do %>
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+            </svg>
+            Home
+          <% end %>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Settings</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Account Settings</h1>
+      <p class="mt-2 text-gray-600">Manage your account preferences and security settings</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Settings Navigation -->
+      <div class="lg:col-span-1">
+        <nav class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+          <h2 class="text-lg font-medium text-gray-900 mb-4">Settings</h2>
+          <ul class="space-y-2">
+            <li>
+              <a href="#general" class="settings-nav-link active flex items-center px-3 py-2 text-sm font-medium rounded-lg transition duration-200">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                General
+              </a>
+            </li>
+            <li>
+              <a href="#security" class="settings-nav-link flex items-center px-3 py-2 text-sm font-medium rounded-lg transition duration-200">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+                Security
+              </a>
+            </li>
+            <li>
+              <a href="#notifications" class="settings-nav-link flex items-center px-3 py-2 text-sm font-medium rounded-lg transition duration-200">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 15h8v-2H4v2zM4 11h10V9H4v2z"></path>
+                </svg>
+                Notifications
+              </a>
+            </li>
+            <li>
+              <a href="#privacy" class="settings-nav-link flex items-center px-3 py-2 text-sm font-medium rounded-lg transition duration-200">
+                <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                Privacy
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Settings Content -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- General Settings -->
+        <div id="general" class="settings-section bg-white rounded-2xl shadow-sm border border-gray-200">
+          <%= form_with model: @user, url: settings_path, method: :patch, local: true, data: { turbo: false } do |form| %>
+            <div class="px-6 py-6 border-b border-gray-200">
+              <h3 class="text-lg font-medium text-gray-900">General Settings</h3>
+              <p class="mt-1 text-sm text-gray-600">Update your general account preferences</p>
+            </div>
+            <div class="px-6 py-6 space-y-6">
+              <!-- Language Preference -->
+              <div>
+                <%= form.label :language, "Language", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <div class="relative">
+                  <%= form.select :language, 
+                      options_for_select([['English', 'en'], ['Spanish', 'es'], ['French', 'fr']], @user.language || 'en'), 
+                      {}, 
+                      { class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white" } %>
+                  <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Timezone -->
+              <div>
+                <%= form.label :timezone, "Timezone", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <div class="relative">
+                  <%= form.select :timezone, 
+                      options_for_select([
+                        ['UTC', 'UTC'],
+                        ['Eastern Time (ET)', 'America/New_York'],
+                        ['Central Time (CT)', 'America/Chicago'],
+                        ['Mountain Time (MT)', 'America/Denver'],
+                        ['Pacific Time (PT)', 'America/Los_Angeles']
+                      ], @user.timezone || 'UTC'), 
+                      {}, 
+                      { class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 appearance-none bg-white" } %>
+                  <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 rounded-b-2xl">
+              <%= form.submit "Save General Settings", class: "px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Security Settings -->
+        <div id="security" class="settings-section bg-white rounded-2xl shadow-sm border border-gray-200 hidden">
+          <div class="px-6 py-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Security Settings</h3>
+            <p class="mt-1 text-sm text-gray-600">Manage your password and account security</p>
+          </div>
+          <div class="px-6 py-6 space-y-6">
+            <!-- Change Password -->
+            <%= form_with url: change_password_path, method: :patch, local: true, data: { turbo: false } do |form| %>
+              <div class="border border-gray-200 rounded-lg p-4">
+                <h4 class="text-md font-medium text-gray-900 mb-4">Change Password</h4>
+                <div class="space-y-4">
+                  <div>
+                    <%= form.label :current_password, "Current Password", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                    <%= form.password_field :current_password, required: true, 
+                        class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" %>
+                  </div>
+                  <div>
+                    <%= form.label :new_password, "New Password", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                    <%= form.password_field :new_password, required: true, 
+                        class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" %>
+                    <p class="mt-1 text-sm text-gray-500">Must be at least 8 characters long</p>
+                  </div>
+                  <div>
+                    <%= form.label :new_password_confirmation, "Confirm New Password", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                    <%= form.password_field :new_password_confirmation, required: true, 
+                        class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200" %>
+                  </div>
+                  <div class="pt-2">
+                    <%= form.submit "Update Password", class: "px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Two-Factor Authentication -->
+            <div class="border border-gray-200 rounded-lg p-4">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h4 class="text-md font-medium text-gray-900">Two-Factor Authentication</h4>
+                  <p class="text-sm text-gray-600">Add an extra layer of security to your account</p>
+                </div>
+                <div class="flex items-center">
+                  <input type="checkbox" id="two-factor" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                  <label for="two-factor" class="ml-2 text-sm text-gray-700">Enable</label>
+                </div>
+              </div>
+              <p class="text-sm text-gray-500">Coming soon - SMS and authenticator app support</p>
+            </div>
+
+            <!-- Login Sessions -->
+            <div class="border border-gray-200 rounded-lg p-4">
+              <h4 class="text-md font-medium text-gray-900 mb-4">Active Sessions</h4>
+              <div class="space-y-3">
+                <div class="flex items-center justify-between py-2">
+                  <div class="flex items-center">
+                    <div class="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">Current Session</p>
+                      <p class="text-xs text-gray-500">Chrome on macOS • <%= Time.current.strftime("%B %d, %Y at %I:%M %p") %></p>
+                    </div>
+                  </div>
+                  <span class="text-xs text-green-600 font-medium">Active</span>
+                </div>
+              </div>
+              <button type="button" class="mt-3 text-sm text-red-600 hover:text-red-700 font-medium">Sign out all other sessions</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div id="notifications" class="settings-section bg-white rounded-2xl shadow-sm border border-gray-200 hidden">
+          <%= form_with model: @user, url: settings_path, method: :patch, local: true, data: { turbo: false } do |form| %>
+            <div class="px-6 py-6 border-b border-gray-200">
+              <h3 class="text-lg font-medium text-gray-900">Notification Preferences</h3>
+              <p class="mt-1 text-sm text-gray-600">Choose how you want to be notified</p>
+            </div>
+            <div class="px-6 py-6 space-y-6">
+              <!-- Email Notifications -->
+              <div>
+                <h4 class="text-md font-medium text-gray-900 mb-4">Email Notifications</h4>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">Property Updates</p>
+                      <p class="text-sm text-gray-600">New properties matching your preferences</p>
+                    </div>
+                    <input type="checkbox" name="notifications[property_updates]" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" checked>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">Viewing Reminders</p>
+                      <p class="text-sm text-gray-600">Reminders for scheduled property viewings</p>
+                    </div>
+                    <input type="checkbox" name="notifications[viewing_reminders]" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" checked>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">Messages</p>
+                      <p class="text-sm text-gray-600">New messages from landlords or tenants</p>
+                    </div>
+                    <input type="checkbox" name="notifications[messages]" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" checked>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">Marketing</p>
+                      <p class="text-sm text-gray-600">Tips, news, and promotional content</p>
+                    </div>
+                    <input type="checkbox" name="notifications[marketing]" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 rounded-b-2xl">
+              <%= form.submit "Save Notification Settings", class: "px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div id="privacy" class="settings-section bg-white rounded-2xl shadow-sm border border-gray-200 hidden">
+          <%= form_with model: @user, url: settings_path, method: :patch, local: true, data: { turbo: false } do |form| %>
+            <div class="px-6 py-6 border-b border-gray-200">
+              <h3 class="text-lg font-medium text-gray-900">Privacy Settings</h3>
+              <p class="mt-1 text-sm text-gray-600">Control your privacy and data sharing preferences</p>
+            </div>
+            <div class="px-6 py-6 space-y-6">
+              <!-- Profile Visibility -->
+              <div>
+                <h4 class="text-md font-medium text-gray-900 mb-4">Profile Visibility</h4>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">Public Profile</p>
+                      <p class="text-sm text-gray-600">Allow others to view your profile</p>
+                    </div>
+                    <input type="checkbox" name="privacy[public_profile]" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" checked>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">Show Contact Info</p>
+                      <p class="text-sm text-gray-600">Display your contact information to other users</p>
+                    </div>
+                    <input type="checkbox" name="privacy[show_contact]" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Data Sharing -->
+              <div>
+                <h4 class="text-md font-medium text-gray-900 mb-4">Data Sharing</h4>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">Analytics</p>
+                      <p class="text-sm text-gray-600">Help improve our service with anonymous usage data</p>
+                    </div>
+                    <input type="checkbox" name="privacy[analytics]" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" checked>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Account Deletion -->
+              <div class="border-t border-gray-200 pt-6">
+                <h4 class="text-md font-medium text-red-900 mb-4">Danger Zone</h4>
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div class="flex items-start">
+                    <svg class="h-5 w-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    <div class="flex-1">
+                      <h5 class="text-sm font-medium text-red-800">Delete Account</h5>
+                      <p class="mt-1 text-sm text-red-700">Once you delete your account, there is no going back. Please be certain.</p>
+                      <button type="button" class="mt-3 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-200">Delete Account</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 rounded-b-2xl">
+              <%= form.submit "Save Privacy Settings", class: "px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Settings navigation
+    const navLinks = document.querySelectorAll('.settings-nav-link');
+    const sections = document.querySelectorAll('.settings-section');
+    
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all links
+        navLinks.forEach(l => l.classList.remove('active'));
+        
+        // Add active class to clicked link
+        this.classList.add('active');
+        
+        // Hide all sections
+        sections.forEach(section => section.classList.add('hidden'));
+        
+        // Show target section
+        const targetId = this.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.classList.remove('hidden');
+        }
+      });
+    });
+    
+    // Password confirmation validation
+    const newPassword = document.querySelector('input[name="new_password"]');
+    const confirmPassword = document.querySelector('input[name="new_password_confirmation"]');
+    
+    if (newPassword && confirmPassword) {
+      function validatePasswords() {
+        if (confirmPassword.value && newPassword.value !== confirmPassword.value) {
+          confirmPassword.setCustomValidity('Passwords do not match');
+          confirmPassword.classList.add('border-red-300');
+        } else {
+          confirmPassword.setCustomValidity('');
+          confirmPassword.classList.remove('border-red-300');
+        }
+      }
+      
+      newPassword.addEventListener('input', validatePasswords);
+      confirmPassword.addEventListener('input', validatePasswords);
+    }
+  });
+</script>
+
+<style>
+  .settings-nav-link {
+    @apply text-gray-600 hover:text-gray-900 hover:bg-gray-50;
+  }
+  
+  .settings-nav-link.active {
+    @apply text-blue-600 bg-blue-50;
+  }
+</style>

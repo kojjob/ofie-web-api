@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_184543) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_30_194955) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -364,6 +364,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_184543) do
     t.datetime "refresh_token_expires_at"
     t.string "name"
     t.string "stripe_customer_id"
+    t.text "bio"
+    t.string "phone"
+    t.string "language"
+    t.string "timezone"
+    t.string "avatar"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["email_verification_token"], name: "index_users_on_email_verification_token", unique: true
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token", unique: true

@@ -12,8 +12,10 @@ Rails.application.routes.draw do
       post "/auth/refresh", to: "auth#refresh_token"
       post "/auth/verify_email", to: "auth#verify_email"
       post "/auth/resend_verification", to: "auth#resend_verification"
+      get "/auth/forgot_password", to: "auth#forgot_password"
       post "/auth/forgot_password", to: "auth#forgot_password"
-      post "/auth/reset_password", to: "auth#reset_password"
+      get "/auth/reset_password", to: "auth#reset_password"
+      patch "/auth/reset_password", to: "auth#reset_password"
 
       # OAuth callback routes
       get "/auth/google/callback", to: "auth#google_callback"
@@ -45,6 +47,14 @@ Rails.application.routes.draw do
 
       # User-specific routes
       get "/users/:user_id/reviews", to: "property_reviews#user_reviews"
+
+      # User profile and settings routes
+      get "/profile", to: "users#show"
+      get "/profile/edit", to: "users#edit"
+      patch "/profile", to: "users#update"
+      get "/settings", to: "users#settings"
+      patch "/settings", to: "users#update_settings"
+      patch "/change_password", to: "users#change_password"
 
       # Payment routes
       resources :payments, only: [ :index, :show, :create ] do
@@ -139,7 +149,11 @@ Rails.application.routes.draw do
   get "register", to: "auth#register_form", as: "register"
   post "register", to: "auth#register"
   delete "logout", to: "auth#logout", as: "logout"
-get "logout", to: "auth#logout", as: "logout_get"
+  get "logout", to: "auth#logout", as: "logout_get"
+  get "forgot_password", to: "auth#forgot_password"
+  post "forgot_password", to: "auth#forgot_password"
+  get "reset_password", to: "auth#reset_password"
+  patch "reset_password", to: "auth#reset_password"
 
   # API routes for backward compatibility
   post "auth/register", to: "auth#register"

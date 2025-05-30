@@ -127,6 +127,29 @@ class AuthController < ApplicationController
     end
   end
 
+  def forgot_password
+    if request.post?
+      user = User.find_by(email: params[:email])
+      if user
+        user.generate_password_reset_token!
+        UserMailer.password_reset(user).deliver_now
+
+        respond_to do |format|
+          format.html { redirect_to login_path, notice: "Password reset email sent. Please check your inbox." }
+          format.json { render json: { message: "Password reset email sent" }, status: :ok }
+        end
+      else
+        respond_to do |format|
+          format.html { redirect_to forgot_password_path, alert: "Email not found." }
+          format.json { render json: { error: "Email not found" }, status: :not_found }
+        end
+      end
+    else
+      # GET request - show the form
+      render "forgot_password"
+    end
+  end
+
   def request_password_reset
     user = User.find_by(email: params[:email])
 
@@ -140,19 +163,38 @@ class AuthController < ApplicationController
   end
 
   def reset_password
-    token = params[:token]
-    user = User.find_by(password_reset_token: token)
+    @token = params[:token]
+    user = User.find_by(password_reset_token: @token)
 
-    if user && user.password_reset_token_valid?
-      if user.update(password: params[:password], password_confirmation: params[:password_confirmation])
-        # Clear reset token
-        user.update(password_reset_token: nil, password_reset_sent_at: nil)
-        render json: { message: "Password reset successfully" }, status: :ok
+    if request.get?
+      # GET request - show the form
+      if user && user.password_reset_token_valid?
+        render "reset_password"
       else
-        render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+        redirect_to login_path, alert: "Invalid or expired password reset token."
       end
     else
-      render json: { error: "Invalid or expired reset token" }, status: :unprocessable_entity
+      # POST/PATCH request - process the form
+      if user && user.password_reset_token_valid?
+        if user.update(password: params[:password], password_confirmation: params[:password_confirmation])
+          user.clear_password_reset_token!
+
+          respond_to do |format|
+            format.html { redirect_to login_path, notice: "Password reset successfully. You can now log in with your new password." }
+            format.json { render json: { message: "Password reset successfully" }, status: :ok }
+          end
+        else
+          respond_to do |format|
+            format.html { render "reset_password", alert: user.errors.full_messages.join(", ") }
+            format.json { render json: { errors: user.errors.full_messages }, status: :unprocessable_entity }
+          end
+        end
+      else
+        respond_to do |format|
+          format.html { redirect_to login_path, alert: "Invalid or expired token." }
+          format.json { render json: { error: "Invalid or expired token" }, status: :unprocessable_entity }
+        end
+      end
     end
   end
 

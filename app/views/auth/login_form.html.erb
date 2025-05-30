@@ -36,7 +36,9 @@
             <label for="remember_me" class="ml-2 block text-sm text-gray-700">Remember me</label>
           </div>
           <div class="text-sm">
-            <a href="#" class="font-medium text-blue-600 hover:text-blue-500">Forgot password?</a>
+            <%= link_to forgot_password_path, class: "font-medium text-blue-600 hover:text-blue-500" do %>
+              Forgot your password?
+            <% end %>
           </div>
         </div>
 
