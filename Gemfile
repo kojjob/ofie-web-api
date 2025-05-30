@@ -15,6 +15,9 @@ gem "bcrypt", "~> 3.1.7"
 # JWT for authentication
 gem "jwt"
 
+# Payment processing with Stripe
+gem "stripe"
+
 # Email functionality for password reset and verification
 gem "mail"
 

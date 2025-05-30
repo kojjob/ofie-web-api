@@ -14,6 +14,14 @@ class User < ApplicationRecord
   has_many :tenant_conversations, class_name: "Conversation", foreign_key: "tenant_id", dependent: :destroy
   has_many :sent_messages, class_name: "Message", foreign_key: "sender_id", dependent: :destroy
 
+  # Payment and rental associations
+  has_many :payment_methods, dependent: :destroy
+  has_many :payments, dependent: :destroy
+  has_many :tenant_rental_applications, class_name: "RentalApplication", foreign_key: "tenant_id", dependent: :destroy
+  has_many :reviewed_rental_applications, class_name: "RentalApplication", foreign_key: "reviewed_by_id", dependent: :nullify
+  has_many :landlord_lease_agreements, class_name: "LeaseAgreement", foreign_key: "landlord_id", dependent: :destroy
+  has_many :tenant_lease_agreements, class_name: "LeaseAgreement", foreign_key: "tenant_id", dependent: :destroy
+
   # Define roles as an enum for easy management and validation
   enum :role, { tenant: "tenant", landlord: "landlord" }
 
@@ -23,6 +31,7 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { minimum: 2, maximum: 100 }
   validates :provider, presence: true, if: :oauth_user?
   validates :uid, presence: true, if: :oauth_user?
+  validates :stripe_customer_id, uniqueness: true, allow_nil: true
 
   # Callbacks
   before_create :generate_email_verification_token

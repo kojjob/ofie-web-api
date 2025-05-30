@@ -43,6 +43,70 @@ Rails.application.routes.draw do
       # User-specific routes
       get "/users/:user_id/reviews", to: "property_reviews#user_reviews"
 
+      # Payment routes
+      resources :payments, only: [ :index, :show, :create ] do
+        member do
+          post :retry
+          post :cancel
+        end
+        collection do
+          get :summary
+        end
+      end
+
+      # Payment methods routes
+      resources :payment_methods, only: [ :index, :show, :create, :update, :destroy ] do
+        member do
+          post :make_default
+        end
+        collection do
+          post :setup_intent_success
+          get :validate
+        end
+      end
+
+      # Payment schedules routes
+      resources :payment_schedules, only: [ :index, :show, :update, :destroy ] do
+        member do
+          post :activate
+          post :deactivate
+          post :toggle_auto_pay
+          post :create_payment
+        end
+        collection do
+          get :upcoming
+        end
+      end
+
+      # Lease agreements with nested payment resources
+      resources :lease_agreements, only: [ :index, :show, :create, :update ] do
+        resources :payments, only: [ :index, :create ]
+        resources :payment_schedules, only: [ :index, :create ]
+      end
+
+      # Rental applications routes
+      resources :rental_applications, only: [ :index, :show, :create, :update ] do
+        member do
+          post :approve
+          post :reject
+          post :under_review
+        end
+      end
+
+      # Security deposits routes
+      resources :security_deposits, only: [ :index, :show, :update ] do
+        member do
+          post :mark_collected
+          post :process_refund
+          post :add_deduction
+        end
+      end
+
+      # Webhook routes
+      namespace :webhooks do
+        post :stripe, to: "stripe#create"
+      end
+
       # Messaging routes
       resources :conversations, only: [ :index, :show, :new, :create, :update, :destroy ] do
         resources :messages, only: [ :index, :show, :create, :update, :destroy ] do
