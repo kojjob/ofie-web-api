@@ -1,0 +1,358 @@
+<!-- Tenant Dashboard -->
+<div class="space-y-8">
+  <!-- Stats Overview -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Active Leases -->
+    <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200">
+      <div class="p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Active Leases</dt>
+              <dd class="text-2xl font-bold text-gray-900" data-stat="active_leases"><%= @stats[:active_leases] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Applications Submitted -->
+    <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200">
+      <div class="p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Applications</dt>
+              <dd class="text-2xl font-bold text-gray-900" data-stat="applications_submitted"><%= @stats[:applications_submitted] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Payments -->
+    <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200">
+      <div class="p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Pending Payments</dt>
+              <dd class="text-2xl font-bold text-gray-900" data-stat="pending_payments"><%= @stats[:pending_payments] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorite Properties -->
+    <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200">
+      <div class="p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-red-500 rounded-md flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Favorites</dt>
+              <dd class="text-2xl font-bold text-gray-900" data-stat="favorite_properties"><%= @stats[:favorite_properties] %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="bg-white shadow-sm rounded-lg border border-gray-200">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h3 class="text-lg font-medium text-gray-900">Quick Actions</h3>
+    </div>
+    <div class="p-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <%= link_to properties_path, class: "flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition duration-200" do %>
+          <div class="flex-shrink-0">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-blue-900">Browse Properties</p>
+            <p class="text-xs text-blue-700">Find your next home</p>
+          </div>
+        <% end %>
+
+        <%= link_to "#", class: "flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition duration-200" do %>
+          <div class="flex-shrink-0">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-green-900">Make Payment</p>
+            <p class="text-xs text-green-700">Pay rent online</p>
+          </div>
+        <% end %>
+
+        <%= link_to "#", class: "flex items-center p-4 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition duration-200" do %>
+          <div class="flex-shrink-0">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-yellow-900">My Applications</p>
+            <p class="text-xs text-yellow-700">Track applications</p>
+          </div>
+        <% end %>
+
+        <%= link_to conversations_path, class: "flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition duration-200" do %>
+          <div class="flex-shrink-0">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-purple-900">Messages</p>
+            <p class="text-xs text-purple-700">Chat with landlords</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current Lease & Upcoming Payments -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Current Lease -->
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Current Lease</h3>
+      </div>
+      <div class="p-6">
+        <% if @lease_agreements.where(status: 'active').any? %>
+          <% active_lease = @lease_agreements.where(status: 'active').first %>
+          <div class="space-y-4">
+            <div class="flex items-center space-x-4">
+              <% if active_lease.property.photos.attached? %>
+                <%= image_tag active_lease.property.photos.first, class: "w-16 h-16 object-cover rounded-lg" %>
+              <% else %>
+                <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                  <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                  </svg>
+                </div>
+              <% end %>
+              <div class="flex-1">
+                <h4 class="text-lg font-medium text-gray-900"><%= active_lease.property.title %></h4>
+                <p class="text-sm text-gray-600"><%= active_lease.property.address %>, <%= active_lease.property.city %></p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <p class="text-sm font-medium text-gray-500">Monthly Rent</p>
+                <p class="text-lg font-bold text-gray-900">$<%= number_with_delimiter(active_lease.monthly_rent) %></p>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-500">Lease End</p>
+                <p class="text-lg font-bold text-gray-900"><%= active_lease.end_date.strftime('%b %d, %Y') %></p>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-gray-200">
+              <%= link_to property_path(active_lease.property), class: "text-blue-600 hover:text-blue-500 text-sm font-medium" do %>
+                View Property Details →
+              <% end %>
+            </div>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No active lease</h3>
+            <p class="mt-1 text-sm text-gray-500">Start browsing properties to find your next home.</p>
+            <div class="mt-6">
+              <%= link_to properties_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" do %>
+                Browse Properties
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Upcoming Payments -->
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Upcoming Payments</h3>
+      </div>
+      <div class="divide-y divide-gray-200">
+        <% if @upcoming_payments.any? %>
+          <% @upcoming_payments.each do |payment| %>
+            <div class="p-6">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-medium text-gray-900"><%= payment.payment_type.humanize %></p>
+                  <p class="text-sm text-gray-500"><%= payment.lease_agreement.property.title %></p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm font-medium text-gray-900">$<%= number_with_delimiter(payment.amount) %></p>
+                  <p class="text-sm text-gray-500">Due <%= payment.due_date.strftime('%b %d') %></p>
+                  <% if payment.due_date <= Date.current %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 mt-1">
+                      Overdue
+                    </span>
+                  <% elsif payment.due_date <= 3.days.from_now %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 mt-1">
+                      Due Soon
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+              <div class="mt-4">
+                <button class="w-full bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition duration-200">
+                  Pay Now
+                </button>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="p-6 text-center">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">All caught up!</h3>
+            <p class="mt-1 text-sm text-gray-500">No upcoming payments at this time.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Applications & Favorite Properties -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Recent Applications -->
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Recent Applications</h3>
+      </div>
+      <div class="divide-y divide-gray-200">
+        <% if @recent_applications.any? %>
+          <% @recent_applications.each do |application| %>
+            <div class="p-6">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                  <% if application.property.photos.attached? %>
+                    <%= image_tag application.property.photos.first, class: "w-12 h-12 object-cover rounded-lg" %>
+                  <% else %>
+                    <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                      </svg>
+                    </div>
+                  <% end %>
+                  <div>
+                    <p class="text-sm font-medium text-gray-900"><%= application.property.title %></p>
+                    <p class="text-sm text-gray-500"><%= application.property.address %></p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    <%= case application.status
+                        when 'pending' then 'bg-yellow-100 text-yellow-800'
+                        when 'approved' then 'bg-green-100 text-green-800'
+                        when 'rejected' then 'bg-red-100 text-red-800'
+                        else 'bg-gray-100 text-gray-800'
+                        end %>">
+                    <%= application.status.capitalize %>
+                  </span>
+                  <p class="text-xs text-gray-500 mt-1"><%= time_ago_in_words(application.created_at) %> ago</p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="p-6 text-center">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No applications yet</h3>
+            <p class="mt-1 text-sm text-gray-500">Start applying to properties you're interested in.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Favorite Properties -->
+    <div class="bg-white shadow-sm rounded-lg border border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Favorite Properties</h3>
+      </div>
+      <div class="p-6">
+        <% if @favorite_properties.any? %>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <% @favorite_properties.each do |favorite| %>
+              <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition duration-200">
+                <div class="aspect-w-16 aspect-h-9">
+                  <% if favorite.property.photos.attached? %>
+                    <%= image_tag favorite.property.photos.first, class: "w-full h-32 object-cover" %>
+                  <% else %>
+                    <div class="w-full h-32 bg-gray-200 flex items-center justify-center">
+                      <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                      </svg>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="p-3">
+                  <h4 class="text-sm font-medium text-gray-900 truncate"><%= favorite.property.title %></h4>
+                  <p class="text-xs text-gray-600 truncate"><%= favorite.property.address %></p>
+                  <div class="flex items-center justify-between mt-2">
+                    <span class="text-sm font-bold text-gray-900">$<%= number_with_delimiter(favorite.property.price) %></span>
+                    <%= link_to property_path(favorite.property), class: "text-blue-600 hover:text-blue-500" do %>
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                      </svg>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No favorites yet</h3>
+            <p class="mt-1 text-sm text-gray-500">Save properties you're interested in to see them here.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

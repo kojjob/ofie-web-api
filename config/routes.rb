@@ -193,6 +193,12 @@ get "logout", to: "auth#logout", as: "logout_get"
   # Health check
   get "/health", to: "application#health"
 
+  # Dashboard routes
+  get "/dashboard", to: "dashboard#index", as: "dashboard"
+  get "/dashboard/landlord", to: "dashboard#landlord_dashboard", as: "landlord_dashboard"
+  get "/dashboard/tenant", to: "dashboard#tenant_dashboard", as: "tenant_dashboard"
+  get "/dashboard/analytics", to: "dashboard#analytics", as: "dashboard_analytics"
+
   # Home page
   get "/home", to: "home#index", as: "home"
 
