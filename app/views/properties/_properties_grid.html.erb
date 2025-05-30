@@ -4,7 +4,7 @@
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-200">
         <!-- Property Image -->
         <div class="h-48 bg-gray-200 relative">
-          <% if property.photos.attached? %>
+          <% if property.photos.attached? && property.photos.any? %>
             <%= image_tag property.photos.first, 
                           class: "w-full h-full object-cover", 
                           alt: property.title %>

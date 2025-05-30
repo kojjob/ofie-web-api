@@ -1,0 +1,26 @@
+New Message from <%= @sender.name || @sender.email %>
+=====================================
+
+Hello <%= @recipient.name || @recipient.email %>,
+
+You have received a new message regarding the property:
+
+Property: <%= @property.title %>
+Location: <%= @property.address %>
+Price: $<%= number_with_delimiter(@property.price) %>
+
+Message:
+--------
+<%= @message.content %>
+
+Sent: <%= @message.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+
+To reply to this message, please log in to your account and visit:
+<%= root_url %>conversations/<%= @conversation.id %>
+
+Best regards,
+The Ofie Team
+
+---
+This email was sent from Ofie Property Management Platform
+If you no longer wish to receive these notifications, please update your preferences in your account settings.

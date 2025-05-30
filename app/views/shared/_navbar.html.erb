@@ -1,9 +1,9 @@
 <!-- Enhanced Navigation with improved accessibility, performance, and UX -->
-<nav class="bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200 sticky top-0 z-50 transition-all duration-300" 
+<nav class="bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-50 transition-all duration-300" 
      role="navigation" 
      aria-label="Main navigation"
      data-controller="navbar"
-     data-navbar-scrolled-class="shadow-xl bg-white/98">
+     data-navbar-scrolled-class="shadow-md bg-white/98">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
       <!-- Logo and Brand -->
@@ -20,7 +20,7 @@
       </div>
       
       <!-- Search Bar (Desktop) -->
-      <div class="hidden md:flex flex-1 max-w-lg mx-4 lg:mx-8">
+      <div class="hidden lg:flex flex-1 max-w-lg mx-4 xl:mx-8">
         <div class="relative w-full" data-controller="search" data-search-url-value="/properties/search">
           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@
           <input data-search-target="input" 
                  data-action="input->search#search focus->search#showResults blur->search#hideResults" 
                  type="text" 
-                 placeholder="Search properties by location, type, or features..." 
+                 placeholder="Search properties..." 
                  class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm">
           
           <!-- Search Results Dropdown -->
@@ -41,13 +41,13 @@
       </div>
       
       <!-- Navigation Links -->
-      <div class="hidden md:flex items-center space-x-1">
+      <div class="hidden lg:flex items-center space-x-1">
         <%= link_to "Browse Properties", properties_path, class: "text-gray-700 hover:text-blue-600 hover:bg-blue-50 px-3 py-2 rounded-lg text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
         <%= link_to "Flash Demo", demo_flash_demo_path, class: "text-gray-700 hover:text-blue-600 hover:bg-blue-50 px-3 py-2 rounded-lg text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
         
         <% if user_signed_in? %>
           <% if current_user.landlord? %>
-            <%= link_to "Dashboard", my_properties_path, class: "text-gray-700 hover:text-blue-600 hover:bg-blue-50 px-3 py-2 rounded-lg text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+            <%= link_to "Dashboard", my_properties_properties_path, class: "text-gray-700 hover:text-blue-600 hover:bg-blue-50 px-3 py-2 rounded-lg text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
             <%= link_to "Add Property", new_property_path, class: "bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-800 transition duration-200 ml-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
           <% else %>
             <%= link_to "My Bookings", "#", class: "text-gray-700 hover:text-blue-600 hover:bg-blue-50 px-3 py-2 rounded-lg text-sm font-medium transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
@@ -131,31 +131,57 @@
       </div>
       
       <!-- Mobile menu button -->
-      <div class="md:hidden flex items-center">
+      <div class="lg:hidden flex items-center space-x-2">
+        <!-- Mobile Search Button -->
+        <button data-controller="mobile-search" 
+                data-action="click->mobile-search#toggle" 
+                class="text-gray-700 hover:text-blue-600 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 md:hidden"
+                aria-label="Toggle search">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+        
         <button data-controller="mobile-menu" 
                 data-action="click->mobile-menu#toggle" 
                 class="text-gray-700 hover:text-blue-600 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
                 aria-label="Toggle mobile menu"
                 aria-expanded="false">
-          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg data-mobile-menu-target="openIcon" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg data-mobile-menu-target="closeIcon" class="h-6 w-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
     </div>
   </div>
   
+  <!-- Mobile Search (appears on small screens) -->
+  <div data-mobile-search-target="searchBar" class="hidden border-t border-gray-200 bg-white px-4 py-3 md:hidden">
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+      <input type="text" placeholder="Search properties..." 
+             class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+    </div>
+  </div>
+  
   <!-- Mobile menu -->
-  <div data-mobile-menu-target="menu" class="hidden md:hidden border-t border-gray-200 bg-white">
-    <!-- Mobile Search -->
-    <div class="px-4 py-3 border-b border-gray-200">
+  <div data-mobile-menu-target="menu" class="hidden lg:hidden border-t border-gray-200 bg-white">
+    <!-- Mobile Search (for medium screens) -->
+    <div class="px-4 py-3 border-b border-gray-200 hidden md:block lg:hidden">
       <div class="relative">
         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
         </div>
-        <input type="text" placeholder="Search properties by location, type, or features..." 
+        <input type="text" placeholder="Search properties..." 
                 class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
       </div>
     </div>
@@ -180,7 +206,7 @@
         </div>
         
         <% if current_user.landlord? %>
-          <%= link_to my_properties_path, class: "flex items-center text-gray-700 hover:text-blue-600 hover:bg-blue-50 px-3 py-2 rounded-lg text-base font-medium transition duration-200" do %>
+          <%= link_to my_properties_properties_path, class: "flex items-center text-gray-700 hover:text-blue-600 hover:bg-blue-50 px-3 py-2 rounded-lg text-base font-medium transition duration-200" do %>
             <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
             </svg>

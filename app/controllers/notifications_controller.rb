@@ -1,5 +1,5 @@
 class NotificationsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_request
   before_action :set_notification, only: [ :show, :mark_read ]
 
   # GET /notifications

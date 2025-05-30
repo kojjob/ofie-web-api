@@ -9,6 +9,11 @@ class User < ApplicationRecord
   has_many :property_reviews, dependent: :destroy
   has_many :notifications, dependent: :destroy
 
+  # Messaging associations
+  has_many :landlord_conversations, class_name: "Conversation", foreign_key: "landlord_id", dependent: :destroy
+  has_many :tenant_conversations, class_name: "Conversation", foreign_key: "tenant_id", dependent: :destroy
+  has_many :sent_messages, class_name: "Message", foreign_key: "sender_id", dependent: :destroy
+
   # Define roles as an enum for easy management and validation
   enum :role, { tenant: "tenant", landlord: "landlord" }
 
@@ -113,6 +118,40 @@ class User < ApplicationRecord
         )
       end
     end
+  end
+
+  # Messaging helper methods
+  def conversations
+    Conversation.where("landlord_id = ? OR tenant_id = ?", id, id)
+  end
+
+  def unread_messages_count
+    conversations.sum { |conv| conv.unread_count_for(self) }
+  end
+
+  def conversation_with(other_user, property)
+    conversations.find_by(
+      landlord: landlord?(other_user) ? other_user : self,
+      tenant: tenant?(other_user) ? other_user : self,
+      property: property
+    )
+  end
+
+  def can_message?(other_user, property)
+    return false if self == other_user
+    return false unless property
+
+    # Landlords can message tenants, tenants can message landlords
+    (landlord? && other_user.tenant?) || (tenant? && other_user.landlord?)
+  end
+
+
+  def landlord?(user = self)
+    user.role == "landlord"
+  end
+
+  def tenant?(user = self)
+    user.role == "tenant"
   end
 
   private

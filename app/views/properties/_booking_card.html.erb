@@ -1,0 +1,112 @@
+<!-- Booking Card -->
+<div class="sticky top-8">
+  <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <!-- Price Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
+      <div class="text-center">
+        <div class="text-4xl font-bold mb-1">$<%= number_with_delimiter(@property.price) %></div>
+        <div class="text-blue-100">per month</div>
+      </div>
+      
+      <div class="mt-4 text-center">
+        <% if @property.available? %>
+          <div class="inline-flex items-center px-3 py-1 bg-green-500 bg-opacity-20 rounded-full">
+            <div class="w-2 h-2 bg-green-300 rounded-full mr-2"></div>
+            <span class="text-green-100 font-medium text-sm">Available now</span>
+          </div>
+        <% else %>
+          <div class="inline-flex items-center px-3 py-1 bg-red-500 bg-opacity-20 rounded-full">
+            <div class="w-2 h-2 bg-red-300 rounded-full mr-2"></div>
+            <span class="text-red-100 font-medium text-sm">Currently rented</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    
+    <div class="p-6">
+      <!-- Contact Actions -->
+      <% if @property.available? %>
+        <div class="space-y-3 mb-6">
+          <!-- Primary CTA - Schedule Viewing (always visible) -->
+          <% if user_signed_in? && current_user != @property.user %>
+            <button type="button" 
+                    class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    data-action="click->scheduling#openModal">
+              <div class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Schedule Viewing
+              </div>
+            </button>
+          <% else %>
+            <%= link_to login_path, 
+                        class: "w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 px-6 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 block text-center" do %>
+              <div class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Schedule Viewing
+              </div>
+            <% end %>
+          <% end %>
+          
+          <!-- Secondary CTA - Send Message -->
+          <% if user_signed_in? && current_user != @property.user %>
+            <%= link_to new_conversation_path(property_id: @property.id), 
+                        class: "w-full border-2 border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 transition duration-200 block text-center group" do %>
+              <div class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                Send Message
+              </div>
+            <% end %>
+          <% else %>
+            <%= link_to login_path, 
+                        class: "w-full border-2 border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 transition duration-200 block text-center group" do %>
+              <div class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                Send Message
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Host Information -->
+      <div class="border-t border-gray-200 pt-6">
+        <h3 class="font-semibold text-gray-900 mb-4">Hosted by</h3>
+        <div class="flex items-center mb-4">
+          <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mr-4">
+            <% if @property.user.name.present? %>
+              <span class="text-white font-bold text-lg"><%= @property.user.name.first.upcase %></span>
+            <% else %>
+              <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+              </svg>
+            <% end %>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-900"><%= @property.user.name.present? ? @property.user.name : 'Property Owner' %></div>
+            <div class="text-sm text-gray-600">Host since <%= @property.user.created_at.strftime('%B %Y') %></div>
+          </div>
+        </div>
+        
+        <!-- Host Stats -->
+        <div class="grid grid-cols-2 gap-4 text-center">
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <div class="text-lg font-bold text-gray-900">4.9</div>
+            <div class="text-xs text-gray-600">Rating</div>
+          </div>
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <div class="text-lg font-bold text-gray-900">< 1hr</div>
+            <div class="text-xs text-gray-600">Response</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

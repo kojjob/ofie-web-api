@@ -39,8 +39,8 @@ class Property < ApplicationRecord
   validates :description, length: { maximum: 2000 }
   validates :address, presence: true
   validates :city, presence: true
-  validates :state, presence: true
-  validates :zip_code, presence: true, format: { with: /\A\d{5}(-\d{4})?\z/, message: "Invalid ZIP code format" }
+  # validates :state, presence: true
+  # validates :zip_code, presence: true, format: { with: /\A\d{5}(-\d{4})?\z/, message: "Invalid ZIP code format" }
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :bedrooms, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :bathrooms, presence: true, numericality: { greater_than: 0 }
@@ -62,7 +62,7 @@ class Property < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
 
   # New scopes for enhanced features
-  scope :with_parking, -> { where(parking: true) }
+  scope :with_parking, -> { where(parking_available: true) }
   scope :pet_friendly, -> { where(pets_allowed: true) }
   scope :furnished, -> { where(furnished: true) }
   scope :utilities_included, -> { where(utilities_included: true) }
@@ -97,7 +97,7 @@ class Property < ApplicationRecord
 
   def amenities_list
     amenities = []
-    amenities << "Parking" if parking?
+    amenities << "Parking" if parking_available?
     amenities << "Pet Friendly" if pets_allowed?
     amenities << "Furnished" if furnished?
     amenities << "Utilities Included" if utilities_included?

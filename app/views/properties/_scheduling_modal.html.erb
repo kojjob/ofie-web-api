@@ -1,0 +1,141 @@
+<!-- Schedule Viewing Modal -->
+<div class="fixed inset-0 z-50 hidden overflow-y-auto bg-black bg-opacity-50" 
+     data-scheduling-target="modal"
+     data-action="click->scheduling#closeModal">
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+         data-action="click->scheduling#stopPropagation">
+      <%= form_with model: [@property, @property.property_viewings.build], 
+                    local: true, 
+                    class: "scheduling-form",
+                    data: { action: "submit->scheduling#validateForm" } do |form| %>
+        
+        <!-- Modal Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-white">Schedule Property Viewing</h3>
+            <button type="button" 
+                    class="text-white hover:text-gray-200 transition-colors" 
+                    data-action="click->scheduling#closeModal">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Modal Body -->
+        <div class="px-6 py-6 space-y-6">
+          <!-- Date and Time Selection -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <%= form.label :scheduled_at, "Preferred Date", class: "block text-sm font-medium text-gray-700" %>
+              <%= form.date_field :scheduled_at, 
+                                  class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors", 
+                                  min: Date.current,
+                                  max: Date.current + 30.days,
+                                  required: true %>
+            </div>
+            
+            <div class="space-y-2">
+              <%= form.label :time_slot, "Preferred Time", class: "block text-sm font-medium text-gray-700" %>
+              <div class="grid grid-cols-2 gap-2" data-scheduling-target="timeSlots">
+                <% [['9:00 AM', '09:00'], ['10:00 AM', '10:00'], ['11:00 AM', '11:00'], ['2:00 PM', '14:00'], ['3:00 PM', '15:00'], ['4:00 PM', '16:00']].each do |time_label, time_value| %>
+                  <label class="relative flex items-center justify-center p-2 border border-gray-300 rounded-lg cursor-pointer hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                         data-scheduling-target="timeSlotOption"
+                         data-action="click->scheduling#selectTimeSlot"
+                         data-time-value="<%= time_value %>">
+                    <%= form.radio_button :time_slot, time_value, class: "sr-only", data: { scheduling_target: "timeSlotRadio" } %>
+                    <span class="text-sm font-medium text-gray-700"><%= time_label %></span>
+                    <div class="absolute inset-0 border-2 border-transparent rounded-lg pointer-events-none"></div>
+                  </label>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Contact Information -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <%= form.label :contact_email, "Email Address", class: "block text-sm font-medium text-gray-700" %>
+              <%= form.email_field :contact_email, 
+                                   value: current_user&.email, 
+                                   class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors",
+                                   required: true %>
+            </div>
+            
+            <div class="space-y-2">
+              <%= form.label :contact_phone, "Phone Number", class: "block text-sm font-medium text-gray-700" %>
+              <span class="text-xs text-gray-500">(Optional)</span>
+              <%= form.telephone_field :contact_phone, 
+                                       class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors",
+                                       placeholder: "+1 (555) 123-4567" %>
+            </div>
+          </div>
+          
+          <!-- Viewing Type -->
+          <div class="space-y-3">
+            <%= form.label :viewing_type, "Viewing Type", class: "block text-sm font-medium text-gray-700" %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" data-scheduling-target="viewingTypes">
+              <label class="relative flex items-center p-4 border-2 border-blue-500 bg-blue-50 rounded-lg cursor-pointer transition-colors"
+                     data-scheduling-target="viewingTypeOption"
+                     data-value="in_person"
+                     data-action="click->scheduling#selectViewingType">
+                <%= form.radio_button :viewing_type, "in_person", class: "sr-only", checked: true, data: { scheduling_target: "viewingTypeRadio" } %>
+                <div class="flex items-center w-full">
+                  <div class="flex-shrink-0 w-5 h-5 border-2 border-blue-600 rounded-full mr-3 flex items-center justify-center"
+                       data-scheduling-target="viewingTypeIndicator">
+                    <div class="w-2.5 h-2.5 bg-blue-600 rounded-full"></div>
+                  </div>
+                  <div class="flex-1">
+                    <div class="font-medium text-gray-900">In-Person Visit</div>
+                    <div class="text-sm text-gray-500">Tour the property in person</div>
+                  </div>
+                </div>
+              </label>
+              
+              <label class="relative flex items-center p-4 border-2 border-gray-200 rounded-lg cursor-pointer transition-colors"
+                     data-scheduling-target="viewingTypeOption"
+                     data-value="virtual"
+                     data-action="click->scheduling#selectViewingType">
+                <%= form.radio_button :viewing_type, "virtual", class: "sr-only", data: { scheduling_target: "viewingTypeRadio" } %>
+                <div class="flex items-center w-full">
+                  <div class="flex-shrink-0 w-5 h-5 border-2 border-gray-300 rounded-full mr-3 flex items-center justify-center"
+                       data-scheduling-target="viewingTypeIndicator">
+                    <div class="w-2.5 h-2.5 bg-gray-300 rounded-full hidden"></div>
+                  </div>
+                  <div class="flex-1">
+                    <div class="font-medium text-gray-900">Virtual Tour</div>
+                    <div class="text-sm text-gray-500">Video call walkthrough</div>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Additional Notes -->
+          <div class="space-y-2">
+            <%= form.label :notes, "Additional Notes", class: "block text-sm font-medium text-gray-700" %>
+            <span class="text-xs text-gray-500">(Optional)</span>
+            <%= form.text_area :notes, 
+                               rows: 3, 
+                               class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none", 
+                               placeholder: "Any specific questions or requirements..." %>
+          </div>
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+          <div class="flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0">
+            <button type="button" 
+                    class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium" 
+                    data-action="click->scheduling#closeModal">
+              Cancel
+            </button>
+            <%= form.submit "Schedule Viewing", class: "flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

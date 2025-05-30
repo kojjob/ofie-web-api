@@ -100,6 +100,7 @@ class PropertiesController < ApplicationController
 
   # GET /properties/:id/edit
   def edit
+    @property_viewing = @property.property_viewings.build
   end
 
   # POST /properties
@@ -226,8 +227,9 @@ class PropertiesController < ApplicationController
 
   def property_params
     params.require(:property).permit(
-      :title, :description, :address, :city, :state, :zip_code,
+      :title, :description, :address, :city, # removed :state, :zip_code
       :price, :bedrooms, :bathrooms, :square_feet, :property_type, :availability_status,
+      :latitude, :longitude,
       photos: []
     )
   end
@@ -245,8 +247,6 @@ class PropertiesController < ApplicationController
       description: property.description,
       address: property.address,
       city: property.city,
-      state: property.state,
-      zip_code: property.zip_code,
       price: property.price,
       bedrooms: property.bedrooms,
       bathrooms: property.bathrooms,

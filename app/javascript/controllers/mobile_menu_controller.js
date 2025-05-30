@@ -2,7 +2,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["menu"];
+  static targets = ["menu", "openIcon", "closeIcon"];
 
   connect() {
     this.isOpen = false;
@@ -24,6 +24,10 @@ export default class extends Controller {
     this.element.setAttribute('aria-expanded', 'true');
     this.isOpen = true;
     
+    // Switch icons
+    if (this.hasOpenIconTarget) this.openIconTarget.classList.add('hidden');
+    if (this.hasCloseIconTarget) this.closeIconTarget.classList.remove('hidden');
+    
     // Prevent body scroll when menu is open
     document.body.style.overflow = 'hidden';
     
@@ -38,6 +42,10 @@ export default class extends Controller {
     this.menuTarget.classList.add('hidden');
     this.element.setAttribute('aria-expanded', 'false');
     this.isOpen = false;
+    
+    // Switch icons back
+    if (this.hasOpenIconTarget) this.openIconTarget.classList.remove('hidden');
+    if (this.hasCloseIconTarget) this.closeIconTarget.classList.add('hidden');
     
     // Restore body scroll
     document.body.style.overflow = '';

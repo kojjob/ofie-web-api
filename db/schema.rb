@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_29_022545) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_30_155729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
-    t.bigint "record_id", null: false
+    t.uuid "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
@@ -40,6 +40,39 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_022545) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.uuid "landlord_id", null: false
+    t.uuid "tenant_id", null: false
+    t.uuid "property_id", null: false
+    t.string "subject"
+    t.string "status", default: "active"
+    t.datetime "last_message_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["landlord_id", "tenant_id", "property_id"], name: "index_conversations_on_participants_and_property", unique: true
+    t.index ["landlord_id"], name: "index_conversations_on_landlord_id"
+    t.index ["last_message_at"], name: "index_conversations_on_last_message_at"
+    t.index ["property_id"], name: "index_conversations_on_property_id"
+    t.index ["status"], name: "index_conversations_on_status"
+    t.index ["tenant_id"], name: "index_conversations_on_tenant_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "conversation_id", null: false
+    t.uuid "sender_id", null: false
+    t.text "content", null: false
+    t.string "message_type", default: "text"
+    t.boolean "read", default: false
+    t.string "attachment_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["created_at"], name: "index_messages_on_created_at"
+    t.index ["sender_id", "read"], name: "index_messages_on_sender_id_and_read"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -66,8 +99,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_022545) do
     t.text "description"
     t.string "address", null: false
     t.string "city", null: false
-    t.string "state", null: false
-    t.string "zip_code", null: false
     t.decimal "price", precision: 10, scale: 2, null: false
     t.integer "bedrooms", null: false
     t.decimal "bathrooms", precision: 3, scale: 1, null: false
@@ -89,11 +120,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_022545) do
     t.boolean "heating"
     t.boolean "internet_included"
     t.integer "status"
+    t.decimal "latitude"
+    t.decimal "longitude"
     t.index ["availability_status"], name: "index_properties_on_availability_status"
     t.index ["city"], name: "index_properties_on_city"
     t.index ["price"], name: "index_properties_on_price"
     t.index ["property_type"], name: "index_properties_on_property_type"
-    t.index ["state"], name: "index_properties_on_state"
     t.index ["user_id"], name: "index_properties_on_user_id"
   end
 
@@ -135,6 +167,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_022545) do
     t.string "contact_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "viewing_type"
     t.index ["property_id", "scheduled_at"], name: "index_property_viewings_on_property_id_and_scheduled_at"
     t.index ["property_id"], name: "index_property_viewings_on_property_id"
     t.index ["status"], name: "index_property_viewings_on_status"
@@ -167,6 +200,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_29_022545) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "conversations", "properties"
+  add_foreign_key "conversations", "users", column: "landlord_id"
+  add_foreign_key "conversations", "users", column: "tenant_id"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "notifications", "users"
   add_foreign_key "properties", "users"
   add_foreign_key "property_favorites", "properties"

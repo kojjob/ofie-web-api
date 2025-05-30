@@ -1,5 +1,5 @@
 class Api::V1::PropertyViewingsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_request
   before_action :set_property, only: [ :create ]
   before_action :set_viewing, only: [ :show, :update, :destroy ]
 

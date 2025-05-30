@@ -1,5 +1,5 @@
 class Api::V1::PropertyFavoritesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_request
   before_action :set_property, only: [ :create, :destroy ]
   before_action :set_favorite, only: [ :destroy ]
 

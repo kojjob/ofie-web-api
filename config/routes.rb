@@ -42,6 +42,18 @@ Rails.application.routes.draw do
 
       # User-specific routes
       get "/users/:user_id/reviews", to: "property_reviews#user_reviews"
+
+      # Messaging routes
+      resources :conversations, only: [ :index, :show, :new, :create, :update, :destroy ] do
+        resources :messages, only: [ :index, :show, :create, :update, :destroy ] do
+          member do
+            patch :mark_read
+          end
+          collection do
+            patch :mark_all_read
+          end
+        end
+      end
     end
   end
 
@@ -52,12 +64,14 @@ Rails.application.routes.draw do
   get "register", to: "auth#register_form", as: "register"
   post "register", to: "auth#register"
   delete "logout", to: "auth#logout", as: "logout"
+get "logout", to: "auth#logout", as: "logout_get"
 
   # API routes for backward compatibility
   post "auth/register", to: "auth#register"
   post "auth/login", to: "auth#login"
 
   # Property routes for web/API
+  # Add this to the properties resource
   resources :properties do
     collection do
       get :my_properties
@@ -65,6 +79,12 @@ Rails.application.routes.draw do
     end
     member do
       delete :remove_photo
+    end
+    # Add nested property_viewings routes
+    resources :property_viewings, only: [ :new, :create, :show, :index, :update, :destroy ] do
+      collection do
+        get :available_slots
+      end
     end
   end
 
@@ -75,6 +95,18 @@ Rails.application.routes.draw do
     end
     collection do
       patch :mark_all_read
+    end
+  end
+
+  # Messaging routes
+  resources :conversations, only: [ :index, :show, :new, :create, :update, :destroy ] do
+    resources :messages, only: [ :index, :show, :create, :update, :destroy ] do
+      member do
+        patch :mark_read
+      end
+      collection do
+        patch :mark_all_read
+      end
     end
   end
 
@@ -97,6 +129,9 @@ Rails.application.routes.draw do
   # Health check
   get "/health", to: "application#health"
 
+  # Home page
+  get "/home", to: "home#index", as: "home"
+
   # Defines the root path route ("/")
-  root "properties#index"
+  root "home#index"
 end

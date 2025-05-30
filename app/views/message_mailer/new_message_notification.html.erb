@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        background-color: #2563eb;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px 8px 0 0;
+      }
+      .content {
+        background-color: #f8fafc;
+        padding: 30px;
+        border: 1px solid #e2e8f0;
+      }
+      .message-box {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #2563eb;
+        margin: 20px 0;
+      }
+      .property-info {
+        background-color: #e0f2fe;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+      .button {
+        display: inline-block;
+        background-color: #2563eb;
+        color: white;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        margin: 20px 0;
+      }
+      .footer {
+        background-color: #64748b;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        border-radius: 0 0 8px 8px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>New Message from <%= @sender.name || @sender.email %></h1>
+    </div>
+    
+    <div class="content">
+      <p>Hello <%= @recipient.name || @recipient.email %>,</p>
+      
+      <p>You have received a new message regarding the property:</p>
+      
+      <div class="property-info">
+        <h3><%= @property.title %></h3>
+        <p><strong>Location:</strong> <%= @property.address %></p>
+        <p><strong>Price:</strong> $<%= number_with_delimiter(@property.price) %></p>
+      </div>
+      
+      <div class="message-box">
+        <h4>Message:</h4>
+        <p><%= simple_format(@message.content) %></p>
+        <p><small><strong>Sent:</strong> <%= @message.created_at.strftime("%B %d, %Y at %I:%M %p") %></small></p>
+      </div>
+      
+      <p>To reply to this message, please log in to your account:</p>
+      
+      <a href="<%= root_url %>conversations/<%= @conversation.id %>" class="button">
+        View Conversation
+      </a>
+      
+      <p>Best regards,<br>The Ofie Team</p>
+    </div>
+    
+    <div class="footer">
+      <p>This email was sent from Ofie Property Management Platform</p>
+      <p>If you no longer wish to receive these notifications, please update your preferences in your account settings.</p>
+    </div>
+  </body>
+</html>

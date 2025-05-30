@@ -1,0 +1,26 @@
+New Conversation Started
+========================
+
+Hello <%= @landlord.name || @landlord.email %>,
+
+A new conversation has been started regarding your property:
+
+Property: <%= @property.title %>
+Location: <%= @property.address %>
+Price: $<%= number_with_delimiter(@property.price) %>
+<% if @conversation.subject.present? %>Subject: <%= @conversation.subject %><% end %>
+
+Conversation Participants:
+--------------------------
+Tenant: <%= @tenant.name || @tenant.email %>
+Landlord: <%= @landlord.name || @landlord.email %>
+
+To view and respond to this conversation, please log in to your account and visit:
+<%= root_url %>conversations/<%= @conversation.id %>
+
+Best regards,
+The Ofie Team
+
+---
+This email was sent from Ofie Property Management Platform
+If you no longer wish to receive these notifications, please update your preferences in your account settings.
