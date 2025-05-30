@@ -4,6 +4,7 @@ class Property < ApplicationRecord
 
   # Lease associations
   has_many :lease_agreements, dependent: :destroy
+  has_many :rental_applications, dependent: :destroy
 
   # New associations for property features
   has_many :property_favorites, dependent: :destroy
