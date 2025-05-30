@@ -29,6 +29,9 @@ Rails.application.routes.draw do
 
         # Property reviews
         resources :reviews, controller: "property_reviews", only: [ :index, :create ]
+
+        # Maintenance requests
+        resources :maintenance_requests, only: [ :index, :create ]
       end
 
       # Standalone property feature routes
@@ -102,6 +105,14 @@ Rails.application.routes.draw do
         end
       end
 
+      # Maintenance requests routes
+      resources :maintenance_requests, only: [ :index, :show, :update, :destroy ] do
+        member do
+          post :complete
+          post :schedule
+        end
+      end
+
       # Webhook routes
       namespace :webhooks do
         post :stripe, to: "stripe#create"
@@ -171,6 +182,14 @@ get "logout", to: "auth#logout", as: "logout_get"
       collection do
         patch :mark_all_read
       end
+    end
+  end
+
+  # Maintenance Request routes (Web)
+  resources :maintenance_requests do
+    member do
+      post :complete
+      post :schedule
     end
   end
 

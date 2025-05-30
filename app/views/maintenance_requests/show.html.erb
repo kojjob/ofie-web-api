@@ -1,0 +1,410 @@
+<div class="maintenance-request-detail">
+  <div class="header">
+    <div class="title-section">
+      <h1><%= @maintenance_request.title %></h1>
+      <div class="status-badge status-<%= @maintenance_request.status %>">
+        <%= @maintenance_request.status.humanize %>
+      </div>
+      <% if @maintenance_request.urgent? %>
+        <div class="urgent-badge">URGENT</div>
+      <% end %>
+    </div>
+    
+    <div class="actions">
+      <% if can_access_request?(@maintenance_request) %>
+        <%= link_to "Edit", edit_maintenance_request_path(@maintenance_request), class: "btn btn-secondary" %>
+      <% end %>
+      
+      <% if @maintenance_request.can_be_cancelled? && current_user == @maintenance_request.tenant %>
+        <%= link_to "Cancel", maintenance_request_path(@maintenance_request), 
+            method: :delete, 
+            data: { confirm: "Are you sure you want to cancel this request?" },
+            class: "btn btn-danger" %>
+      <% end %>
+      
+      <%= link_to "Back to List", maintenance_requests_path, class: "btn btn-outline" %>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="main-content">
+      <div class="section">
+        <h3>Request Details</h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Property:</label>
+            <span><%= @maintenance_request.property.title %></span>
+          </div>
+          
+          <div class="detail-item">
+            <label>Category:</label>
+            <span><%= @maintenance_request.category.humanize %></span>
+          </div>
+          
+          <div class="detail-item">
+            <label>Priority:</label>
+            <span class="priority-<%= @maintenance_request.priority %>">
+              <%= @maintenance_request.priority.humanize %>
+            </span>
+          </div>
+          
+          <div class="detail-item">
+            <label>Location:</label>
+            <span><%= @maintenance_request.location_details %></span>
+          </div>
+          
+          <div class="detail-item">
+            <label>Requested:</label>
+            <span><%= @maintenance_request.requested_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+          </div>
+          
+          <% if @maintenance_request.scheduled_at.present? %>
+            <div class="detail-item">
+              <label>Scheduled:</label>
+              <span><%= @maintenance_request.scheduled_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+            </div>
+          <% end %>
+          
+          <% if @maintenance_request.completed_at.present? %>
+            <div class="detail-item">
+              <label>Completed:</label>
+              <span><%= @maintenance_request.completed_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+            </div>
+          <% end %>
+          
+          <% if @maintenance_request.estimated_cost.present? %>
+            <div class="detail-item">
+              <label>Estimated Cost:</label>
+              <span>$<%= number_with_precision(@maintenance_request.estimated_cost, precision: 2) %></span>
+            </div>
+          <% end %>
+          
+          <% if @maintenance_request.assigned_to.present? %>
+            <div class="detail-item">
+              <label>Assigned To:</label>
+              <span><%= @maintenance_request.assigned_to.full_name %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Description</h3>
+        <div class="description">
+          <%= simple_format(@maintenance_request.description) %>
+        </div>
+      </div>
+
+      <% if @maintenance_request.photos.attached? %>
+        <div class="section">
+          <h3>Photos</h3>
+          <div class="photo-grid">
+            <% @maintenance_request.photos.each do |photo| %>
+              <div class="photo-item">
+                <%= image_tag photo, alt: "Maintenance request photo", class: "photo" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @maintenance_request.landlord_notes.present? %>
+        <div class="section">
+          <h3>Landlord Notes</h3>
+          <div class="notes">
+            <%= simple_format(@maintenance_request.landlord_notes) %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @maintenance_request.completion_notes.present? %>
+        <div class="section">
+          <h3>Completion Notes</h3>
+          <div class="notes">
+            <%= simple_format(@maintenance_request.completion_notes) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="sidebar">
+      <div class="section">
+        <h3>Contact Information</h3>
+        <div class="contact-info">
+          <div class="contact-item">
+            <label>Tenant:</label>
+            <span><%= @maintenance_request.tenant.full_name %></span>
+            <span class="email"><%= @maintenance_request.tenant.email %></span>
+          </div>
+          
+          <div class="contact-item">
+            <label>Landlord:</label>
+            <span><%= @maintenance_request.landlord.full_name %></span>
+            <span class="email"><%= @maintenance_request.landlord.email %></span>
+          </div>
+        </div>
+      </div>
+
+      <% if current_user == @maintenance_request.landlord %>
+        <div class="section landlord-actions">
+          <h3>Landlord Actions</h3>
+          
+          <% if @maintenance_request.can_be_scheduled? %>
+            <div class="action-form">
+              <%= form_with url: schedule_maintenance_request_path(@maintenance_request), method: :post, local: true do |form| %>
+                <div class="form-group">
+                  <%= form.label :scheduled_at, "Schedule Date & Time" %>
+                  <%= form.datetime_local_field :scheduled_at, class: "form-control" %>
+                </div>
+                
+                <div class="form-group">
+                  <%= form.label :assigned_to_id, "Assign To" %>
+                  <%= form.select :assigned_to_id, 
+                      options_from_collection_for_select(User.where(role: 'maintenance'), :id, :full_name), 
+                      { prompt: "Select maintenance person" }, 
+                      { class: "form-control" } %>
+                </div>
+                
+                <div class="form-group">
+                  <%= form.label :landlord_notes, "Notes" %>
+                  <%= form.text_area :landlord_notes, rows: 3, class: "form-control" %>
+                </div>
+                
+                <%= form.submit "Schedule Request", class: "btn btn-primary" %>
+              <% end %>
+            </div>
+          <% end %>
+          
+          <% if @maintenance_request.can_be_completed? %>
+            <div class="action-form">
+              <%= form_with url: complete_maintenance_request_path(@maintenance_request), method: :post, local: true do |form| %>
+                <div class="form-group">
+                  <%= form.label :completion_notes, "Completion Notes" %>
+                  <%= form.text_area :completion_notes, rows: 3, class: "form-control", 
+                      placeholder: "Describe what was done to resolve the issue..." %>
+                </div>
+                
+                <%= form.submit "Mark as Completed", class: "btn btn-success" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+.maintenance-request-detail {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.title-section h1 {
+  margin: 0 0 10px 0;
+  color: #1f2937;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-right: 10px;
+}
+
+.status-pending { background-color: #fef3c7; color: #92400e; }
+.status-in_progress { background-color: #dbeafe; color: #1e40af; }
+.status-scheduled { background-color: #e0e7ff; color: #3730a3; }
+.status-completed { background-color: #d1fae5; color: #065f46; }
+.status-cancelled { background-color: #fee2e2; color: #991b1b; }
+
+.urgent-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: #fee2e2;
+  color: #991b1b;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary { background-color: #3b82f6; color: white; }
+.btn-secondary { background-color: #6b7280; color: white; }
+.btn-success { background-color: #10b981; color: white; }
+.btn-danger { background-color: #ef4444; color: white; }
+.btn-outline { background-color: transparent; color: #374151; border: 1px solid #d1d5db; }
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.section h3 {
+  margin: 0 0 15px 0;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 10px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-item label {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+}
+
+.detail-item span {
+  color: #1f2937;
+}
+
+.priority-low { color: #10b981; }
+.priority-medium { color: #f59e0b; }
+.priority-high { color: #ef4444; }
+
+.description, .notes {
+  line-height: 1.6;
+  color: #374151;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.photo {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.photo:hover {
+  transform: scale(1.05);
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-item label {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.contact-item .email {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.landlord-actions {
+  background-color: #f8fafc;
+}
+
+.action-form {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

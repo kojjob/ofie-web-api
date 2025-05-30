@@ -1,0 +1,485 @@
+<div class="maintenance-request-form">
+  <div class="header">
+    <h1>Create Maintenance Request</h1>
+    <%= link_to "Back to Requests", maintenance_requests_path, class: "btn btn-outline" %>
+  </div>
+
+  <%= form_with model: @maintenance_request, local: true, multipart: true, class: "request-form" do |form| %>
+    <% if @maintenance_request.errors.any? %>
+      <div class="error-messages">
+        <h4><%= pluralize(@maintenance_request.errors.count, "error") %> prohibited this request from being saved:</h4>
+        <ul>
+          <% @maintenance_request.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-grid">
+      <div class="main-form">
+        <div class="section">
+          <h3>Request Information</h3>
+          
+          <div class="form-group">
+            <%= form.label :property_id, "Property *" %>
+            <%= form.select :property_id, 
+                options_from_collection_for_select(@properties, :id, :title), 
+                { prompt: "Select a property" }, 
+                { class: "form-control", required: true } %>
+          </div>
+
+          <div class="form-group">
+            <%= form.label :title, "Issue Title *" %>
+            <%= form.text_field :title, class: "form-control", 
+                placeholder: "Brief description of the issue", required: true %>
+          </div>
+
+          <div class="form-group">
+            <%= form.label :description, "Detailed Description *" %>
+            <%= form.text_area :description, rows: 5, class: "form-control", 
+                placeholder: "Please provide a detailed description of the maintenance issue...", 
+                required: true %>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <%= form.label :category, "Category *" %>
+              <%= form.select :category, 
+                  options_for_select([
+                    ['Plumbing', 'plumbing'],
+                    ['Electrical', 'electrical'],
+                    ['HVAC', 'hvac'],
+                    ['Appliances', 'appliances'],
+                    ['Structural', 'structural'],
+                    ['Pest Control', 'pest_control'],
+                    ['Landscaping', 'landscaping'],
+                    ['Security', 'security'],
+                    ['Other', 'other']
+                  ]), 
+                  { prompt: "Select category" }, 
+                  { class: "form-control", required: true } %>
+            </div>
+
+            <div class="form-group">
+              <%= form.label :priority, "Priority *" %>
+              <%= form.select :priority, 
+                  options_for_select([
+                    ['Low', 'low'],
+                    ['Medium', 'medium'],
+                    ['High', 'high']
+                  ]), 
+                  { prompt: "Select priority" }, 
+                  { class: "form-control", required: true } %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= form.label :location_details, "Specific Location" %>
+            <%= form.text_field :location_details, class: "form-control", 
+                placeholder: "e.g., Kitchen sink, Master bedroom, Front yard" %>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Additional Information</h3>
+          
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <%= form.check_box :urgent, class: "checkbox" %>
+              <span class="checkmark"></span>
+              This is an urgent issue that requires immediate attention
+            </label>
+          </div>
+
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <%= form.check_box :tenant_present_required, class: "checkbox" %>
+              <span class="checkmark"></span>
+              Tenant presence required during maintenance
+            </label>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Photos (Optional)</h3>
+          <p class="help-text">Upload photos to help illustrate the issue</p>
+          
+          <div class="file-upload">
+            <%= file_field_tag "photos[]", multiple: true, accept: "image/*", 
+                class: "file-input", id: "photo-upload" %>
+            <label for="photo-upload" class="file-label">
+              <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+              </svg>
+              <span>Click to upload photos or drag and drop</span>
+              <span class="file-types">PNG, JPG, GIF up to 10MB each</span>
+            </label>
+          </div>
+          
+          <div id="photo-preview" class="photo-preview"></div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="section help-section">
+          <h3>Need Help?</h3>
+          <div class="help-content">
+            <h4>Emergency Issues</h4>
+            <p>For emergencies like gas leaks, electrical hazards, or flooding, contact emergency services immediately and then notify your landlord.</p>
+            
+            <h4>Response Times</h4>
+            <ul>
+              <li><strong>Urgent:</strong> Within 24 hours</li>
+              <li><strong>High:</strong> Within 3 days</li>
+              <li><strong>Medium:</strong> Within 1 week</li>
+              <li><strong>Low:</strong> Within 2 weeks</li>
+            </ul>
+            
+            <h4>Tips for Better Service</h4>
+            <ul>
+              <li>Be specific about the location</li>
+              <li>Include photos when possible</li>
+              <li>Describe what you've already tried</li>
+              <li>Mention if the issue affects safety</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Submit Request", class: "btn btn-primary" %>
+      <%= link_to "Cancel", maintenance_requests_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+// Photo upload preview
+document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('photo-upload');
+  const preview = document.getElementById('photo-preview');
+  
+  fileInput.addEventListener('change', function(e) {
+    preview.innerHTML = '';
+    
+    Array.from(e.target.files).forEach(file => {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const div = document.createElement('div');
+          div.className = 'preview-item';
+          div.innerHTML = `
+            <img src="${e.target.result}" alt="Preview">
+            <span class="file-name">${file.name}</span>
+          `;
+          preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+  
+  // Drag and drop functionality
+  const fileLabel = document.querySelector('.file-label');
+  
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    fileLabel.addEventListener(eventName, preventDefaults, false);
+  });
+  
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
+  ['dragenter', 'dragover'].forEach(eventName => {
+    fileLabel.addEventListener(eventName, highlight, false);
+  });
+  
+  ['dragleave', 'drop'].forEach(eventName => {
+    fileLabel.addEventListener(eventName, unhighlight, false);
+  });
+  
+  function highlight(e) {
+    fileLabel.classList.add('drag-over');
+  }
+  
+  function unhighlight(e) {
+    fileLabel.classList.remove('drag-over');
+  }
+  
+  fileLabel.addEventListener('drop', handleDrop, false);
+  
+  function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    fileInput.files = files;
+    fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+});
+</script>
+
+<style>
+.maintenance-request-form {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.header h1 {
+  margin: 0;
+  color: #1f2937;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary { background-color: #3b82f6; color: white; }
+.btn-secondary { background-color: #6b7280; color: white; }
+.btn-outline { background-color: transparent; color: #374151; border: 1px solid #d1d5db; }
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error-messages {
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.error-messages h4 {
+  color: #991b1b;
+  margin: 0 0 10px 0;
+}
+
+.error-messages ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.error-messages li {
+  color: #991b1b;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.section h3 {
+  margin: 0 0 15px 0;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.checkbox-group {
+  margin-bottom: 15px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.checkbox {
+  margin-right: 10px;
+}
+
+.help-text {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 15px;
+}
+
+.file-upload {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-label:hover,
+.file-label.drag-over {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.file-label span {
+  color: #374151;
+  font-weight: 500;
+}
+
+.file-types {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 5px;
+}
+
+.photo-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.preview-item {
+  text-align: center;
+}
+
+.preview-item img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.file-name {
+  display: block;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 5px;
+  word-break: break-all;
+}
+
+.help-section {
+  background-color: #f8fafc;
+}
+
+.help-content h4 {
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  font-size: 0.875rem;
+}
+
+.help-content p,
+.help-content li {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.help-content ul {
+  margin: 8px 0 16px 0;
+  padding-left: 16px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+}
+</style>

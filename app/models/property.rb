@@ -11,6 +11,7 @@ class Property < ApplicationRecord
   has_many :favorited_by_users, through: :property_favorites, source: :user
   has_many :property_viewings, dependent: :destroy
   has_many :property_reviews, dependent: :destroy
+  has_many :maintenance_requests, dependent: :destroy
 
   # Define property types as an enum for easy management and validation
   enum :property_type, {

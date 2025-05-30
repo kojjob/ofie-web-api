@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_172912) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_30_184543) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -85,6 +85,36 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_172912) do
     t.index ["rental_application_id"], name: "index_lease_agreements_on_rental_application_id", unique: true
     t.index ["status"], name: "index_lease_agreements_on_status"
     t.index ["tenant_id"], name: "index_lease_agreements_on_tenant_id"
+  end
+
+  create_table "maintenance_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "property_id", null: false
+    t.uuid "tenant_id", null: false
+    t.uuid "landlord_id", null: false
+    t.string "title", null: false
+    t.text "description", null: false
+    t.string "priority", default: "medium"
+    t.string "status", default: "pending"
+    t.string "category"
+    t.text "location_details"
+    t.decimal "estimated_cost", precision: 10, scale: 2
+    t.datetime "requested_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "scheduled_at"
+    t.datetime "completed_at"
+    t.uuid "assigned_to_id"
+    t.text "landlord_notes"
+    t.text "completion_notes"
+    t.boolean "urgent", default: false
+    t.boolean "tenant_present_required", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_maintenance_requests_on_category"
+    t.index ["landlord_id"], name: "index_maintenance_requests_on_landlord_id"
+    t.index ["priority"], name: "index_maintenance_requests_on_priority"
+    t.index ["property_id"], name: "index_maintenance_requests_on_property_id"
+    t.index ["requested_at"], name: "index_maintenance_requests_on_requested_at"
+    t.index ["status"], name: "index_maintenance_requests_on_status"
+    t.index ["tenant_id"], name: "index_maintenance_requests_on_tenant_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -351,6 +381,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_172912) do
   add_foreign_key "lease_agreements", "rental_applications"
   add_foreign_key "lease_agreements", "users", column: "landlord_id"
   add_foreign_key "lease_agreements", "users", column: "tenant_id"
+  add_foreign_key "maintenance_requests", "properties"
+  add_foreign_key "maintenance_requests", "users", column: "assigned_to_id"
+  add_foreign_key "maintenance_requests", "users", column: "landlord_id"
+  add_foreign_key "maintenance_requests", "users", column: "tenant_id"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "notifications", "users"

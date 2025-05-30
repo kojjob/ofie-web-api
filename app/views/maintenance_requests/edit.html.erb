@@ -1,0 +1,633 @@
+<div class="maintenance-request-form">
+  <div class="header">
+    <h1>Edit Maintenance Request</h1>
+    <div class="header-actions">
+      <%= link_to "View Request", @maintenance_request, class: "btn btn-outline" %>
+      <%= link_to "Back to List", maintenance_requests_path, class: "btn btn-outline" %>
+    </div>
+  </div>
+
+  <%= form_with model: @maintenance_request, local: true, multipart: true, class: "request-form" do |form| %>
+    <% if @maintenance_request.errors.any? %>
+      <div class="error-messages">
+        <h4><%= pluralize(@maintenance_request.errors.count, "error") %> prohibited this request from being saved:</h4>
+        <ul>
+          <% @maintenance_request.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-grid">
+      <div class="main-form">
+        <div class="section">
+          <h3>Request Information</h3>
+          
+          <div class="form-group">
+            <%= form.label :property_id, "Property" %>
+            <div class="readonly-field">
+              <%= @maintenance_request.property.title %>
+            </div>
+            <p class="help-text">Property cannot be changed after request creation</p>
+          </div>
+
+          <div class="form-group">
+            <%= form.label :title, "Issue Title *" %>
+            <%= form.text_field :title, class: "form-control", 
+                placeholder: "Brief description of the issue", required: true %>
+          </div>
+
+          <div class="form-group">
+            <%= form.label :description, "Detailed Description *" %>
+            <%= form.text_area :description, rows: 5, class: "form-control", 
+                placeholder: "Please provide a detailed description of the maintenance issue...", 
+                required: true %>
+          </div>
+
+          <% if current_user == @maintenance_request.landlord %>
+            <div class="form-row">
+              <div class="form-group">
+                <%= form.label :category, "Category *" %>
+                <%= form.select :category, 
+                    options_for_select([
+                      ['Plumbing', 'plumbing'],
+                      ['Electrical', 'electrical'],
+                      ['HVAC', 'hvac'],
+                      ['Appliances', 'appliances'],
+                      ['Structural', 'structural'],
+                      ['Pest Control', 'pest_control'],
+                      ['Landscaping', 'landscaping'],
+                      ['Security', 'security'],
+                      ['Other', 'other']
+                    ], @maintenance_request.category), 
+                    {}, 
+                    { class: "form-control", required: true } %>
+              </div>
+
+              <div class="form-group">
+                <%= form.label :priority, "Priority *" %>
+                <%= form.select :priority, 
+                    options_for_select([
+                      ['Low', 'low'],
+                      ['Medium', 'medium'],
+                      ['High', 'high']
+                    ], @maintenance_request.priority), 
+                    {}, 
+                    { class: "form-control", required: true } %>
+              </div>
+            </div>
+          <% else %>
+            <div class="form-row">
+              <div class="form-group">
+                <%= form.label :category, "Category" %>
+                <div class="readonly-field">
+                  <%= @maintenance_request.category.humanize %>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <%= form.label :priority, "Priority" %>
+                <div class="readonly-field priority-<%= @maintenance_request.priority %>">
+                  <%= @maintenance_request.priority.humanize %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="form-group">
+            <%= form.label :location_details, "Specific Location" %>
+            <%= form.text_field :location_details, class: "form-control", 
+                placeholder: "e.g., Kitchen sink, Master bedroom, Front yard" %>
+          </div>
+        </div>
+
+        <% if current_user == @maintenance_request.tenant %>
+          <div class="section">
+            <h3>Additional Information</h3>
+            
+            <div class="checkbox-group">
+              <label class="checkbox-label">
+                <%= form.check_box :tenant_present_required, class: "checkbox" %>
+                <span class="checkmark"></span>
+                Tenant presence required during maintenance
+              </label>
+            </div>
+          </div>
+        <% end %>
+
+        <% if current_user == @maintenance_request.landlord %>
+          <div class="section landlord-section">
+            <h3>Landlord Information</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <%= form.label :status, "Status" %>
+                <%= form.select :status, 
+                    options_for_select([
+                      ['Pending', 'pending'],
+                      ['In Progress', 'in_progress'],
+                      ['Scheduled', 'scheduled'],
+                      ['Completed', 'completed'],
+                      ['Cancelled', 'cancelled']
+                    ], @maintenance_request.status), 
+                    {}, 
+                    { class: "form-control" } %>
+              </div>
+
+              <div class="form-group">
+                <%= form.label :estimated_cost, "Estimated Cost ($)" %>
+                <%= form.number_field :estimated_cost, step: 0.01, class: "form-control", 
+                    placeholder: "0.00" %>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <%= form.label :scheduled_at, "Scheduled Date & Time" %>
+                <%= form.datetime_local_field :scheduled_at, class: "form-control" %>
+              </div>
+
+              <div class="form-group">
+                <%= form.label :assigned_to_id, "Assign To" %>
+                <%= form.select :assigned_to_id, 
+                    options_from_collection_for_select(User.where(role: 'maintenance'), :id, :full_name, @maintenance_request.assigned_to_id), 
+                    { prompt: "Select maintenance person" }, 
+                    { class: "form-control" } %>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <%= form.label :landlord_notes, "Landlord Notes" %>
+              <%= form.text_area :landlord_notes, rows: 4, class: "form-control", 
+                  placeholder: "Internal notes, instructions for maintenance staff, etc." %>
+            </div>
+
+            <% if @maintenance_request.completed? %>
+              <div class="form-group">
+                <%= form.label :completion_notes, "Completion Notes" %>
+                <%= form.text_area :completion_notes, rows: 4, class: "form-control", 
+                    placeholder: "Describe what was done to resolve the issue..." %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="section">
+          <h3>Photos</h3>
+          
+          <% if @maintenance_request.photos.attached? %>
+            <div class="existing-photos">
+              <h4>Current Photos</h4>
+              <div class="photo-grid">
+                <% @maintenance_request.photos.each do |photo| %>
+                  <div class="photo-item">
+                    <%= image_tag photo, alt: "Maintenance request photo", class: "photo" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+          
+          <div class="file-upload">
+            <h4>Add More Photos</h4>
+            <%= file_field_tag "photos[]", multiple: true, accept: "image/*", 
+                class: "file-input", id: "photo-upload" %>
+            <label for="photo-upload" class="file-label">
+              <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+              </svg>
+              <span>Click to upload additional photos</span>
+              <span class="file-types">PNG, JPG, GIF up to 10MB each</span>
+            </label>
+          </div>
+          
+          <div id="photo-preview" class="photo-preview"></div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="section info-section">
+          <h3>Request Status</h3>
+          <div class="status-info">
+            <div class="status-item">
+              <label>Current Status:</label>
+              <span class="status-badge status-<%= @maintenance_request.status %>">
+                <%= @maintenance_request.status.humanize %>
+              </span>
+            </div>
+            
+            <div class="status-item">
+              <label>Requested:</label>
+              <span><%= @maintenance_request.requested_at.strftime("%B %d, %Y") %></span>
+            </div>
+            
+            <% if @maintenance_request.scheduled_at.present? %>
+              <div class="status-item">
+                <label>Scheduled:</label>
+                <span><%= @maintenance_request.scheduled_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+              </div>
+            <% end %>
+            
+            <% if @maintenance_request.completed_at.present? %>
+              <div class="status-item">
+                <label>Completed:</label>
+                <span><%= @maintenance_request.completed_at.strftime("%B %d, %Y") %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="section contact-section">
+          <h3>Contact Information</h3>
+          <div class="contact-info">
+            <div class="contact-item">
+              <label>Tenant:</label>
+              <span><%= @maintenance_request.tenant.full_name %></span>
+              <span class="email"><%= @maintenance_request.tenant.email %></span>
+            </div>
+            
+            <div class="contact-item">
+              <label>Landlord:</label>
+              <span><%= @maintenance_request.landlord.full_name %></span>
+              <span class="email"><%= @maintenance_request.landlord.email %></span>
+            </div>
+          </div>
+        </div>
+
+        <% if current_user == @maintenance_request.tenant %>
+          <div class="section help-section">
+            <h3>Need Help?</h3>
+            <div class="help-content">
+              <p>If this is an emergency, contact your landlord directly or call emergency services.</p>
+              
+              <h4>What you can edit:</h4>
+              <ul>
+                <li>Title and description</li>
+                <li>Location details</li>
+                <li>Tenant presence requirement</li>
+                <li>Add more photos</li>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Update Request", class: "btn btn-primary" %>
+      <%= link_to "Cancel", @maintenance_request, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+// Photo upload preview (same as new form)
+document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('photo-upload');
+  const preview = document.getElementById('photo-preview');
+  
+  if (fileInput && preview) {
+    fileInput.addEventListener('change', function(e) {
+      preview.innerHTML = '';
+      
+      Array.from(e.target.files).forEach(file => {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.innerHTML = `
+              <img src="${e.target.result}" alt="Preview">
+              <span class="file-name">${file.name}</span>
+            `;
+            preview.appendChild(div);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    });
+  }
+});
+</script>
+
+<style>
+/* Inherit most styles from new.html.erb */
+.maintenance-request-form {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.header h1 {
+  margin: 0;
+  color: #1f2937;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary { background-color: #3b82f6; color: white; }
+.btn-secondary { background-color: #6b7280; color: white; }
+.btn-outline { background-color: transparent; color: #374151; border: 1px solid #d1d5db; }
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.readonly-field {
+  padding: 10px 12px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.priority-low { color: #10b981; font-weight: 600; }
+.priority-medium { color: #f59e0b; font-weight: 600; }
+.priority-high { color: #ef4444; font-weight: 600; }
+
+.landlord-section {
+  background-color: #f0f9ff;
+  border-left: 4px solid #3b82f6;
+}
+
+.existing-photos {
+  margin-bottom: 20px;
+}
+
+.existing-photos h4 {
+  margin: 0 0 10px 0;
+  color: #374151;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.photo {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-pending { background-color: #fef3c7; color: #92400e; }
+.status-in_progress { background-color: #dbeafe; color: #1e40af; }
+.status-scheduled { background-color: #e0e7ff; color: #3730a3; }
+.status-completed { background-color: #d1fae5; color: #065f46; }
+.status-cancelled { background-color: #fee2e2; color: #991b1b; }
+
+.info-section,
+.contact-section,
+.help-section {
+  background-color: #f8fafc;
+}
+
+.status-info,
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-item,
+.contact-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.status-item label,
+.contact-item label {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 2px;
+}
+
+.contact-item .email {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.help-content h4 {
+  color: #1f2937;
+  margin: 15px 0 8px 0;
+  font-size: 0.875rem;
+}
+
+.help-content p,
+.help-content li {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.help-content ul {
+  margin: 8px 0;
+  padding-left: 16px;
+}
+
+/* Inherit other styles from new form */
+.error-messages {
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.section h3 {
+  margin: 0 0 15px 0;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.help-text {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.file-upload {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-label:hover {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.upload-icon {
+  width: 32px;
+  height: 32px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.file-types {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 5px;
+}
+
+.photo-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.preview-item {
+  text-align: center;
+}
+
+.preview-item img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.file-name {
+  display: block;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 5px;
+  word-break: break-all;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+}
+</style>

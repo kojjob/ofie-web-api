@@ -22,6 +22,11 @@ class User < ApplicationRecord
   has_many :landlord_lease_agreements, class_name: "LeaseAgreement", foreign_key: "landlord_id", dependent: :destroy
   has_many :tenant_lease_agreements, class_name: "LeaseAgreement", foreign_key: "tenant_id", dependent: :destroy
 
+  # Maintenance request associations
+  has_many :tenant_maintenance_requests, class_name: "MaintenanceRequest", foreign_key: "tenant_id", dependent: :destroy
+  has_many :landlord_maintenance_requests, class_name: "MaintenanceRequest", foreign_key: "landlord_id", dependent: :destroy
+  has_many :assigned_maintenance_requests, class_name: "MaintenanceRequest", foreign_key: "assigned_to_id", dependent: :nullify
+
   # Define roles as an enum for easy management and validation
   enum :role, { tenant: "tenant", landlord: "landlord" }
 
