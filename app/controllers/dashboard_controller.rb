@@ -10,7 +10,7 @@ class DashboardController < ApplicationController
   end
 
   def landlord_dashboard
-    @properties = current_user.properties.includes(:photos)
+    @properties = current_user.properties.with_attached_photos
     @stats = {
       total_properties: @properties.count,
       available_properties: @properties.where(availability_status: "available").count,
@@ -19,7 +19,7 @@ class DashboardController < ApplicationController
     }
     @recent_applications = RentalApplication.joins(:property)
                                           .where(properties: { user_id: current_user.id })
-                                          .includes(:user, property: :photos)
+                                          .includes(:user, property: { photos_attachments: :blob })
                                           .order(created_at: :desc)
                                           .limit(5)
     @upcoming_payments = Payment.joins(lease_agreement: :property)
@@ -36,7 +36,7 @@ class DashboardController < ApplicationController
   end
 
   def tenant_dashboard
-    @lease_agreements = current_user.lease_agreements.includes(property: :photos)
+    @lease_agreements = current_user.lease_agreements.includes(property: { photos_attachments: :blob })
     @stats = {
       active_leases: @lease_agreements.where(status: "active").count,
       applications_submitted: current_user.rental_applications.count,
@@ -44,7 +44,7 @@ class DashboardController < ApplicationController
       favorite_properties: current_user.property_favorites.count
     }
     @recent_applications = current_user.rental_applications
-                                      .includes(property: :photos)
+                                      .includes(property: { photos_attachments: :blob })
                                       .order(created_at: :desc)
                                       .limit(5)
     @upcoming_payments = current_user.payments
@@ -54,7 +54,7 @@ class DashboardController < ApplicationController
                                     .order(:due_date)
                                     .limit(5)
     @favorite_properties = current_user.property_favorites
-                                      .includes(property: :photos)
+                                      .includes(property: { photos_attachments: :blob })
                                       .limit(6)
 
     respond_to do |format|
