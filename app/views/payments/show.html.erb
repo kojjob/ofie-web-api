@@ -1,0 +1,350 @@
+<% content_for :title, "Payment Details" %>
+<% content_for :description, "View payment information and process payment" %>
+
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="flex items-center space-x-3 mb-2">
+            <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900">Payment Details</h1>
+          </div>
+          <p class="text-gray-600">
+            <% if @payment.payment_number.present? %>
+              Payment #<%= @payment.payment_number %>
+            <% else %>
+              Payment for <%= @property.title %>
+            <% end %>
+          </p>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <%= link_to payments_path, 
+                      class: "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 font-medium transition-all duration-200 shadow-sm" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Payments
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Banner -->
+    <div class="mb-8">
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div class="px-6 py-8">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-6">
+              <!-- Status Icon -->
+              <div class="w-16 h-16 rounded-2xl flex items-center justify-center <%= 
+                case @payment.status
+                when 'pending' then 'bg-gradient-to-br from-amber-100 to-orange-100'
+                when 'processing' then 'bg-gradient-to-br from-blue-100 to-indigo-100'
+                when 'succeeded' then 'bg-gradient-to-br from-green-100 to-emerald-100'
+                when 'failed' then 'bg-gradient-to-br from-red-100 to-pink-100'
+                when 'canceled' then 'bg-gradient-to-br from-gray-100 to-slate-100'
+                when 'refunded' then 'bg-gradient-to-br from-purple-100 to-violet-100'
+                else 'bg-gradient-to-br from-gray-100 to-slate-100'
+                end %>">
+                <svg class="w-8 h-8 <%= 
+                  case @payment.status
+                  when 'pending' then 'text-amber-600'
+                  when 'processing' then 'text-blue-600'
+                  when 'succeeded' then 'text-green-600'
+                  when 'failed' then 'text-red-600'
+                  when 'canceled' then 'text-gray-600'
+                  when 'refunded' then 'text-purple-600'
+                  else 'text-gray-600'
+                  end %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <% case @payment.status %>
+                  <% when 'pending' %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <% when 'processing' %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                  <% when 'succeeded' %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <% when 'failed' %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  <% when 'canceled' %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728"></path>
+                  <% when 'refunded' %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                  <% else %>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                  <% end %>
+                </svg>
+              </div>
+              
+              <!-- Status Info -->
+              <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-1">
+                  Payment <%= @payment.status.humanize %>
+                </h2>
+                <p class="text-gray-600">
+                  <%= @payment.payment_type.humanize %> payment
+                  <% if @payment.due_date.present? %>
+                    • Due <%= @payment.due_date.strftime("%B %d, %Y") %>
+                  <% end %>
+                </p>
+                <% if @payment.overdue? %>
+                  <p class="text-red-600 font-medium mt-1">
+                    <%= pluralize(@payment.days_overdue, 'day') %> overdue
+                  </p>
+                <% end %>
+              </div>
+            </div>
+            
+            <!-- Amount -->
+            <div class="text-right">
+              <p class="text-3xl font-bold text-gray-900 mb-1">
+                <%= number_to_currency(@payment.amount) %>
+              </p>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= 
+                case @payment.status
+                when 'pending' then 'bg-amber-100 text-amber-800'
+                when 'processing' then 'bg-blue-100 text-blue-800'
+                when 'succeeded' then 'bg-green-100 text-green-800'
+                when 'failed' then 'bg-red-100 text-red-800'
+                when 'canceled' then 'bg-gray-100 text-gray-800'
+                when 'refunded' then 'bg-purple-100 text-purple-800'
+                else 'bg-gray-100 text-gray-800'
+                end %>">
+                <%= @payment.status.humanize %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Details Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <!-- Payment Information -->
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          Payment Information
+        </h3>
+        
+        <div class="space-y-4">
+          <div class="flex justify-between items-center py-3 border-b border-gray-100">
+            <span class="text-gray-600 font-medium">Payment Type</span>
+            <span class="text-gray-900 font-semibold"><%= @payment.payment_type.humanize %></span>
+          </div>
+          
+          <div class="flex justify-between items-center py-3 border-b border-gray-100">
+            <span class="text-gray-600 font-medium">Amount</span>
+            <span class="text-gray-900 font-semibold text-lg"><%= number_to_currency(@payment.amount) %></span>
+          </div>
+          
+          <div class="flex justify-between items-center py-3 border-b border-gray-100">
+            <span class="text-gray-600 font-medium">Due Date</span>
+            <span class="text-gray-900 font-semibold"><%= @payment.due_date.strftime("%B %d, %Y") %></span>
+          </div>
+          
+          <% if @payment.paid_at.present? %>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <span class="text-gray-600 font-medium">Paid Date</span>
+              <span class="text-gray-900 font-semibold"><%= @payment.paid_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+            </div>
+          <% end %>
+          
+          <% if @payment.payment_method.present? %>
+            <div class="flex justify-between items-center py-3 border-b border-gray-100">
+              <span class="text-gray-600 font-medium">Payment Method</span>
+              <span class="text-gray-900 font-semibold">
+                <%= @payment.payment_method.brand&.humanize || @payment.payment_method.payment_type.humanize %> 
+                •••• <%= @payment.payment_method.last_four %>
+              </span>
+            </div>
+          <% end %>
+          
+          <% if @payment.failure_reason.present? %>
+            <div class="py-3">
+              <span class="text-gray-600 font-medium block mb-2">Failure Reason</span>
+              <span class="text-red-600 bg-red-50 px-3 py-2 rounded-lg text-sm"><%= @payment.failure_reason %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Property & Lease Information -->
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+          </svg>
+          Property Details
+        </h3>
+        
+        <div class="space-y-4">
+          <!-- Property Image & Info -->
+          <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl">
+            <% if @property.photos.attached? && @property.photos.any? %>
+              <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+                <%= image_tag @property.photos.first, 
+                              class: "w-full h-full object-cover",
+                              alt: @property.title %>
+              </div>
+            <% else %>
+              <div class="w-16 h-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+                </svg>
+              </div>
+            <% end %>
+            
+            <div class="flex-1">
+              <h4 class="font-bold text-gray-900 mb-1">
+                <%= link_to @property.title, property_path(@property), class: "hover:text-blue-600 transition-colors" %>
+              </h4>
+              <p class="text-gray-600 text-sm"><%= @property.address %></p>
+            </div>
+          </div>
+          
+          <div class="space-y-3">
+            <div class="flex justify-between items-center py-2">
+              <span class="text-gray-600 font-medium">Lease Agreement</span>
+              <span class="text-blue-600 font-semibold">
+                <%= link_to "View Lease", lease_agreement_path(@lease_agreement), class: "hover:underline" %>
+              </span>
+            </div>
+            
+            <div class="flex justify-between items-center py-2">
+              <span class="text-gray-600 font-medium">Monthly Rent</span>
+              <span class="text-gray-900 font-semibold"><%= number_to_currency(@lease_agreement.monthly_rent) %></span>
+            </div>
+            
+            <% if current_user.landlord? %>
+              <div class="flex justify-between items-center py-2">
+                <span class="text-gray-600 font-medium">Tenant</span>
+                <span class="text-gray-900 font-semibold"><%= @payment.user.name || @payment.user.email %></span>
+              </div>
+            <% else %>
+              <div class="flex justify-between items-center py-2">
+                <span class="text-gray-600 font-medium">Landlord</span>
+                <span class="text-gray-900 font-semibold"><%= @lease_agreement.landlord.name || @lease_agreement.landlord.email %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <% if @payment.description.present? %>
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Description</h3>
+        <p class="text-gray-700 leading-relaxed"><%= @payment.description %></p>
+      </div>
+    <% end %>
+
+    <!-- Action Buttons -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <% if @can_pay %>
+            <button onclick="openPaymentModal()" 
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+              Pay Now
+            </button>
+          <% end %>
+          
+          <% if current_user == @payment.user && ['pending', 'processing'].include?(@payment.status) %>
+            <%= link_to cancel_payment_path(@payment), 
+                        method: :post,
+                        class: "inline-flex items-center px-6 py-3 border-2 border-red-200 text-red-700 bg-white hover:bg-red-50 hover:border-red-300 rounded-xl font-bold transition-all duration-300",
+                        data: { confirm: "Are you sure you want to cancel this payment?" } do %>
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+              Cancel Payment
+            <% end %>
+          <% end %>
+          
+          <% if @can_refund %>
+            <button onclick="openRefundModal()" 
+                    class="inline-flex items-center px-6 py-3 border-2 border-purple-200 text-purple-700 bg-white hover:bg-purple-50 hover:border-purple-300 rounded-xl font-bold transition-all duration-300">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+              </svg>
+              Process Refund
+            </button>
+          <% end %>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <%= link_to lease_agreement_path(@lease_agreement), 
+                      class: "inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-xl font-medium transition-all duration-200" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            View Lease
+          <% end %>
+          
+          <%= link_to property_path(@property), 
+                      class: "inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded-xl font-medium transition-all duration-200" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+            </svg>
+            View Property
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Modal (placeholder for future implementation) -->
+<div id="paymentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+    <h3 class="text-xl font-bold text-gray-900 mb-4">Process Payment</h3>
+    <p class="text-gray-600 mb-6">Payment processing interface will be implemented here.</p>
+    <div class="flex justify-end space-x-3">
+      <button onclick="closePaymentModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50">Cancel</button>
+      <button class="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700">Pay Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Refund Modal (placeholder for future implementation) -->
+<div id="refundModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+    <h3 class="text-xl font-bold text-gray-900 mb-4">Process Refund</h3>
+    <p class="text-gray-600 mb-6">Refund processing interface will be implemented here.</p>
+    <div class="flex justify-end space-x-3">
+      <button onclick="closeRefundModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50">Cancel</button>
+      <button class="px-4 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700">Process Refund</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openPaymentModal() {
+  document.getElementById('paymentModal').classList.remove('hidden');
+}
+
+function closePaymentModal() {
+  document.getElementById('paymentModal').classList.add('hidden');
+}
+
+function openRefundModal() {
+  document.getElementById('refundModal').classList.remove('hidden');
+}
+
+function closeRefundModal() {
+  document.getElementById('refundModal').classList.add('hidden');
+}
+</script>
