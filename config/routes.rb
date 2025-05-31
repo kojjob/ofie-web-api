@@ -293,6 +293,19 @@ Rails.application.routes.draw do
       post :reject
       post :under_review
     end
+
+    # Nested lease agreements routes
+    resources :lease_agreements, only: [:new, :create]
+  end
+
+  # Lease Agreements routes (Web)
+  resources :lease_agreements, only: [:index, :show, :edit, :update, :destroy] do
+    member do
+      post :sign_tenant
+      post :sign_landlord
+      post :activate
+      post :terminate
+    end
   end
 
   # Home page

@@ -1,0 +1,214 @@
+<% content_for :title, "Create Lease Agreement" %>
+<% content_for :description, "Create a lease agreement for approved rental application" %>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg shadow-blue-500/25 mb-4">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Lease Agreement</h1>
+      <p class="text-gray-600">Generate a lease agreement for the approved rental application</p>
+    </div>
+
+    <!-- Application & Property Info -->
+    <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-6 mb-8">
+      <h3 class="text-xl font-bold text-gray-900 mb-4">Application & Property Details</h3>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Property Info -->
+        <div class="flex items-center space-x-4">
+          <% if @property.photos.attached? && @property.photos.any? %>
+            <div class="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0">
+              <%= image_tag @property.photos.first, 
+                            class: "w-full h-full object-cover",
+                            alt: @property.title %>
+            </div>
+          <% else %>
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+              </svg>
+            </div>
+          <% end %>
+          
+          <div class="flex-1">
+            <h4 class="text-lg font-bold text-gray-900"><%= @property.title %></h4>
+            <p class="text-gray-600"><%= @property.address %></p>
+            <p class="text-lg font-bold text-blue-600">
+              <%= number_to_currency(@property.price) %>/month
+            </p>
+          </div>
+        </div>
+        
+        <!-- Tenant Info -->
+        <div class="bg-gray-50 rounded-2xl p-4">
+          <h5 class="font-bold text-gray-900 mb-2">Tenant Information</h5>
+          <p class="text-gray-700"><strong>Name:</strong> <%= @rental_application.tenant.name || @rental_application.tenant.email %></p>
+          <p class="text-gray-700"><strong>Email:</strong> <%= @rental_application.tenant.email %></p>
+          <p class="text-gray-700"><strong>Move-in Date:</strong> <%= @rental_application.move_in_date.strftime("%B %d, %Y") %></p>
+          <p class="text-gray-700"><strong>Monthly Income:</strong> <%= number_to_currency(@rental_application.monthly_income) %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lease Agreement Form -->
+    <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8">
+      <%= form_with model: [@rental_application, @lease_agreement], local: true, class: "space-y-6" do |form| %>
+        <% if @lease_agreement.errors.any? %>
+          <div class="bg-red-50 border border-red-200 rounded-2xl p-4">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                <div class="mt-2 text-sm text-red-700">
+                  <ul class="list-disc pl-5 space-y-1">
+                    <% @lease_agreement.errors.full_messages.each do |message| %>
+                      <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Lease Dates -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <%= form.label :lease_start_date, class: "block text-sm font-bold text-gray-700 mb-2" do %>
+              <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              Lease Start Date *
+            <% end %>
+            <%= form.date_field :lease_start_date, 
+                                class: "w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                                required: true %>
+          </div>
+
+          <div>
+            <%= form.label :lease_end_date, class: "block text-sm font-bold text-gray-700 mb-2" do %>
+              <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              Lease End Date *
+            <% end %>
+            <%= form.date_field :lease_end_date, 
+                                class: "w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                                required: true %>
+          </div>
+        </div>
+
+        <!-- Financial Terms -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <%= form.label :monthly_rent, class: "block text-sm font-bold text-gray-700 mb-2" do %>
+              <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+              Monthly Rent *
+            <% end %>
+            <%= form.number_field :monthly_rent, 
+                                  class: "w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                                  step: 0.01,
+                                  min: 0,
+                                  required: true %>
+          </div>
+
+          <div>
+            <%= form.label :security_deposit_amount, class: "block text-sm font-bold text-gray-700 mb-2" do %>
+              <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+              Security Deposit *
+            <% end %>
+            <%= form.number_field :security_deposit_amount, 
+                                  class: "w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent",
+                                  step: 0.01,
+                                  min: 0,
+                                  required: true %>
+            <p class="mt-1 text-sm text-gray-500">
+              Typically equal to one month's rent
+            </p>
+          </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div>
+          <%= form.label :terms_and_conditions, class: "block text-sm font-bold text-gray-700 mb-2" do %>
+            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            Terms and Conditions
+          <% end %>
+          <%= form.text_area :terms_and_conditions, 
+                             rows: 8,
+                             class: "w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none",
+                             placeholder: "Enter the lease terms and conditions..." %>
+          <p class="mt-1 text-sm text-gray-500">
+            Include important lease terms, rules, and conditions
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center justify-between pt-6">
+          <%= link_to rental_application_path(@rental_application), 
+                      class: "inline-flex items-center px-6 py-3 border-2 border-gray-200 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-300 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-0.5" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Application
+          <% end %>
+          
+          <%= form.submit "Create Lease Agreement", 
+                          class: "inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed",
+                          data: { disable_with: "Creating..." } %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Information Box -->
+    <div class="mt-8 bg-blue-50 rounded-3xl p-6 border border-blue-100">
+      <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        What happens next?
+      </h3>
+      <ul class="space-y-2 text-blue-800">
+        <li class="flex items-start">
+          <svg class="w-4 h-4 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          The lease agreement will be created in draft status
+        </li>
+        <li class="flex items-start">
+          <svg class="w-4 h-4 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          You can review and edit the lease before sending for signatures
+        </li>
+        <li class="flex items-start">
+          <svg class="w-4 h-4 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          The tenant will be notified when the lease is ready for signature
+        </li>
+        <li class="flex items-start">
+          <svg class="w-4 h-4 mr-2 mt-0.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Once both parties sign, the lease becomes active
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
