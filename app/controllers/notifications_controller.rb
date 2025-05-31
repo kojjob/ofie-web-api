@@ -9,7 +9,7 @@ class NotificationsController < ApplicationController
                                  .order(created_at: :desc)
                                  .limit(50)
 
-    @unread_count = current_user.notifications.where(read: false).count
+    @unread_count = current_user.notifications.unread.count
 
     respond_to do |format|
       format.html
@@ -20,8 +20,9 @@ class NotificationsController < ApplicationController
               id: notification.id,
               title: notification.title,
               message: notification.message,
-              type: notification.notification_type,
+              notification_type: notification.notification_type,
               read: notification.read,
+              read_at: notification.read_at,
               created_at: notification.created_at,
               url: notification.url
             }
@@ -56,10 +57,11 @@ class NotificationsController < ApplicationController
 
   # PATCH /notifications/mark_all_read
   def mark_all_read
-    current_user.notifications.unread.update_all(read_at: Time.current)
+    current_user.notifications.unread.update_all(read: true, read_at: Time.current)
 
     respond_to do |format|
       format.html { redirect_to notifications_path, notice: "All notifications marked as read." }
+      format.json { render json: { success: true, message: "All notifications marked as read" } }
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace("notifications-list",
