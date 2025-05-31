@@ -18,8 +18,8 @@ class Payment < ApplicationRecord
   scope :security_deposits, -> { where(payment_type: "security_deposit") }
   scope :by_lease, ->(lease_id) { where(lease_agreement_id: lease_id) }
   scope :by_user, ->(user_id) { where(user_id: user_id) }
-  scope :overdue, -> { where("due_date < ? AND status IN (?)", Date.current, %w[pending failed]) }
-  scope :due_soon, ->(days = 7) { where(due_date: Date.current..(Date.current + days.days)) }
+  scope :overdue, -> { where("payments.due_date < ? AND payments.status IN (?)", Date.current, %w[pending failed]) }
+  scope :due_soon, ->(days = 7) { where("payments.due_date BETWEEN ? AND ?", Date.current, Date.current + days.days) }
 
   before_validation :generate_payment_number, on: :create
   before_validation :set_default_description, on: :create

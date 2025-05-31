@@ -283,7 +283,7 @@
                     <p class="text-xs text-gray-500"><%= current_user.landlord? ? "Track payments" : "View payment history" %></p>
                   </div>
                   <% unless current_user.landlord? %>
-                    <% overdue_count = current_user.payments.overdue.count %>
+                    <% overdue_count = current_user.payments.where("payments.due_date < ? AND payments.status IN (?)", Date.current, %w[pending failed]).count %>
                     <% if overdue_count > 0 %>
                       <span class="ml-auto h-5 w-5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center">
                         <%= overdue_count > 9 ? '9+' : overdue_count %>
@@ -484,7 +484,7 @@
           </svg>
           <%= current_user.landlord? ? "Payment Management" : "My Payments" %>
           <% unless current_user.landlord? %>
-            <% overdue_count = current_user.payments.overdue.count %>
+            <% overdue_count = current_user.payments.where("payments.due_date < ? AND payments.status IN (?)", Date.current, %w[pending failed]).count %>
             <% if overdue_count > 0 %>
               <span class="ml-auto h-2 w-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse"></span>
             <% end %>

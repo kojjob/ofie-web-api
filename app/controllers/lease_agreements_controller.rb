@@ -271,7 +271,30 @@ class LeaseAgreementsController < ApplicationController
       end
     end
   end
+  
+  def destroy
+    unless can_manage_lease?(@lease_agreement)
+      redirect_to lease_agreement_path(@lease_agreement), 
+                  alert: "You don't have permission to delete this lease."
+      return
+    end
+    
+    @lease_agreement.destroy
+    respond_to do |format|
+      format.html { 
+        redirect_to lease_agreements_path, 
+        notice: "Lease agreement deleted successfully." 
+      }
+      format.json { 
+        render json: { message: "Lease agreement deleted successfully" } 
+      }
+    end
+  end
 
+
+  def send_lease_created_notification
+    NotificationService.new(@lease_agreement, 'lease_created').send
+  end
   private
 
   def set_lease_agreement
