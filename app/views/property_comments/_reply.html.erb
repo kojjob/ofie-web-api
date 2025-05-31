@@ -58,12 +58,10 @@
                     </button>
                   <% end %>
                   <% if reply.can_be_deleted_by?(current_user) %>
-                    <%= link_to property_comment_path(reply), 
-                                method: :delete,
-                                confirm: "Are you sure you want to delete this reply?",
-                                class: "block w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-b-lg" do %>
+                    <button class="block w-full text-left px-3 py-2 text-xs text-red-600 hover:bg-red-50 rounded-b-lg"
+                            onclick="deleteComment('<%= reply.id %>', '<%= property_comment_path(reply) %>')">
                       Delete Reply
-                    <% end %>
+                    </button>
                   <% end %>
                 </div>
               </div>

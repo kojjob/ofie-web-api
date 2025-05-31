@@ -1,4 +1,4 @@
-<div class="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-300">
+<div class="bg-gradient-to-r from-gray-50 to-white rounded-2xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-300" data-comment-id="<%= comment.id %>">
   <div class="flex items-start space-x-4">
     <!-- User Avatar -->
     <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
@@ -62,17 +62,15 @@
                 <div id="dropdown-<%= comment.id %>" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
                   <% if comment.can_be_edited_by?(current_user) %>
                     <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl"
-                            onclick="editComment('<%= comment.id %>')">
+                            onclick="startEditComment('<%= comment.id %>')">
                       Edit Comment
                     </button>
                   <% end %>
                   <% if comment.can_be_deleted_by?(current_user) %>
-                    <%= link_to property_comment_path(comment), 
-                                method: :delete,
-                                confirm: "Are you sure you want to delete this comment?",
-                                class: "block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-xl" do %>
+                    <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-xl"
+                            onclick="deleteComment('<%= comment.id %>', '<%= property_comment_path(comment) %>')">
                       Delete Comment
-                    <% end %>
+                    </button>
                   <% end %>
                 </div>
               </div>
@@ -95,16 +93,48 @@
       
       <!-- Comment Text -->
       <div class="prose prose-gray max-w-none mb-4">
-        <p class="text-gray-800 leading-relaxed"><%= simple_format(comment.display_content) %></p>
+        <!-- Display Mode -->
+        <div id="comment-display-<%= comment.id %>" class="comment-display">
+          <p class="text-gray-800 leading-relaxed"><%= simple_format(comment.display_content) %></p>
+        </div>
+
+        <!-- Edit Mode -->
+        <div id="comment-edit-<%= comment.id %>" class="comment-edit hidden">
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 border border-blue-200">
+            <textarea id="comment-textarea-<%= comment.id %>"
+                      class="w-full px-4 py-3 border border-blue-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900"
+                      rows="4"
+                      maxlength="2000"
+                      oninput="updateEditCharacterCount('<%= comment.id %>', this)"><%= comment.content %></textarea>
+            <div class="flex items-center justify-between mt-3">
+              <div class="text-sm text-gray-500">
+                <span id="edit-character-count-<%= comment.id %>"><%= comment.content.length %></span>/2000 characters
+              </div>
+              <div class="flex space-x-3">
+                <button type="button"
+                        class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+                        onclick="cancelEditComment('<%= comment.id %>')">
+                  Cancel
+                </button>
+                <button type="button"
+                        class="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                        onclick="saveEditComment('<%= comment.id %>', '<%= property_comment_path(comment) %>')">
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       
       <!-- Reply Form -->
       <% if user_signed_in? %>
         <div id="reply-form-<%= comment.id %>" class="hidden mt-4">
-          <%= form_with model: [@property, PropertyComment.new], 
+          <%= form_with model: [@property, PropertyComment.new],
                         url: property_property_comments_path(@property),
-                        local: true,
-                        class: "bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200" do |form| %>
+                        local: false,
+                        class: "bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200 reply-form",
+                        data: { comment_id: comment.id } do |form| %>
             <%= form.hidden_field :parent_id, value: comment.id %>
             <div class="flex items-start space-x-3">
               <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
@@ -232,9 +262,211 @@ function toggleLike(commentId, url) {
   });
 }
 
-function editComment(commentId) {
-  // This would open an edit modal or inline edit form
-  alert('Edit functionality would be implemented here');
+function deleteComment(commentId, url) {
+  if (confirm('Are you sure you want to delete this comment? This action cannot be undone.')) {
+    console.log('Deleting comment:', commentId, 'URL:', url);
+
+    // Get CSRF token
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    if (!csrfMeta) {
+      console.error('CSRF token not found');
+      showNotification('Security token not found. Please refresh the page.', 'error');
+      return;
+    }
+
+    const token = csrfMeta.getAttribute('content');
+
+    // Find the comment element
+    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+    if (commentElement) {
+      // Add deleting state
+      commentElement.style.opacity = '0.5';
+      commentElement.style.pointerEvents = 'none';
+    }
+
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': token,
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => {
+      console.log('Delete response status:', response.status);
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+    })
+    .then(data => {
+      if (data && data.message) {
+        console.log('Delete successful:', data.message);
+
+        // Remove the comment from the DOM with animation
+        if (commentElement) {
+          commentElement.style.transform = 'translateX(-100%)';
+          commentElement.style.transition = 'all 0.3s ease-out';
+
+          setTimeout(() => {
+            commentElement.remove();
+          }, 300);
+        }
+
+        showNotification('Comment deleted successfully!', 'success');
+      }
+    })
+    .catch(error => {
+      console.error('Error deleting comment:', error);
+
+      // Restore comment element
+      if (commentElement) {
+        commentElement.style.opacity = '1';
+        commentElement.style.pointerEvents = 'auto';
+      }
+
+      showNotification('Failed to delete comment. Please try again.', 'error');
+    });
+  }
+}
+
+function startEditComment(commentId) {
+  // Hide display mode and show edit mode
+  const displayElement = document.getElementById(`comment-display-${commentId}`);
+  const editElement = document.getElementById(`comment-edit-${commentId}`);
+
+  if (displayElement && editElement) {
+    displayElement.classList.add('hidden');
+    editElement.classList.remove('hidden');
+
+    // Focus on textarea
+    const textarea = document.getElementById(`comment-textarea-${commentId}`);
+    if (textarea) {
+      textarea.focus();
+      // Move cursor to end
+      textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+    }
+
+    // Close dropdown
+    toggleDropdown(commentId);
+  }
+}
+
+function cancelEditComment(commentId) {
+  // Show display mode and hide edit mode
+  const displayElement = document.getElementById(`comment-display-${commentId}`);
+  const editElement = document.getElementById(`comment-edit-${commentId}`);
+
+  if (displayElement && editElement) {
+    displayElement.classList.remove('hidden');
+    editElement.classList.add('hidden');
+  }
+}
+
+function saveEditComment(commentId, url) {
+  const textarea = document.getElementById(`comment-textarea-${commentId}`);
+  const content = textarea.value.trim();
+
+  if (!content) {
+    showNotification('Comment cannot be empty.', 'error');
+    return;
+  }
+
+  // Get CSRF token
+  const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+  // Disable textarea during save
+  textarea.disabled = true;
+
+  fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': token,
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      property_comment: {
+        content: content
+      }
+    })
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  })
+  .then(data => {
+    if (data && data.comment) {
+      // Update the display content
+      const displayElement = document.getElementById(`comment-display-${commentId}`);
+      if (displayElement) {
+        const paragraph = displayElement.querySelector('p');
+        if (paragraph) {
+          paragraph.innerHTML = data.comment.content.replace(/\n/g, '<br>');
+        }
+      }
+
+      // Switch back to display mode
+      cancelEditComment(commentId);
+
+      showNotification('Comment updated successfully!', 'success');
+    }
+  })
+  .catch(error => {
+    console.error('Error updating comment:', error);
+    showNotification('Failed to update comment. Please try again.', 'error');
+  })
+  .finally(() => {
+    // Re-enable textarea
+    textarea.disabled = false;
+  });
+}
+
+function updateEditCharacterCount(commentId, textarea) {
+  const count = textarea.value.length;
+  const counter = document.getElementById(`edit-character-count-${commentId}`);
+
+  if (counter) {
+    counter.textContent = count;
+
+    // Change color based on character count
+    if (count > 1800) {
+      counter.className = 'text-red-500 font-bold';
+    } else if (count > 1500) {
+      counter.className = 'text-amber-500 font-bold';
+    } else {
+      counter.className = 'text-gray-500';
+    }
+  }
+}
+
+function showNotification(message, type) {
+  const notification = document.createElement('div');
+  notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-2xl font-bold text-white shadow-lg transform transition-all duration-300 ${
+    type === 'success' ? 'bg-green-500' : 'bg-red-500'
+  }`;
+  notification.textContent = message;
+
+  document.body.appendChild(notification);
+
+  // Animate in
+  setTimeout(() => {
+    notification.style.transform = 'translateX(0)';
+  }, 100);
+
+  // Remove after 3 seconds
+  setTimeout(() => {
+    notification.style.transform = 'translateX(100%)';
+    setTimeout(() => {
+      if (document.body.contains(notification)) {
+        document.body.removeChild(notification);
+      }
+    }, 300);
+  }, 3000);
 }
 
 // Close dropdowns when clicking outside
