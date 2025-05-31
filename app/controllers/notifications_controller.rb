@@ -1,5 +1,5 @@
 class NotificationsController < ApplicationController
-  before_action :authenticate_request
+  before_action :ensure_authenticated
   before_action :set_notification, only: [ :show, :mark_read ]
 
   # GET /notifications
@@ -83,6 +83,15 @@ class NotificationsController < ApplicationController
   end
 
   private
+
+  def ensure_authenticated
+    unless current_user
+      respond_to do |format|
+        format.html { redirect_to login_path, alert: "Please sign in to continue" }
+        format.json { render json: { error: "Unauthorized" }, status: :unauthorized }
+      end
+    end
+  end
 
   def set_notification
     @notification = current_user.notifications.find(params[:id])

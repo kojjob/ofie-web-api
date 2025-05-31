@@ -70,9 +70,19 @@ export default class extends Controller {
       headers: {
         'Accept': 'application/json',
         'X-CSRF-Token': this.getCSRFToken()
-      }
+      },
+      credentials: 'same-origin'
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        if (response.status === 401) {
+          console.log('User not authenticated, skipping notifications')
+          return { notifications: [], unread_count: 0 }
+        }
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      return response.json()
+    })
     .then(data => {
       this.renderNotifications(data.notifications)
       this.updateUnreadCount(data.unread_count)
