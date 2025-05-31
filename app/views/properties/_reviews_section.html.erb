@@ -184,7 +184,7 @@
       <!-- View All Reviews Link -->
       <% if @property.reviews_count > 5 %>
         <div class="text-center">
-          <%= link_to "View All <%= @property.reviews_count %> Reviews", property_reviews_path(@property), class: "inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          <%= link_to "View All #{@property.reviews_count} Reviews", property_reviews_path(@property), class: "inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
         </div>
       <% end %>
     <% else %>
