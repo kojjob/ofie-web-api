@@ -202,7 +202,7 @@
                 <% end %>
                 
                 <% if current_user.landlord? %>
-                  <%= link_to "#", class: "group flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition-all duration-200" do %>
+                  <%= link_to analytics_path, class: "group flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition-all duration-200" do %>
                     <div class="w-10 h-10 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
                       <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
@@ -368,12 +368,16 @@
             </svg>
             Dashboard
           <% end %>
-          <%= link_to "#", class: "group flex items-center text-gray-700 hover:text-pink-600 hover:bg-pink-50 px-4 py-3 rounded-2xl text-base font-semibold transition-all duration-200 relative" do %>
+          <%= link_to favorites_path, class: "group flex items-center text-gray-700 hover:text-pink-600 hover:bg-pink-50 px-4 py-3 rounded-2xl text-base font-semibold transition-all duration-200 relative", data: { action: "click->mobile-menu#linkClicked" } do %>
             <svg class="h-5 w-5 mr-3 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
             </svg>
             Favorites
-            <span class="ml-auto h-6 w-6 bg-gradient-to-r from-pink-500 to-red-500 text-white text-xs rounded-full flex items-center justify-center font-semibold">3</span>
+            <% if current_user.property_favorites.count > 0 %>
+              <span class="ml-auto h-6 w-6 bg-gradient-to-r from-pink-500 to-red-500 text-white text-xs rounded-full flex items-center justify-center font-semibold">
+                <%= current_user.property_favorites.count > 9 ? '9+' : current_user.property_favorites.count %>
+              </span>
+            <% end %>
           <% end %>
         <% end %>
         
@@ -393,7 +397,9 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5" />
           </svg>
           Notifications
-          <span class="ml-auto h-2 w-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse"></span>
+          <% if current_user.notifications.unread.count > 0 %>
+            <span class="ml-auto h-2 w-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse"></span>
+          <% end %>
         <% end %>
         
         <%= link_to profile_path, class: "group flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 px-4 py-3 rounded-2xl text-base font-semibold transition-all duration-200" do %>

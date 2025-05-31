@@ -1,0 +1,163 @@
+<% content_for :title, "My Favorites" %>
+<% content_for :description, "Your favorite properties" %>
+
+<div class="min-h-screen bg-gradient-to-br from-pink-50 via-white to-red-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2 flex items-center">
+            <svg class="w-8 h-8 mr-3 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            My Favorites
+          </h1>
+          <p class="text-gray-600">Properties you've saved for later</p>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <span class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-pink-100 to-red-100 text-pink-800 rounded-2xl font-bold">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+            <%= @favorites.count %> <%= 'Property'.pluralize(@favorites.count) %>
+          </span>
+          
+          <%= link_to properties_path, 
+                      class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            Browse More
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <% if @properties.any? %>
+      <!-- Favorites Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% @properties.each do |property| %>
+          <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 overflow-hidden hover:shadow-2xl hover:shadow-gray-300/50 transition-all duration-500 transform hover:-translate-y-2">
+            <!-- Property Image -->
+            <div class="relative h-64 overflow-hidden">
+              <% if property.photos.attached? && property.photos.any? %>
+                <%= image_tag property.photos.first, 
+                              class: "w-full h-full object-cover group-hover:scale-110 transition-transform duration-700",
+                              alt: property.title %>
+              <% else %>
+                <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+                  </svg>
+                </div>
+              <% end %>
+              
+              <!-- Favorite Badge -->
+              <div class="absolute top-4 right-4">
+                <%= link_to property_favorites_path(property), 
+                            method: :delete,
+                            class: "inline-flex items-center justify-center w-10 h-10 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110",
+                            data: { confirm: "Remove from favorites?" } do %>
+                  <svg class="w-5 h-5 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                  </svg>
+                <% end %>
+              </div>
+              
+              <!-- Property Status -->
+              <div class="absolute top-4 left-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-2xl text-xs font-bold <%= property.status == 'available' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %> shadow-lg">
+                  <%= property.status.humanize %>
+                </span>
+              </div>
+            </div>
+            
+            <!-- Property Details -->
+            <div class="p-6">
+              <div class="flex items-start justify-between mb-3">
+                <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                  <%= link_to property.title, property_path(property), class: "hover:underline" %>
+                </h3>
+                <div class="text-right">
+                  <p class="text-2xl font-bold text-blue-600"><%= number_to_currency(property.price) %></p>
+                  <p class="text-sm text-gray-500">per month</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center text-gray-600 mb-4">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                <span class="text-sm"><%= property.address %></span>
+              </div>
+              
+              <!-- Property Features -->
+              <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v0"></path>
+                  </svg>
+                  <%= property.bedrooms %> bed
+                </div>
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11"></path>
+                  </svg>
+                  <%= property.bathrooms %> bath
+                </div>
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                  </svg>
+                  <%= property.square_feet %> sqft
+                </div>
+              </div>
+              
+              <!-- Action Buttons -->
+              <div class="flex items-center space-x-3">
+                <%= link_to property_path(property), 
+                            class: "flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 px-4 rounded-2xl font-bold text-center transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+                  View Details
+                <% end %>
+                
+                <% if user_signed_in? && current_user != property.user %>
+                  <%= link_to new_conversation_path(property_id: property.id, other_user_id: property.user.id), 
+                              class: "inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-16">
+        <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-pink-100 to-red-100 rounded-3xl shadow-lg shadow-pink-500/25 mb-6">
+          <svg class="w-12 h-12 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+          </svg>
+        </div>
+        
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">No favorites yet</h3>
+        <p class="text-gray-600 mb-8 max-w-md mx-auto">
+          Start exploring properties and save your favorites by clicking the heart icon on any property you like.
+        </p>
+        
+        <%= link_to properties_path, 
+                    class: "inline-flex items-center px-8 py-4 bg-gradient-to-r from-pink-600 to-red-600 hover:from-pink-700 hover:to-red-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          Browse Properties
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

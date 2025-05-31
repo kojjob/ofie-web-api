@@ -277,6 +277,12 @@ Rails.application.routes.draw do
   get "/dashboard/tenant", to: "dashboard#tenant_dashboard", as: "tenant_dashboard"
   get "/dashboard/analytics", to: "dashboard#analytics", as: "dashboard_analytics"
 
+  # Analytics routes
+  get "/analytics", to: "analytics#index", as: "analytics"
+
+  # Favorites routes
+  get "/favorites", to: "property_favorites#index", as: "favorites"
+
   # Home page
   get "/home", to: "home#index", as: "home"
 
