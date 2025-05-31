@@ -155,12 +155,21 @@ class MaintenanceRequest < ApplicationRecord
   end
 
   def notify_status_change
-    # TODO: Implement notification system
-    # NotificationService.notify_maintenance_status_change(self)
+    old_status = status_was
+    NotificationService.notify_maintenance_status_change(self, old_status)
+
+    # Notify about assignment if assigned_to changed
+    if saved_change_to_assigned_to_id? && assigned_to.present?
+      NotificationService.notify_maintenance_assignment(self)
+    end
+
+    # Notify about completion
+    if completed? && saved_change_to_status?
+      NotificationService.notify_maintenance_completion(self)
+    end
   end
 
   def notify_landlord_of_new_request
-    # TODO: Implement notification system
-    # NotificationService.notify_new_maintenance_request(self)
+    NotificationService.notify_new_maintenance_request(self)
   end
 end

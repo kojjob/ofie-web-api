@@ -1,0 +1,54 @@
+# Maintenance Request fixtures
+
+pending_request:
+  id: "01234567-89ab-cdef-0123-456789abcdef"
+  property: property_one
+  tenant: tenant
+  title: "Leaky faucet in kitchen"
+  description: "The kitchen faucet has been dripping constantly for the past week. It's getting worse and wasting water."
+  priority: medium
+  status: pending
+  category: plumbing
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+in_progress_request:
+  id: "01234567-89ab-cdef-0123-456789abcde1"
+  property: property_one
+  tenant: tenant
+  title: "Broken air conditioning"
+  description: "AC unit stopped working yesterday. It's getting very hot in the apartment."
+  priority: high
+  status: in_progress
+  category: hvac
+  assigned_to: contractor
+  scheduled_date: <%= 1.day.from_now %>
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 1.day.ago %>
+
+completed_request:
+  id: "01234567-89ab-cdef-0123-456789abcde2"
+  property: property_one
+  tenant: tenant
+  title: "Replace light bulb"
+  description: "Light bulb in bedroom burned out."
+  priority: low
+  status: completed
+  category: electrical
+  assigned_to: contractor
+  scheduled_date: <%= 2.days.ago %>
+  completed_at: <%= 1.day.ago %>
+  created_at: <%= 5.days.ago %>
+  updated_at: <%= 1.day.ago %>
+
+urgent_request:
+  id: "01234567-89ab-cdef-0123-456789abcde3"
+  property: property_one
+  tenant: tenant
+  title: "Water leak emergency"
+  description: "Major water leak in bathroom ceiling. Water is dripping into the apartment below."
+  priority: urgent
+  status: pending
+  category: plumbing
+  created_at: <%= 1.hour.ago %>
+  updated_at: <%= 1.hour.ago %>

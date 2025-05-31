@@ -17,7 +17,11 @@ class Notification < ApplicationRecord
     "booking",
     "property_update",
     "review",
-    "system"
+    "system",
+    "maintenance_request_new",
+    "maintenance_request_status_change",
+    "maintenance_request_assigned",
+    "maintenance_request_completed"
   ].freeze
 
   validates :notification_type, inclusion: { in: TYPES }
@@ -85,6 +89,17 @@ class Notification < ApplicationRecord
         message: message,
         notification_type: "system",
         url: url
+      )
+    end
+
+    def create_maintenance_request_notification(user, maintenance_request, type, title, message)
+      create!(
+        user: user,
+        notifiable: maintenance_request,
+        title: title,
+        message: message,
+        notification_type: type,
+        url: "/maintenance_requests/#{maintenance_request.id}"
       )
     end
   end

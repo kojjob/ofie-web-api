@@ -203,6 +203,7 @@ Rails.application.routes.draw do
     end
     collection do
       patch :mark_all_read
+      get :unread_count
     end
   end
 

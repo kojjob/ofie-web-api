@@ -56,12 +56,28 @@ class NotificationsController < ApplicationController
 
   # PATCH /notifications/mark_all_read
   def mark_all_read
-    current_user.notifications.where(read: false).update_all(read: true)
+    current_user.notifications.unread.update_all(read_at: Time.current)
 
     respond_to do |format|
-      format.json { render json: { status: "success", message: "All notifications marked as read" } }
-      format.html { redirect_back(fallback_location: notifications_path) }
+      format.html { redirect_to notifications_path, notice: "All notifications marked as read." }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace("notifications-list",
+            partial: "notifications/list",
+            locals: { notifications: current_user.notifications.recent.limit(20) }
+          ),
+          turbo_stream.replace("unread-count",
+            partial: "notifications/unread_count",
+            locals: { count: 0 }
+          )
+        ]
+      end
     end
+  end
+
+  def unread_count
+    count = current_user.notifications.unread.count
+    render json: { count: count }
   end
 
   private
