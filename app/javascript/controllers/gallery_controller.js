@@ -58,12 +58,14 @@ export default class extends Controller {
   updateThumbnailSelection(activeIndex) {
     if (this.hasThumbnailTarget) {
       this.thumbnailTargets.forEach((thumbnail, index) => {
-        thumbnail.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-2', 'opacity-100')
-        thumbnail.classList.add('opacity-70', 'hover:opacity-100')
-        
+        // Remove all selection indicators
+        thumbnail.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-2', 'border-indigo-500', 'border-blue-500', 'shadow-indigo-500/25')
+
+        // Add selection indicators to active thumbnail only
         if (index === activeIndex) {
-          thumbnail.classList.add('ring-2', 'ring-blue-500', 'ring-offset-2', 'opacity-100')
-          thumbnail.classList.remove('opacity-70')
+          thumbnail.classList.add('ring-2', 'ring-blue-500', 'ring-offset-2')
+          // Also add border classes for consistency with HTML
+          thumbnail.classList.add('border-indigo-500', 'shadow-indigo-500/25')
         }
       })
     }
