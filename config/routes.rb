@@ -306,6 +306,18 @@ Rails.application.routes.draw do
       post :activate
       post :terminate
     end
+
+    # Nested payments routes
+    resources :payments, only: [:new, :create]
+  end
+
+  # Payments routes (Web)
+  resources :payments, only: [:index, :show] do
+    member do
+      post :pay
+      post :cancel
+      post :refund
+    end
   end
 
   # Home page

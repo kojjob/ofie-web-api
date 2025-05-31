@@ -1,0 +1,290 @@
+<% content_for :title, current_user.landlord? ? "Payment Management" : "My Payments" %>
+<% content_for :description, current_user.landlord? ? "Manage payments for your properties" : "View and manage your payments" %>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2 flex items-center">
+            <svg class="w-8 h-8 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+            <%= current_user.landlord? ? "Payment Management" : "My Payments" %>
+          </h1>
+          <p class="text-gray-600">
+            <%= current_user.landlord? ? "Track and manage payments for your properties" : "View your payment history and upcoming payments" %>
+          </p>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <% unless current_user.landlord? %>
+            <%= link_to lease_agreements_path, 
+                        class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+              View Leases
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-gray-900"><%= @stats[:total] %></p>
+          <p class="text-sm text-gray-600">Total</p>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-amber-600"><%= @stats[:pending] %></p>
+          <p class="text-sm text-gray-600">Pending</p>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-blue-600"><%= @stats[:processing] %></p>
+          <p class="text-sm text-gray-600">Processing</p>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-green-600"><%= @stats[:succeeded] %></p>
+          <p class="text-sm text-gray-600">Paid</p>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-red-600"><%= @stats[:failed] %></p>
+          <p class="text-sm text-gray-600">Failed</p>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-lg font-bold text-green-600"><%= number_to_currency(@stats[:total_amount]) %></p>
+          <p class="text-sm text-gray-600">Total Paid</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overdue & Upcoming Alerts -->
+    <% if @overdue_payments.any? || @upcoming_payments.any? %>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Overdue Payments -->
+        <% if @overdue_payments.any? %>
+          <div class="bg-red-50 border border-red-200 rounded-3xl p-6">
+            <h3 class="text-lg font-bold text-red-900 mb-4 flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Overdue Payments (<%= @stats[:overdue_count] %>)
+            </h3>
+            <div class="space-y-3">
+              <% @overdue_payments.each do |payment| %>
+                <div class="flex items-center justify-between bg-white rounded-2xl p-3">
+                  <div>
+                    <p class="font-bold text-gray-900"><%= payment.payment_type.humanize %></p>
+                    <p class="text-sm text-gray-600">Due: <%= payment.due_date.strftime("%m/%d/%Y") %></p>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-bold text-red-600"><%= number_to_currency(payment.amount) %></p>
+                    <%= link_to "Pay Now", payment_path(payment), class: "text-xs bg-red-600 text-white px-2 py-1 rounded-xl" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Upcoming Payments -->
+        <% if @upcoming_payments.any? %>
+          <div class="bg-blue-50 border border-blue-200 rounded-3xl p-6">
+            <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Upcoming Payments (<%= @stats[:upcoming_count] %>)
+            </h3>
+            <div class="space-y-3">
+              <% @upcoming_payments.each do |payment| %>
+                <div class="flex items-center justify-between bg-white rounded-2xl p-3">
+                  <div>
+                    <p class="font-bold text-gray-900"><%= payment.payment_type.humanize %></p>
+                    <p class="text-sm text-gray-600">Due: <%= payment.due_date.strftime("%m/%d/%Y") %></p>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-bold text-blue-600"><%= number_to_currency(payment.amount) %></p>
+                    <%= link_to "View", payment_path(payment), class: "text-xs bg-blue-600 text-white px-2 py-1 rounded-xl" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Filter Tabs -->
+    <div class="mb-6">
+      <div class="flex flex-wrap gap-2">
+        <%= link_to payments_path, 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status].blank? && params[:type].blank? ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-blue-50'}" do %>
+          All
+        <% end %>
+        <%= link_to payments_path(status: 'pending'), 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status] == 'pending' ? 'bg-amber-600 text-white' : 'bg-white text-gray-700 hover:bg-amber-50'}" do %>
+          Pending
+        <% end %>
+        <%= link_to payments_path(status: 'succeeded'), 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status] == 'succeeded' ? 'bg-green-600 text-white' : 'bg-white text-gray-700 hover:bg-green-50'}" do %>
+          Paid
+        <% end %>
+        <%= link_to payments_path(status: 'failed'), 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status] == 'failed' ? 'bg-red-600 text-white' : 'bg-white text-gray-700 hover:bg-red-50'}" do %>
+          Failed
+        <% end %>
+        <%= link_to payments_path(type: 'rent'), 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:type] == 'rent' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-indigo-50'}" do %>
+          Rent
+        <% end %>
+        <%= link_to payments_path(type: 'security_deposit'), 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:type] == 'security_deposit' ? 'bg-purple-600 text-white' : 'bg-white text-gray-700 hover:bg-purple-50'}" do %>
+          Security Deposit
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Payments List -->
+    <% if @payments.any? %>
+      <div class="space-y-4">
+        <% @payments.each do |payment| %>
+          <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-6 hover:shadow-xl transition-all duration-300">
+            <div class="flex items-center justify-between">
+              <!-- Left: Payment Info -->
+              <div class="flex items-center space-x-4 flex-1">
+                <!-- Payment Type Icon -->
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 <%= 
+                  case payment.payment_type
+                  when 'rent' then 'bg-gradient-to-br from-blue-100 to-indigo-100'
+                  when 'security_deposit' then 'bg-gradient-to-br from-purple-100 to-pink-100'
+                  when 'late_fee' then 'bg-gradient-to-br from-red-100 to-orange-100'
+                  else 'bg-gradient-to-br from-gray-100 to-gray-200'
+                  end %>">
+                  <svg class="w-6 h-6 <%= 
+                    case payment.payment_type
+                    when 'rent' then 'text-blue-600'
+                    when 'security_deposit' then 'text-purple-600'
+                    when 'late_fee' then 'text-red-600'
+                    else 'text-gray-600'
+                    end %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                  </svg>
+                </div>
+                
+                <!-- Payment Details -->
+                <div class="flex-1">
+                  <h3 class="font-bold text-gray-900 mb-1">
+                    <%= payment.payment_type.humanize %>
+                    <% if payment.payment_number.present? %>
+                      <span class="text-sm text-gray-500">#<%= payment.payment_number %></span>
+                    <% end %>
+                  </h3>
+                  <div class="flex items-center space-x-4 text-sm text-gray-500">
+                    <span>Due: <%= payment.due_date.strftime("%m/%d/%Y") %></span>
+                    <% if payment.paid_at.present? %>
+                      <span>•</span>
+                      <span>Paid: <%= payment.paid_at.strftime("%m/%d/%Y") %></span>
+                    <% end %>
+                    <% if current_user.landlord? %>
+                      <span>•</span>
+                      <span>Tenant: <%= payment.user.name || payment.user.email %></span>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Center: Status & Amount -->
+              <div class="flex items-center space-x-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-xl text-sm font-bold <%= 
+                  case payment.status
+                  when 'pending' then 'bg-amber-100 text-amber-800'
+                  when 'processing' then 'bg-blue-100 text-blue-800'
+                  when 'succeeded' then 'bg-green-100 text-green-800'
+                  when 'failed' then 'bg-red-100 text-red-800'
+                  when 'canceled' then 'bg-gray-100 text-gray-800'
+                  when 'refunded' then 'bg-purple-100 text-purple-800'
+                  else 'bg-gray-100 text-gray-800'
+                  end %>">
+                  <%= payment.status.humanize %>
+                </span>
+                
+                <span class="font-bold text-green-600 text-lg">
+                  <%= number_to_currency(payment.amount) %>
+                </span>
+                
+                <% if payment.overdue? %>
+                  <span class="inline-flex items-center px-2 py-1 rounded-xl text-xs font-bold bg-red-100 text-red-800">
+                    <%= pluralize(payment.days_overdue, 'day') %> overdue
+                  </span>
+                <% end %>
+              </div>
+              
+              <!-- Right: Action Buttons -->
+              <div class="flex items-center space-x-2">
+                <%= link_to payment_path(payment), 
+                            class: "inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-200" do %>
+                  View
+                <% end %>
+                
+                <% if payment.user == current_user && ['pending', 'failed'].include?(payment.status) %>
+                  <%= link_to payment_path(payment), 
+                              class: "inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-all duration-200" do %>
+                    Pay Now
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="mt-8 flex justify-center">
+        <%= paginate @payments if respond_to?(:paginate) %>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-16">
+        <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-green-100 to-emerald-100 rounded-3xl shadow-lg shadow-green-500/25 mb-6">
+          <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+          </svg>
+        </div>
+        
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">
+          <%= current_user.landlord? ? "No payments yet" : "No payments found" %>
+        </h3>
+        <p class="text-gray-600 mb-8 max-w-md mx-auto">
+          <%= current_user.landlord? ? 
+              "Payments from your tenants will appear here once they start making payments." : 
+              "Your payment history will appear here once you start making payments." %>
+        </p>
+        
+        <% unless current_user.landlord? %>
+          <%= link_to lease_agreements_path, 
+                      class: "inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            View My Leases
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

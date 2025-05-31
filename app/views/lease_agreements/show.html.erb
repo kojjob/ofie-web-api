@@ -277,8 +277,27 @@
             <% end %>
           <% end %>
         <% end %>
+
+        <!-- Payment Actions for Tenants -->
+        <% if current_user == @lease_agreement.tenant && @lease_agreement.status == 'active' %>
+          <%= link_to new_lease_agreement_payment_path(@lease_agreement, payment_type: 'rent'),
+                      class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+            Pay Rent
+          <% end %>
+
+          <%= link_to payments_path,
+                      class: "inline-flex items-center px-6 py-3 border-2 border-green-200 text-green-700 bg-white hover:bg-green-50 hover:border-green-300 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-0.5" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            Payment History
+          <% end %>
+        <% end %>
       </div>
-      
+
       <div>
         <%= link_to property_path(@property), 
                     class: "inline-flex items-center px-6 py-3 border-2 border-gray-200 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-300 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-0.5" do %>

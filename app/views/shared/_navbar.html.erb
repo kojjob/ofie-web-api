@@ -272,6 +272,26 @@
                   <% end %>
                 <% end %>
 
+                <%= link_to payments_path, class: "group flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition-all duration-200" do %>
+                  <div class="w-10 h-10 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
+                    <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <p class="font-semibold"><%= current_user.landlord? ? "Payment Management" : "My Payments" %></p>
+                    <p class="text-xs text-gray-500"><%= current_user.landlord? ? "Track payments" : "View payment history" %></p>
+                  </div>
+                  <% unless current_user.landlord? %>
+                    <% overdue_count = current_user.payments.overdue.count %>
+                    <% if overdue_count > 0 %>
+                      <span class="ml-auto h-5 w-5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full flex items-center justify-center">
+                        <%= overdue_count > 9 ? '9+' : overdue_count %>
+                      </span>
+                    <% end %>
+                  <% end %>
+                <% end %>
+
                 <hr class="my-2 border-gray-200">
                 
                 <%= link_to logout_path, method: :delete, class: "group flex items-center px-6 py-3 text-sm text-red-600 hover:bg-red-50 transition-all duration-200" do %>
@@ -454,6 +474,19 @@
             <% active_leases_count = current_user.landlord_lease_agreements.where(status: 'active').count %>
             <% if active_leases_count > 0 %>
               <span class="ml-auto h-2 w-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full animate-pulse"></span>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <%= link_to payments_path, class: "group flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 px-4 py-3 rounded-2xl text-base font-semibold transition-all duration-200 relative", data: { action: "click->mobile-menu#linkClicked" } do %>
+          <svg class="h-5 w-5 mr-3 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+          </svg>
+          <%= current_user.landlord? ? "Payment Management" : "My Payments" %>
+          <% unless current_user.landlord? %>
+            <% overdue_count = current_user.payments.overdue.count %>
+            <% if overdue_count > 0 %>
+              <span class="ml-auto h-2 w-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse"></span>
             <% end %>
           <% end %>
         <% end %>
