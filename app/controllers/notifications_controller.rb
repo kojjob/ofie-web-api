@@ -87,10 +87,12 @@ class NotificationsController < ApplicationController
   def ensure_authenticated
     unless current_user
       respond_to do |format|
-        format.html { redirect_to login_path, alert: "Please sign in to continue" }
-        format.json { render json: { error: "Unauthorized" }, status: :unauthorized }
+        format.html { redirect_to root_path, alert: "Please sign in to continue" }
+        format.json { render json: { notifications: [], unread_count: 0 }, status: :ok }
       end
+      return false
     end
+    true
   end
 
   def set_notification

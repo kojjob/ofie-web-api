@@ -75,17 +75,20 @@ export default class extends Controller {
     })
     .then(response => {
       if (!response.ok) {
-        if (response.status === 401) {
-          console.log('User not authenticated, skipping notifications')
-          return { notifications: [], unread_count: 0 }
-        }
-        throw new Error(`HTTP error! status: ${response.status}`)
+        console.log(`HTTP error! status: ${response.status}`)
+        return { notifications: [], unread_count: 0 }
       }
       return response.json()
     })
     .then(data => {
-      this.renderNotifications(data.notifications)
-      this.updateUnreadCount(data.unread_count)
+      if (data && data.notifications !== undefined) {
+        this.renderNotifications(data.notifications)
+        this.updateUnreadCount(data.unread_count)
+      } else {
+        console.log('No notification data received')
+        this.renderNotifications([])
+        this.updateUnreadCount(0)
+      }
     })
     .catch(error => {
       console.error('Error loading notifications:', error)
