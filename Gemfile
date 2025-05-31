@@ -79,4 +79,9 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 end
 
+group :development do
+  # Preview emails in browser during development
+  gem "letter_opener"
+end
+
 gem "kaminari", "~> 1.2"

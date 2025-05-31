@@ -44,8 +44,8 @@ class User < ApplicationRecord
   validates :timezone, inclusion: { in: ActiveSupport::TimeZone.all.map(&:name) }, allow_blank: true
 
   # Callbacks
-  before_create :generate_email_verification_token
-  after_create :send_email_verification, unless: :oauth_user?
+  # before_create :generate_email_verification_token
+  # after_create :send_email_verification, unless: :oauth_user?
 
   # JWT encoding/decoding helper
   def self.encode_token(payload, expires_in = 24.hours)
