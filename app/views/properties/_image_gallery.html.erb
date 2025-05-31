@@ -55,8 +55,9 @@
                   data-gallery-target="thumbnail"
                   data-action="click->gallery#goToSlide"
                   data-slide-index="<%= index %>">
-            <%= image_tag image, 
-                         class: "w-full h-full object-cover", 
+            <%= image_tag image,
+                         class: "w-full h-full object-cover thumbnail-clear",
+                         style: "filter: none !important; opacity: 1 !important; backdrop-filter: none !important;",
                          alt: "#{@property.title} - Thumbnail #{index + 1}" %>
           </button>
         <% end %>
