@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_request
   before_action :set_user, only: [ :show, :edit, :update ]
   before_action :ensure_current_user, only: [ :edit, :update ]
 
@@ -96,7 +96,7 @@ class UsersController < ApplicationController
   end
 
   def settings_params
-    params.require(:user).permit(:email_notifications, :sms_notifications, :marketing_emails, :timezone)
+    params.require(:user).permit(:email_notifications, :sms_notifications, :marketing_emails, :timezone, :language, :avatar)
   end
 
   def get_recent_activities

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
       # Enhanced authentication routes
       post "/auth/refresh", to: "auth#refresh_token"
+      get "/auth/verify_email", to: "auth#verify_email", as: :verify_email
       post "/auth/verify_email", to: "auth#verify_email"
       post "/auth/resend_verification", to: "auth#resend_verification"
       get "/auth/forgot_password", to: "auth#forgot_password"
@@ -54,7 +55,7 @@ Rails.application.routes.draw do
       patch "/profile", to: "users#update"
       get "/settings", to: "users#settings"
       patch "/settings", to: "users#update_settings"
-      patch "/change_password", to: "users#change_password"
+      patch "/change_password", to: "users#change_password", as: :change_password
 
       # Payment routes
       resources :payments, only: [ :index, :show, :create ] do
@@ -158,6 +159,14 @@ Rails.application.routes.draw do
   # API routes for backward compatibility
   post "auth/register", to: "auth#register"
   post "auth/login", to: "auth#login"
+
+  # User profile routes (Web)
+  get "profile", to: "users#show", as: "profile"
+  get "profile/edit", to: "users#edit", as: "edit_profile"
+  patch "profile", to: "users#update"
+  get "settings", to: "users#settings", as: "settings"
+  patch "settings", to: "users#update_settings"
+  patch "change_password", to: "users#change_password", as: "change_password"
 
   # Property routes for web/API
   # Add this to the properties resource
