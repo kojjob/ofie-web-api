@@ -1,5 +1,5 @@
 class PropertyCommentsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_request, except: [:index]
   before_action :set_property, only: [:index, :create]
   before_action :set_comment, only: [:show, :edit, :update, :destroy, :toggle_like, :flag]
   before_action :ensure_can_edit, only: [:edit, :update]
@@ -12,20 +12,17 @@ class PropertyCommentsController < ApplicationController
                         .includes(:user, replies: :user)
                         .top_level
                         .recent
-                        .page(params[:page])
-                        .per(10)
-    
+                        .limit(10)
+
     @new_comment = PropertyComment.new if user_signed_in?
 
     respond_to do |format|
       format.html
-      format.json { 
-        render json: { 
-          comments: comments_json(@comments), 
-          total_comments: @property.comments_count,
-          current_page: @comments.current_page,
-          total_pages: @comments.total_pages
-        } 
+      format.json {
+        render json: {
+          comments: comments_json(@comments),
+          total_comments: @property.comments_count
+        }
       }
     end
   end
