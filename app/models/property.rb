@@ -11,6 +11,7 @@ class Property < ApplicationRecord
   has_many :favorited_by_users, through: :property_favorites, source: :user
   has_many :property_viewings, dependent: :destroy
   has_many :property_reviews, dependent: :destroy
+  has_many :property_comments, dependent: :destroy
   has_many :maintenance_requests, dependent: :destroy
   has_many :conversations, dependent: :destroy
 
@@ -115,5 +116,13 @@ class Property < ApplicationRecord
     amenities << "Heating" if heating?
     amenities << "Internet Included" if internet_included?
     amenities
+  end
+
+  def comments_count
+    property_comments.not_flagged.count
+  end
+
+  def recent_comments(limit = 5)
+    property_comments.not_flagged.includes(:user, :replies).top_level.recent.limit(limit)
   end
 end

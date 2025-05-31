@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_195000) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_30_200002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_195000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "comment_likes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "property_comment_id", null: false
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["property_comment_id"], name: "index_comment_likes_on_property_comment_id"
+    t.index ["user_id", "property_comment_id"], name: "index_comment_likes_on_user_id_and_property_comment_id", unique: true
   end
 
   create_table "conversations", force: :cascade do |t|
@@ -257,6 +266,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_195000) do
     t.index ["user_id"], name: "index_properties_on_user_id"
   end
 
+  create_table "property_comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "property_id", null: false
+    t.uuid "parent_id"
+    t.text "content", null: false
+    t.boolean "edited", default: false
+    t.datetime "edited_at", precision: nil
+    t.integer "likes_count", default: 0
+    t.boolean "flagged", default: false
+    t.string "flagged_reason"
+    t.datetime "flagged_at", precision: nil
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["flagged"], name: "index_property_comments_on_flagged"
+    t.index ["parent_id"], name: "index_property_comments_on_parent_id"
+    t.index ["property_id", "created_at"], name: "index_property_comments_on_property_id_and_created_at"
+    t.index ["user_id", "created_at"], name: "index_property_comments_on_user_id_and_created_at"
+    t.check_constraint "length(content) >= 1 AND length(content) <= 2000", name: "content_length_check"
+  end
+
   create_table "property_favorites", force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "property_id", null: false
@@ -380,6 +409,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_195000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comment_likes", "property_comments", name: "comment_likes_property_comment_id_fkey"
+  add_foreign_key "comment_likes", "users", name: "comment_likes_user_id_fkey"
   add_foreign_key "conversations", "properties"
   add_foreign_key "conversations", "users", column: "landlord_id"
   add_foreign_key "conversations", "users", column: "tenant_id"
@@ -400,6 +431,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_195000) do
   add_foreign_key "payments", "payment_methods"
   add_foreign_key "payments", "users"
   add_foreign_key "properties", "users"
+  add_foreign_key "property_comments", "properties", name: "property_comments_property_id_fkey"
+  add_foreign_key "property_comments", "property_comments", column: "parent_id", name: "property_comments_parent_id_fkey"
+  add_foreign_key "property_comments", "users", name: "property_comments_user_id_fkey"
   add_foreign_key "property_favorites", "properties"
   add_foreign_key "property_favorites", "users"
   add_foreign_key "property_reviews", "properties"

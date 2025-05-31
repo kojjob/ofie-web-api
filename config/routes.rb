@@ -33,6 +33,9 @@ Rails.application.routes.draw do
         # Property reviews
         resources :reviews, controller: "property_reviews", only: [ :index, :create ]
 
+        # Property comments
+        resources :comments, controller: "property_comments", only: [ :index, :create ]
+
         # Maintenance requests
         resources :maintenance_requests, only: [ :index, :create ]
       end
@@ -43,6 +46,13 @@ Rails.application.routes.draw do
       resources :property_reviews, only: [ :show, :update, :destroy ] do
         member do
           post :helpful, to: "property_reviews#mark_helpful"
+        end
+      end
+
+      resources :property_comments, only: [ :show, :update, :destroy ] do
+        member do
+          post :toggle_like
+          post :flag
         end
       end
 
@@ -182,6 +192,13 @@ Rails.application.routes.draw do
     resources :property_viewings, only: [ :new, :create, :show, :index, :update, :destroy ] do
       collection do
         get :available_slots
+      end
+    end
+
+    # Add nested property_comments routes
+    resources :property_comments, only: [ :index, :create ] do
+      collection do
+        get :recent
       end
     end
   end

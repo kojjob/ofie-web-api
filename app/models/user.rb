@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :favorite_properties, through: :property_favorites, source: :property
   has_many :property_viewings, dependent: :destroy
   has_many :property_reviews, dependent: :destroy
+  has_many :property_comments, dependent: :destroy
+  has_many :comment_likes, dependent: :destroy
   has_many :notifications, dependent: :destroy
 
   # Messaging associations
