@@ -94,6 +94,10 @@ class Property < ApplicationRecord
     property_reviews.count
   end
 
+  def available_for_applications?
+    available? && status_active?
+  end
+
   def verified_reviews
     property_reviews.verified
   end
