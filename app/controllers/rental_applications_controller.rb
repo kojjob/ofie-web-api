@@ -101,15 +101,18 @@ class RentalApplicationsController < ApplicationController
     
     respond_to do |format|
       if @rental_application.update(rental_application_params)
-        format.html { 
-          redirect_to rental_application_path(@rental_application), 
-          notice: "Application updated successfully!" 
+        # Send notification to landlord about application update
+        send_application_update_notification
+
+        format.html {
+          redirect_to rental_application_path(@rental_application),
+          notice: "Application updated successfully!"
         }
-        format.json { 
-          render json: { 
-            message: "Application updated successfully", 
-            application: rental_application_json(@rental_application) 
-          } 
+        format.json {
+          render json: {
+            message: "Application updated successfully",
+            application: rental_application_json(@rental_application)
+          }
         }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -157,10 +160,18 @@ class RentalApplicationsController < ApplicationController
     respond_to do |format|
       if @rental_application.approve!
         send_status_change_notification('approved')
-        
-        format.html { 
-          redirect_to rental_application_path(@rental_application), 
-          notice: "Application approved successfully!" 
+        # Send email notification for important status change
+        NotificationEmailJob.perform_later(
+          Notification.where(
+            user: @rental_application.tenant,
+            notifiable: @rental_application,
+            notification_type: 'rental_application_status_change'
+          ).last
+        )
+
+        format.html {
+          redirect_to rental_application_path(@rental_application),
+          notice: "Application approved successfully!"
         }
         format.json { 
           render json: { 
@@ -195,10 +206,18 @@ class RentalApplicationsController < ApplicationController
     respond_to do |format|
       if @rental_application.reject!
         send_status_change_notification('rejected')
-        
-        format.html { 
-          redirect_to rental_application_path(@rental_application), 
-          notice: "Application rejected." 
+        # Send email notification for important status change
+        NotificationEmailJob.perform_later(
+          Notification.where(
+            user: @rental_application.tenant,
+            notifiable: @rental_application,
+            notification_type: 'rental_application_status_change'
+          ).last
+        )
+
+        format.html {
+          redirect_to rental_application_path(@rental_application),
+          notice: "Application rejected."
         }
         format.json { 
           render json: { 
@@ -326,15 +345,11 @@ class RentalApplicationsController < ApplicationController
   end
 
   def send_application_notification
-    # This would integrate with your notification system
-    # For now, we'll create a simple notification
+    # Send notification to landlord about new application
     if @rental_application.property.user != current_user
-      Notification.create!(
-        user: @rental_application.property.user,
-        notification_type: 'rental_application',
-        title: 'New Rental Application',
-        message: "#{current_user.name || current_user.email} has applied for #{@rental_application.property.title}",
-        data: { rental_application_id: @rental_application.id }
+      Notification.create_rental_application_notification(
+        @rental_application.property.user,
+        @rental_application
       )
     end
   end
@@ -342,12 +357,20 @@ class RentalApplicationsController < ApplicationController
   def send_status_change_notification(status)
     # Send notification to tenant about status change
     if @rental_application.tenant != current_user
-      Notification.create!(
-        user: @rental_application.tenant,
-        notification_type: 'application_status_change',
-        title: 'Application Status Update',
-        message: "Your application for #{@rental_application.property.title} has been #{status.humanize.downcase}",
-        data: { rental_application_id: @rental_application.id, status: status }
+      Notification.create_application_status_notification(
+        @rental_application.tenant,
+        @rental_application,
+        status
+      )
+    end
+  end
+
+  def send_application_update_notification
+    # Send notification to landlord about application update
+    if @rental_application.property.user != current_user
+      Notification.create_application_updated_notification(
+        @rental_application.property.user,
+        @rental_application
       )
     end
   end

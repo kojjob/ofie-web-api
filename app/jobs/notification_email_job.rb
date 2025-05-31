@@ -17,6 +17,12 @@ class NotificationEmailJob < ApplicationJob
       NotificationMailer.maintenance_request_assigned(notification).deliver_now
     when "maintenance_request_completed"
       NotificationMailer.maintenance_request_completed(notification).deliver_now
+    when "rental_application_new"
+      NotificationMailer.rental_application_received(notification).deliver_now
+    when "rental_application_status_change"
+      NotificationMailer.rental_application_status_updated(notification).deliver_now
+    when "rental_application_updated"
+      NotificationMailer.rental_application_updated(notification).deliver_now
     else
       NotificationMailer.generic_notification(notification).deliver_now
     end

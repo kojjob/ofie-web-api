@@ -52,6 +52,44 @@ class NotificationMailer < ApplicationMailer
     )
   end
 
+  def rental_application_received(notification)
+    @notification = notification
+    @rental_application = notification.notifiable
+    @user = notification.user
+    @tenant = @rental_application.tenant
+    @property = @rental_application.property
+
+    mail(
+      to: @user.email,
+      subject: "New Rental Application - #{@property.title}"
+    )
+  end
+
+  def rental_application_status_updated(notification)
+    @notification = notification
+    @rental_application = notification.notifiable
+    @user = notification.user
+    @property = @rental_application.property
+
+    mail(
+      to: @user.email,
+      subject: "Application #{@rental_application.status.humanize} - #{@property.title}"
+    )
+  end
+
+  def rental_application_updated(notification)
+    @notification = notification
+    @rental_application = notification.notifiable
+    @user = notification.user
+    @tenant = @rental_application.tenant
+    @property = @rental_application.property
+
+    mail(
+      to: @user.email,
+      subject: "Application Updated - #{@property.title}"
+    )
+  end
+
   def generic_notification(notification)
     @notification = notification
     @user = notification.user
