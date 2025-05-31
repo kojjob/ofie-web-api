@@ -203,6 +203,14 @@ Rails.application.routes.draw do
     end
   end
 
+  # Standalone property comments routes (Web)
+  resources :property_comments, only: [ :show, :edit, :update, :destroy ] do
+    member do
+      post :toggle_like
+      post :flag
+    end
+  end
+
   # Property reviews routes (Web)
   resources :property_reviews, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
     member do
