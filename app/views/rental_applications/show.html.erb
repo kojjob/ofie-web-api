@@ -202,24 +202,31 @@
         <% if @can_manage %>
           <!-- Landlord Actions -->
           <% if ['pending', 'under_review'].include?(@rental_application.status) %>
-            <%= link_to approve_rental_application_path(@rental_application), 
-                        method: :post,
-                        class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5",
-                        data: { confirm: "Are you sure you want to approve this application?" } do %>
+            <button onclick="openStatusModal('approve', <%= @rental_application.id %>)"
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               Approve Application
-            <% end %>
-            
-            <%= link_to reject_rental_application_path(@rental_application), 
-                        method: :post,
-                        class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5",
-                        data: { confirm: "Are you sure you want to reject this application?" } do %>
+            </button>
+
+            <button onclick="openStatusModal('reject', <%= @rental_application.id %>)"
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               Reject Application
+            </button>
+
+            <% if @rental_application.status == 'pending' %>
+              <button onclick="openStatusModal('under_review', <%= @rental_application.id %>)"
+                      class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                </svg>
+                Mark Under Review
+              </button>
             <% end %>
           <% end %>
         <% else %>
@@ -248,3 +255,6 @@
     </div>
   </div>
 </div>
+
+<!-- Include Status Update Modal -->
+<%= render 'status_update_modal' %>
