@@ -379,19 +379,47 @@ class LeaseAgreementsController < ApplicationController
   end
 
   def send_lease_created_notification
-    # Implementation will be added with notification integration
+    # Send notification to tenant about new lease
+    if @lease_agreement.tenant != current_user
+      Notification.create_lease_created_notification(
+        @lease_agreement.tenant,
+        @lease_agreement
+      )
+    end
   end
 
   def send_lease_signed_notification(signer)
-    # Implementation will be added with notification integration
+    # Send notification to the other party about signature
+    recipient = signer == 'tenant' ? @lease_agreement.landlord : @lease_agreement.tenant
+
+    if recipient != current_user
+      Notification.create_lease_signed_notification(
+        recipient,
+        @lease_agreement,
+        signer
+      )
+    end
   end
 
   def send_lease_activated_notification
-    # Implementation will be added with notification integration
+    # Send notification to tenant about lease activation
+    if @lease_agreement.tenant != current_user
+      Notification.create_lease_activated_notification(
+        @lease_agreement.tenant,
+        @lease_agreement
+      )
+    end
   end
 
   def send_lease_terminated_notification(reason)
-    # Implementation will be added with notification integration
+    # Send notification to tenant about lease termination
+    if @lease_agreement.tenant != current_user
+      Notification.create_lease_terminated_notification(
+        @lease_agreement.tenant,
+        @lease_agreement,
+        reason
+      )
+    end
   end
 
   def lease_agreement_json(lease, include_details: false)

@@ -1,0 +1,274 @@
+<% content_for :title, current_user.landlord? ? "Lease Agreements" : "My Leases" %>
+<% content_for :description, current_user.landlord? ? "Manage lease agreements for your properties" : "View your lease agreements" %>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2 flex items-center">
+            <svg class="w-8 h-8 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+            </svg>
+            <%= current_user.landlord? ? "Lease Agreements" : "My Leases" %>
+          </h1>
+          <p class="text-gray-600">
+            <%= current_user.landlord? ? "Manage lease agreements for your properties" : "View and manage your lease agreements" %>
+          </p>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <% if current_user.landlord? %>
+            <%= link_to rental_applications_path(status: 'approved'), 
+                        class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Create from Application
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-gray-900"><%= @stats[:total] %></p>
+          <p class="text-sm text-gray-600">Total</p>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-gray-600"><%= @stats[:draft] %></p>
+          <p class="text-sm text-gray-600">Draft</p>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-amber-600"><%= @stats[:pending_signatures] %></p>
+          <p class="text-sm text-gray-600">Pending</p>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-blue-600"><%= @stats[:signed] %></p>
+          <p class="text-sm text-gray-600">Signed</p>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-green-600"><%= @stats[:active] %></p>
+          <p class="text-sm text-gray-600">Active</p>
+        </div>
+      </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-red-600"><%= @stats[:terminated] %></p>
+          <p class="text-sm text-gray-600">Terminated</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="mb-6">
+      <div class="flex flex-wrap gap-2">
+        <%= link_to lease_agreements_path, 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status].blank? ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-blue-50'}" do %>
+          All
+        <% end %>
+        <%= link_to lease_agreements_path(status: 'draft'), 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status] == 'draft' ? 'bg-gray-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}" do %>
+          Draft
+        <% end %>
+        <%= link_to lease_agreements_path(status: 'pending_signatures'), 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status] == 'pending_signatures' ? 'bg-amber-600 text-white' : 'bg-white text-gray-700 hover:bg-amber-50'}" do %>
+          Pending Signatures
+        <% end %>
+        <%= link_to lease_agreements_path(status: 'signed'), 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status] == 'signed' ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-blue-50'}" do %>
+          Signed
+        <% end %>
+        <%= link_to lease_agreements_path(status: 'active'), 
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status] == 'active' ? 'bg-green-600 text-white' : 'bg-white text-gray-700 hover:bg-green-50'}" do %>
+          Active
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Lease Agreements List -->
+    <% if @lease_agreements.any? %>
+      <div class="space-y-4">
+        <% @lease_agreements.each do |lease| %>
+          <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-6 hover:shadow-xl transition-all duration-300">
+            <div class="flex items-center justify-between">
+              <!-- Left: Property & Lease Info -->
+              <div class="flex items-center space-x-4 flex-1">
+                <!-- Property Image -->
+                <div class="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
+                  <% if lease.property.photos.attached? && lease.property.photos.any? %>
+                    <%= image_tag lease.property.photos.first, 
+                                  class: "w-full h-full object-cover",
+                                  alt: lease.property.title %>
+                  <% else %>
+                    <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+                      </svg>
+                    </div>
+                  <% end %>
+                </div>
+                
+                <!-- Lease Details -->
+                <div class="flex-1">
+                  <h3 class="font-bold text-gray-900 mb-1">
+                    <%= link_to lease.property.title, property_path(lease.property), class: "hover:text-blue-600 transition-colors" %>
+                  </h3>
+                  <div class="flex items-center space-x-4 text-sm text-gray-500">
+                    <span>
+                      <% if lease.lease_number.present? %>
+                        Lease #<%= lease.lease_number %>
+                      <% else %>
+                        Created: <%= lease.created_at.strftime("%m/%d/%Y") %>
+                      <% end %>
+                    </span>
+                    <span>•</span>
+                    <span><%= lease.lease_start_date.strftime("%m/%d/%Y") %> - <%= lease.lease_end_date.strftime("%m/%d/%Y") %></span>
+                    <% if current_user.landlord? %>
+                      <span>•</span>
+                      <span>Tenant: <%= lease.tenant.name || lease.tenant.email %></span>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Center: Status & Rent -->
+              <div class="flex items-center space-x-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-xl text-sm font-bold <%= 
+                  case lease.status
+                  when 'draft' then 'bg-gray-100 text-gray-800'
+                  when 'pending_signatures' then 'bg-amber-100 text-amber-800'
+                  when 'signed' then 'bg-blue-100 text-blue-800'
+                  when 'active' then 'bg-green-100 text-green-800'
+                  when 'terminated' then 'bg-red-100 text-red-800'
+                  else 'bg-gray-100 text-gray-800'
+                  end %>">
+                  <%= lease.status.humanize %>
+                </span>
+                
+                <span class="font-bold text-blue-600">
+                  <%= number_to_currency(lease.monthly_rent) %>/mo
+                </span>
+              </div>
+              
+              <!-- Right: Signature Status & Actions -->
+              <div class="flex items-center space-x-4">
+                <!-- Signature Status -->
+                <div class="flex items-center space-x-2">
+                  <!-- Landlord Signature -->
+                  <div class="flex items-center">
+                    <% if lease.landlord_signed_at.present? %>
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    <% else %>
+                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                    <% end %>
+                    <span class="text-xs text-gray-500 ml-1">L</span>
+                  </div>
+                  
+                  <!-- Tenant Signature -->
+                  <div class="flex items-center">
+                    <% if lease.tenant_signed_at.present? %>
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    <% else %>
+                      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                    <% end %>
+                    <span class="text-xs text-gray-500 ml-1">T</span>
+                  </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center space-x-2">
+                  <%= link_to lease_agreement_path(lease), 
+                              class: "inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-200" do %>
+                    View
+                  <% end %>
+                  
+                  <% if current_user.landlord? && lease.status == 'signed' %>
+                    <%= link_to activate_lease_agreement_path(lease), 
+                                method: :post,
+                                class: "inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-all duration-200",
+                                data: { confirm: "Activate this lease?" } do %>
+                      Activate
+                    <% end %>
+                  <% end %>
+                  
+                  <!-- Sign buttons for pending signatures -->
+                  <% if lease.status == 'pending_signatures' %>
+                    <% if current_user == lease.tenant && lease.tenant_signed_at.blank? %>
+                      <%= link_to sign_tenant_lease_agreement_path(lease), 
+                                  method: :post,
+                                  class: "inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-all duration-200",
+                                  data: { confirm: "Sign this lease?" } do %>
+                        Sign
+                      <% end %>
+                    <% elsif current_user == lease.landlord && lease.landlord_signed_at.blank? %>
+                      <%= link_to sign_landlord_lease_agreement_path(lease), 
+                                  method: :post,
+                                  class: "inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-200",
+                                  data: { confirm: "Sign this lease?" } do %>
+                        Sign
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Pagination -->
+      <div class="mt-8 flex justify-center">
+        <%= paginate @lease_agreements if respond_to?(:paginate) %>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-16">
+        <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-3xl shadow-lg shadow-blue-500/25 mb-6">
+          <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+        </div>
+        
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">
+          <%= current_user.landlord? ? "No lease agreements yet" : "No leases found" %>
+        </h3>
+        <p class="text-gray-600 mb-8 max-w-md mx-auto">
+          <%= current_user.landlord? ? 
+              "Create lease agreements from approved rental applications to get started." : 
+              "Your lease agreements will appear here once they're created by landlords." %>
+        </p>
+        
+        <% if current_user.landlord? %>
+          <%= link_to rental_applications_path(status: 'approved'), 
+                      class: "inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Create from Application
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
