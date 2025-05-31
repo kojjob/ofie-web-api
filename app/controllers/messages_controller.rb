@@ -76,16 +76,18 @@ class MessagesController < ApplicationController
         format.html { redirect_to @conversation, notice: "Message was successfully sent." }
         format.json do
           render json: {
-            id: @message.id,
-            content: @message.content,
-            message_type: @message.message_type,
-            sender: {
-              id: @message.sender.id,
-              name: @message.sender.name,
-              email: @message.sender.email
-            },
-            created_at: @message.created_at,
-            read: @message.read
+            message: {
+              id: @message.id,
+              content: @message.content,
+              message_type: @message.message_type,
+              sender: {
+                id: @message.sender.id,
+                name: @message.sender.name,
+                email: @message.sender.email
+              },
+              created_at: @message.created_at,
+              read: @message.read
+            }
           }, status: :created
         end
       else
