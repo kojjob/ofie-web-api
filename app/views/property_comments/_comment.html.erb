@@ -33,14 +33,13 @@
         <div class="flex items-center space-x-2">
           <% if user_signed_in? %>
             <!-- Like Button -->
-            <%= link_to toggle_like_property_comment_path(comment), 
-                        method: :post,
-                        class: "group flex items-center space-x-1 px-3 py-1 rounded-xl transition-all duration-200 #{comment.liked_by?(current_user) ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-600'}" do %>
+            <button class="group flex items-center space-x-1 px-3 py-1 rounded-xl transition-all duration-200 <%= comment.liked_by?(current_user) ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-600' %>"
+                    onclick="toggleLike('<%= comment.id %>', '<%= toggle_like_property_comment_path(comment) %>')">
               <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="<%= comment.liked_by?(current_user) ? 'currentColor' : 'none' %>" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
               </svg>
-              <span class="text-sm font-medium"><%= comment.likes_count %></span>
-            <% end %>
+              <span class="text-sm font-medium" id="like-count-<%= comment.id %>"><%= comment.likes_count %></span>
+            </button>
             
             <!-- Reply Button -->
             <button class="flex items-center space-x-1 px-3 py-1 bg-gray-100 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all duration-200"
@@ -148,15 +147,89 @@
 <script>
 function toggleReplyForm(commentId) {
   const form = document.getElementById(`reply-form-${commentId}`);
-  form.classList.toggle('hidden');
-  if (!form.classList.contains('hidden')) {
-    form.querySelector('textarea').focus();
+  if (form) {
+    form.classList.toggle('hidden');
+    if (!form.classList.contains('hidden')) {
+      const textarea = form.querySelector('textarea');
+      if (textarea) {
+        textarea.focus();
+      }
+    }
   }
 }
 
 function toggleDropdown(commentId) {
   const dropdown = document.getElementById(`dropdown-${commentId}`);
-  dropdown.classList.toggle('hidden');
+  if (dropdown) {
+    dropdown.classList.toggle('hidden');
+  }
+}
+
+function toggleLike(commentId, url) {
+  console.log('Toggling like for comment:', commentId, 'URL:', url);
+
+  // Get CSRF token
+  const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+  if (!csrfMeta) {
+    console.error('CSRF token not found');
+    alert('Security token not found. Please refresh the page.');
+    return;
+  }
+
+  const token = csrfMeta.getAttribute('content');
+  console.log('CSRF token found:', token ? 'Yes' : 'No');
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': token,
+      'Accept': 'application/json'
+    }
+  })
+  .then(response => {
+    console.log('Response status:', response.status);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log('Response data:', data);
+    if (data.liked !== undefined) {
+      // Update like count
+      const countElement = document.getElementById(`like-count-${commentId}`);
+      if (countElement) {
+        countElement.textContent = data.likes_count;
+        console.log('Updated like count to:', data.likes_count);
+      }
+
+      // Update button appearance
+      const button = countElement.closest('button');
+      if (button) {
+        const svg = button.querySelector('svg');
+        if (data.liked) {
+          button.className = button.className.replace('bg-gray-100 text-gray-600', 'bg-red-100 text-red-600');
+          if (svg) {
+            svg.setAttribute('fill', 'currentColor');
+          }
+          console.log('Button updated to liked state');
+        } else {
+          button.className = button.className.replace('bg-red-100 text-red-600', 'bg-gray-100 text-gray-600');
+          if (svg) {
+            svg.setAttribute('fill', 'none');
+          }
+          console.log('Button updated to unliked state');
+        }
+      }
+    } else {
+      console.error('Invalid response data:', data);
+    }
+  })
+  .catch(error => {
+    console.error('Error toggling like:', error);
+    alert('Failed to update like. Please try again. Check console for details.');
+  });
 }
 
 function editComment(commentId) {

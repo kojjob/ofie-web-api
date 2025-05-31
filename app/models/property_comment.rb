@@ -37,15 +37,13 @@ class PropertyComment < ApplicationRecord
 
   def toggle_like!(user)
     return false unless user
-    
+
     existing_like = comment_likes.find_by(user: user)
     if existing_like
       existing_like.destroy!
-      decrement!(:likes_count)
       false # unliked
     else
       comment_likes.create!(user: user)
-      increment!(:likes_count)
       true # liked
     end
   end
@@ -83,7 +81,7 @@ class PropertyComment < ApplicationRecord
 
   def can_be_deleted_by?(user)
     return false unless user
-    user == self.user || user == property.user || user.admin?
+    user == self.user || user == property.user || (user.respond_to?(:admin?) && user.admin?)
   end
 
   def display_content
