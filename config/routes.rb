@@ -201,6 +201,9 @@ Rails.application.routes.draw do
         get :recent
       end
     end
+
+    # Add nested rental_applications routes
+    resources :rental_applications, only: [ :new, :create ]
   end
 
   # Standalone property comments routes (Web)
@@ -282,6 +285,15 @@ Rails.application.routes.draw do
 
   # Favorites routes
   get "/favorites", to: "property_favorites#index", as: "favorites"
+
+  # Rental Applications routes (Web)
+  resources :rental_applications, only: [:index, :show, :edit, :update, :destroy] do
+    member do
+      post :approve
+      post :reject
+      post :under_review
+    end
+  end
 
   # Home page
   get "/home", to: "home#index", as: "home"
