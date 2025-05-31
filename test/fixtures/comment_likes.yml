@@ -1,0 +1,22 @@
+# Comment Likes Fixtures
+
+one:
+  id: <%= SecureRandom.uuid %>
+  user: two
+  property_comment: one
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+two:
+  id: <%= SecureRandom.uuid %>
+  user: one
+  property_comment: two
+  created_at: <%= 12.hours.ago %>
+  updated_at: <%= 12.hours.ago %>
+
+three:
+  id: <%= SecureRandom.uuid %>
+  user: two
+  property_comment: reply_one
+  created_at: <%= 6.hours.ago %>
+  updated_at: <%= 6.hours.ago %>

@@ -47,9 +47,9 @@ class PropertyCommentsController < ApplicationController
         # Create notification for property owner
         create_comment_notification(@comment) unless current_user == @property.user
         
-        format.html { 
-          redirect_to property_comments_path(@property), 
-          notice: "Comment was successfully posted." 
+        format.html {
+          redirect_to property_property_comments_path(@property),
+          notice: "Comment was successfully posted."
         }
         format.json { 
           render json: { 
@@ -64,8 +64,7 @@ class PropertyCommentsController < ApplicationController
                               .includes(:user, replies: :user)
                               .top_level
                               .recent
-                              .page(params[:page])
-                              .per(10)
+                              .limit(10)
           render :index, status: :unprocessable_entity
         }
         format.json { 
@@ -89,9 +88,9 @@ class PropertyCommentsController < ApplicationController
       if @comment.update(comment_params)
         @comment.mark_as_edited!
         
-        format.html { 
-          redirect_to property_comments_path(@comment.property), 
-          notice: "Comment was successfully updated." 
+        format.html {
+          redirect_to property_property_comments_path(@comment.property),
+          notice: "Comment was successfully updated."
         }
         format.json { 
           render json: { 
@@ -117,9 +116,9 @@ class PropertyCommentsController < ApplicationController
     @comment.destroy!
 
     respond_to do |format|
-      format.html { 
-        redirect_to property_comments_path(property), 
-        notice: "Comment was successfully deleted." 
+      format.html {
+        redirect_to property_property_comments_path(property),
+        notice: "Comment was successfully deleted."
       }
       format.json { 
         render json: { message: "Comment deleted successfully" } 
@@ -230,7 +229,7 @@ class PropertyCommentsController < ApplicationController
       message: "#{comment.user.name || comment.user.email} commented on your property '#{comment.property.title}'",
       notification_type: "comment",
       notifiable: comment,
-      url: property_comments_path(comment.property)
+      url: property_property_comments_path(comment.property)
     )
   end
 
