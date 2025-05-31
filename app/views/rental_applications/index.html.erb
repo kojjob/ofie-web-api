@@ -2,7 +2,7 @@
 <% content_for :description, current_user.landlord? ? "Manage rental applications for your properties" : "Track your rental applications" %>
 
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Header -->
     <div class="mb-8">
       <div class="flex items-center justify-between">
@@ -17,10 +17,10 @@
             <%= current_user.landlord? ? "Review and manage applications for your properties" : "Track the status of your rental applications" %>
           </p>
         </div>
-        
+
         <div class="flex items-center space-x-4">
           <% unless current_user.landlord? %>
-            <%= link_to properties_path, 
+            <%= link_to properties_path,
                         class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -32,81 +32,30 @@
       </div>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-      <!-- Total Applications -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-6">
-        <div class="flex items-center">
-          <div class="w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center">
-            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-            </svg>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Total</p>
-            <p class="text-2xl font-bold text-gray-900"><%= @stats[:total] %></p>
-          </div>
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-gray-900"><%= @stats[:total] %></p>
+          <p class="text-sm text-gray-600">Total</p>
         </div>
       </div>
-
-      <!-- Pending Applications -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-6">
-        <div class="flex items-center">
-          <div class="w-12 h-12 bg-gradient-to-r from-amber-100 to-orange-100 rounded-2xl flex items-center justify-center">
-            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Pending</p>
-            <p class="text-2xl font-bold text-gray-900"><%= @stats[:pending] %></p>
-          </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-amber-600"><%= @stats[:pending] %></p>
+          <p class="text-sm text-gray-600">Pending</p>
         </div>
       </div>
-
-      <!-- Under Review -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-6">
-        <div class="flex items-center">
-          <div class="w-12 h-12 bg-gradient-to-r from-purple-100 to-indigo-100 rounded-2xl flex items-center justify-center">
-            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-            </svg>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Under Review</p>
-            <p class="text-2xl font-bold text-gray-900"><%= @stats[:under_review] %></p>
-          </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-green-600"><%= @stats[:approved] %></p>
+          <p class="text-sm text-gray-600">Approved</p>
         </div>
       </div>
-
-      <!-- Approved Applications -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-6">
-        <div class="flex items-center">
-          <div class="w-12 h-12 bg-gradient-to-r from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center">
-            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Approved</p>
-            <p class="text-2xl font-bold text-gray-900"><%= @stats[:approved] %></p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Rejected Applications -->
-      <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-6">
-        <div class="flex items-center">
-          <div class="w-12 h-12 bg-gradient-to-r from-red-100 to-pink-100 rounded-2xl flex items-center justify-center">
-            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600">Rejected</p>
-            <p class="text-2xl font-bold text-gray-900"><%= @stats[:rejected] %></p>
-          </div>
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-4">
+        <div class="text-center">
+          <p class="text-2xl font-bold text-red-600"><%= @stats[:rejected] %></p>
+          <p class="text-sm text-gray-600">Rejected</p>
         </div>
       </div>
     </div>
@@ -114,28 +63,20 @@
     <!-- Filter Tabs -->
     <div class="mb-6">
       <div class="flex flex-wrap gap-2">
-        <%= link_to rental_applications_path, 
-                    class: "px-4 py-2 rounded-2xl font-medium transition-all duration-200 #{params[:status].blank? ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-blue-50'}" do %>
-          All Applications
+        <%= link_to rental_applications_path,
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status].blank? ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-blue-50'}" do %>
+          All
         <% end %>
-        
-        <%= link_to rental_applications_path(status: 'pending'), 
-                    class: "px-4 py-2 rounded-2xl font-medium transition-all duration-200 #{params[:status] == 'pending' ? 'bg-amber-600 text-white' : 'bg-white text-gray-700 hover:bg-amber-50'}" do %>
+        <%= link_to rental_applications_path(status: 'pending'),
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status] == 'pending' ? 'bg-amber-600 text-white' : 'bg-white text-gray-700 hover:bg-amber-50'}" do %>
           Pending
         <% end %>
-        
-        <%= link_to rental_applications_path(status: 'under_review'), 
-                    class: "px-4 py-2 rounded-2xl font-medium transition-all duration-200 #{params[:status] == 'under_review' ? 'bg-purple-600 text-white' : 'bg-white text-gray-700 hover:bg-purple-50'}" do %>
-          Under Review
-        <% end %>
-        
-        <%= link_to rental_applications_path(status: 'approved'), 
-                    class: "px-4 py-2 rounded-2xl font-medium transition-all duration-200 #{params[:status] == 'approved' ? 'bg-green-600 text-white' : 'bg-white text-gray-700 hover:bg-green-50'}" do %>
+        <%= link_to rental_applications_path(status: 'approved'),
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status] == 'approved' ? 'bg-green-600 text-white' : 'bg-white text-gray-700 hover:bg-green-50'}" do %>
           Approved
         <% end %>
-        
-        <%= link_to rental_applications_path(status: 'rejected'), 
-                    class: "px-4 py-2 rounded-2xl font-medium transition-all duration-200 #{params[:status] == 'rejected' ? 'bg-red-600 text-white' : 'bg-white text-gray-700 hover:bg-red-50'}" do %>
+        <%= link_to rental_applications_path(status: 'rejected'),
+                    class: "px-4 py-2 rounded-xl font-medium transition-all duration-200 #{params[:status] == 'rejected' ? 'bg-red-600 text-white' : 'bg-white text-gray-700 hover:bg-red-50'}" do %>
           Rejected
         <% end %>
       </div>
@@ -143,92 +84,82 @@
 
     <!-- Applications List -->
     <% if @rental_applications.any? %>
-      <div class="space-y-6">
+      <div class="space-y-4">
         <% @rental_applications.each do |application| %>
-          <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 overflow-hidden hover:shadow-2xl hover:shadow-gray-300/50 transition-all duration-500">
-            <div class="p-6">
-              <div class="flex items-start justify-between">
-                <!-- Application Info -->
+          <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/20 p-6 hover:shadow-xl transition-all duration-300">
+            <div class="flex items-center justify-between">
+              <!-- Left: Property & Applicant Info -->
+              <div class="flex items-center space-x-4 flex-1">
+                <!-- Property Image -->
+                <div class="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
+                  <% if application.property.photos.attached? && application.property.photos.any? %>
+                    <%= image_tag application.property.photos.first,
+                                  class: "w-full h-full object-cover",
+                                  alt: application.property.title %>
+                  <% else %>
+                    <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+                      </svg>
+                    </div>
+                  <% end %>
+                </div>
+
+                <!-- Property & Application Details -->
                 <div class="flex-1">
-                  <div class="flex items-center space-x-4 mb-4">
-                    <!-- Property Image -->
-                    <div class="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0">
-                      <% if application.property.photos.attached? && application.property.photos.any? %>
-                        <%= image_tag application.property.photos.first, 
-                                      class: "w-full h-full object-cover",
-                                      alt: application.property.title %>
-                      <% else %>
-                        <div class="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
-                          </svg>
-                        </div>
-                      <% end %>
-                    </div>
-                    
-                    <!-- Property & Application Details -->
-                    <div class="flex-1">
-                      <h3 class="text-xl font-bold text-gray-900 mb-1">
-                        <%= link_to application.property.title, property_path(application.property), class: "hover:text-blue-600 transition-colors" %>
-                      </h3>
-                      <p class="text-gray-600 mb-2"><%= application.property.address %></p>
-                      
-                      <div class="flex items-center space-x-4 text-sm text-gray-500">
-                        <span>Applied: <%= application.application_date.strftime("%B %d, %Y") %></span>
-                        <span>•</span>
-                        <span>Move-in: <%= application.move_in_date.strftime("%B %d, %Y") %></span>
-                        <% if current_user.landlord? %>
-                          <span>•</span>
-                          <span>Applicant: <%= application.tenant.name || application.tenant.email %></span>
-                        <% end %>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <!-- Application Status -->
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                      <span class="inline-flex items-center px-3 py-1 rounded-2xl text-sm font-bold <%= 
-                        case application.status
-                        when 'pending' then 'bg-amber-100 text-amber-800'
-                        when 'under_review' then 'bg-purple-100 text-purple-800'
-                        when 'approved' then 'bg-green-100 text-green-800'
-                        when 'rejected' then 'bg-red-100 text-red-800'
-                        else 'bg-gray-100 text-gray-800'
-                        end %>">
-                        <%= application.status.humanize %>
-                      </span>
-                      
-                      <span class="text-lg font-bold text-blue-600">
-                        <%= number_to_currency(application.property.price) %>/month
-                      </span>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="flex items-center space-x-3">
-                      <%= link_to rental_application_path(application), 
-                                  class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                        </svg>
-                        View Details
-                      <% end %>
-                      
-                      <% if current_user.landlord? && ['pending', 'under_review'].include?(application.status) %>
-                        <%= link_to approve_rental_application_path(application), 
-                                    method: :post,
-                                    class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5",
-                                    data: { confirm: "Are you sure you want to approve this application?" } do %>
-                          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                          </svg>
-                          Approve
-                        <% end %>
-                      <% end %>
-                    </div>
+                  <h3 class="font-bold text-gray-900 mb-1">
+                    <%= link_to application.property.title, property_path(application.property), class: "hover:text-blue-600 transition-colors" %>
+                  </h3>
+                  <div class="flex items-center space-x-4 text-sm text-gray-500">
+                    <span>Applied: <%= application.application_date.strftime("%m/%d/%Y") %></span>
+                    <% if current_user.landlord? %>
+                      <span>•</span>
+                      <span>Applicant: <%= application.tenant.name || application.tenant.email %></span>
+                    <% end %>
                   </div>
                 </div>
+              </div>
+
+              <!-- Center: Status & Price -->
+              <div class="flex items-center space-x-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-xl text-sm font-bold <%=
+                  case application.status
+                  when 'pending' then 'bg-amber-100 text-amber-800'
+                  when 'under_review' then 'bg-purple-100 text-purple-800'
+                  when 'approved' then 'bg-green-100 text-green-800'
+                  when 'rejected' then 'bg-red-100 text-red-800'
+                  else 'bg-gray-100 text-gray-800'
+                  end %>">
+                  <%= application.status.humanize %>
+                </span>
+
+                <span class="font-bold text-blue-600">
+                  <%= number_to_currency(application.property.price) %>/mo
+                </span>
+              </div>
+
+              <!-- Right: Action Buttons -->
+              <div class="flex items-center space-x-2">
+                <%= link_to rental_application_path(application),
+                            class: "inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-200" do %>
+                  View
+                <% end %>
+
+                <% if current_user.landlord? && ['pending', 'under_review'].include?(application.status) %>
+                  <%= link_to approve_rental_application_path(application),
+                              method: :post,
+                              class: "inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-all duration-200",
+                              data: { confirm: "Approve this application?" } do %>
+                    Approve
+                  <% end %>
+
+                  <%= link_to reject_rental_application_path(application),
+                              method: :post,
+                              class: "inline-flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200",
+                              data: { confirm: "Reject this application?" } do %>
+                    Reject
+                  <% end %>
+                <% end %>
               </div>
             </div>
           </div>

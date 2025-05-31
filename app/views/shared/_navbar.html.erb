@@ -231,7 +231,27 @@
                     </span>
                   <% end %>
                 <% end %>
-                
+
+                <%= link_to rental_applications_path, class: "group flex items-center px-6 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition-all duration-200" do %>
+                  <div class="w-10 h-10 bg-gradient-to-r from-green-100 to-emerald-100 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
+                    <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <p class="font-semibold"><%= current_user.landlord? ? "Applications" : "My Applications" %></p>
+                    <p class="text-xs text-gray-500"><%= current_user.landlord? ? "Review applications" : "Track applications" %></p>
+                  </div>
+                  <% if current_user.landlord? %>
+                    <% pending_count = current_user.properties.joins(:rental_applications).where(rental_applications: { status: 'pending' }).count %>
+                    <% if pending_count > 0 %>
+                      <span class="ml-auto h-5 w-5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
+                        <%= pending_count > 9 ? '9+' : pending_count %>
+                      </span>
+                    <% end %>
+                  <% end %>
+                <% end %>
+
                 <hr class="my-2 border-gray-200">
                 
                 <%= link_to logout_path, method: :delete, class: "group flex items-center px-6 py-3 text-sm text-red-600 hover:bg-red-50 transition-all duration-200" do %>
@@ -391,7 +411,20 @@
             <span class="ml-auto h-2 w-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse"></span>
           <% end %>
         <% end %>
-        
+
+        <%= link_to rental_applications_path, class: "group flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 px-4 py-3 rounded-2xl text-base font-semibold transition-all duration-200 relative", data: { action: "click->mobile-menu#linkClicked" } do %>
+          <svg class="h-5 w-5 mr-3 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          <%= current_user.landlord? ? "Applications" : "My Applications" %>
+          <% if current_user.landlord? %>
+            <% pending_count = current_user.properties.joins(:rental_applications).where(rental_applications: { status: 'pending' }).count %>
+            <% if pending_count > 0 %>
+              <span class="ml-auto h-2 w-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full animate-pulse"></span>
+            <% end %>
+          <% end %>
+        <% end %>
+
         <%= link_to notifications_path, class: "group flex items-center text-gray-700 hover:text-amber-600 hover:bg-amber-50 px-4 py-3 rounded-2xl text-base font-semibold transition-all duration-200 relative", data: { action: "click->mobile-menu#linkClicked" } do %>
           <svg class="h-5 w-5 mr-3 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5" />
