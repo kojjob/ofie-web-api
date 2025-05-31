@@ -186,6 +186,16 @@ Rails.application.routes.draw do
     end
   end
 
+  # Property reviews routes (Web)
+  resources :property_reviews, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
+    member do
+      patch :helpful
+    end
+  end
+
+  # User reviews route
+  get "/users/:user_id/reviews", to: "property_reviews#user_reviews", as: "user_reviews"
+
   # Notification routes
   resources :notifications, only: [ :index, :show ] do
     member do

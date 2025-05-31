@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+favorite_one:
+  user: tenant
+  property: property_one
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+favorite_two:
+  user: another_tenant
+  property: property_two
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>

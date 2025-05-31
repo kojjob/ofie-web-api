@@ -13,7 +13,8 @@ class Message < ApplicationRecord
   after_create :create_notification
 
   def mark_as_read!
-    update!(read: true)
+    return if read?
+    update!(read: true, read_at: Time.current)
   end
 
   def recipient

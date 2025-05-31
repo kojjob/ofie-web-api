@@ -1,4 +1,4 @@
-<% content_for :title, "Review by #{@review.user.first_name || @review.user.email.split('@').first}" %>
+<% content_for :title, "Review by #{@review.user.name || @review.user.email.split('@').first}" %>
 
 <div class="min-h-screen bg-gray-50">
   <!-- Header -->
@@ -54,14 +54,14 @@
               <div class="flex-shrink-0">
                 <div class="h-12 w-12 bg-gray-300 rounded-full flex items-center justify-center">
                   <span class="text-lg font-medium text-gray-700">
-                    <%= @review.user.first_name&.first || @review.user.email.first.upcase %>
+                    <%= @review.user.name&.first || @review.user.email.first.upcase %>
                   </span>
                 </div>
               </div>
               <div>
                 <h2 class="text-xl font-semibold text-gray-900">
                   <%= link_to user_reviews_path(@review.user), class: "hover:text-blue-600" do %>
-                    <%= @review.user.first_name || @review.user.email.split('@').first %>
+                    <%= @review.user.name || @review.user.email.split('@').first %>
                   <% end %>
                   <% if @review.verified? %>
                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 ml-2">
@@ -204,12 +204,12 @@
           <div class="flex items-center space-x-3 mb-4">
             <div class="h-10 w-10 bg-gray-300 rounded-full flex items-center justify-center">
               <span class="text-sm font-medium text-gray-700">
-                <%= @review.user.first_name&.first || @review.user.email.first.upcase %>
+                <%= @review.user.name&.first || @review.user.email.first.upcase %>
               </span>
             </div>
             <div>
               <h4 class="font-medium text-gray-900">
-                <%= @review.user.first_name || @review.user.email.split('@').first %>
+                <%= @review.user.name || @review.user.email.split('@').first %>
               </h4>
               <% if @review.user.tenant? %>
                 <span class="text-sm text-gray-600">Tenant</span>
@@ -233,7 +233,7 @@
           </div>
           
           <div class="mt-4 pt-4 border-t">
-            <%= link_to "View All Reviews by #{@review.user.first_name || @review.user.email.split('@').first}", user_reviews_path(@review.user), class: "w-full bg-gray-100 text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center block" %>
+            <%= link_to "View All Reviews by #{@review.user.name || @review.user.email.split('@').first}", user_reviews_path(@review.user), class: "w-full bg-gray-100 text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center block" %>
           </div>
         </div>
       </div>
@@ -249,12 +249,12 @@
               <div class="flex items-center space-x-3 mb-3">
                 <div class="h-8 w-8 bg-gray-300 rounded-full flex items-center justify-center">
                   <span class="text-xs font-medium text-gray-700">
-                    <%= review.user.first_name&.first || review.user.email.first.upcase %>
+                    <%= review.user.name&.first || review.user.email.first.upcase %>
                   </span>
                 </div>
                 <div>
                   <h4 class="font-medium text-gray-900 text-sm">
-                    <%= review.user.first_name || review.user.email.split('@').first %>
+                    <%= review.user.name || review.user.email.split('@').first %>
                   </h4>
                   <div class="flex items-center">
                     <% (1..5).each do |i| %>

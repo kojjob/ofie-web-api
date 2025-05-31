@@ -9,6 +9,9 @@ class ConversationTest < ActiveSupport::TestCase
   end
 
   test "should be valid with valid attributes" do
+    # Clean up any existing conversations to avoid uniqueness conflicts
+    Conversation.where(landlord: @landlord, tenant: @tenant, property: @property).destroy_all
+
     conversation = Conversation.new(
       landlord: @landlord,
       tenant: @tenant,
@@ -60,6 +63,9 @@ class ConversationTest < ActiveSupport::TestCase
   end
 
   test "should enforce uniqueness of landlord, tenant, and property combination" do
+    # Clean up any existing conversations
+    Conversation.where(landlord: @landlord, tenant: @tenant, property: @property).destroy_all
+
     # Create first conversation
     conversation1 = Conversation.create!(
       landlord: @landlord,
@@ -99,11 +105,14 @@ class ConversationTest < ActiveSupport::TestCase
   end
 
   test "should return nil for non-participant" do
-    other_user = users(:other_user)
+    other_user = users(:another_tenant)
     assert_nil @conversation.other_participant(other_user)
   end
 
   test "should count unread messages for user" do
+    # Clean up existing messages to get accurate counts
+    @conversation.messages.destroy_all
+
     # Create some messages
     message1 = Message.create!(
       conversation: @conversation,
@@ -156,16 +165,19 @@ class ConversationTest < ActiveSupport::TestCase
   end
 
   test "active scope should return active conversations" do
+    # Clean up existing conversations to avoid uniqueness conflicts
+    Conversation.destroy_all
+
     active_conversation = Conversation.create!(
       landlord: @landlord,
-      tenant: @tenant,
-      property: @property,
+      tenant: users(:another_tenant),
+      property: properties(:property_two),
       subject: "Active conversation",
       status: "active"
     )
 
     archived_conversation = Conversation.create!(
-      landlord: @landlord,
+      landlord: users(:another_landlord),
       tenant: users(:another_tenant),
       property: @property,
       subject: "Archived conversation",
@@ -181,7 +193,7 @@ class ConversationTest < ActiveSupport::TestCase
     user_conversations = Conversation.for_user(@landlord)
     assert_includes user_conversations, @conversation
 
-    other_user = users(:other_user)
+    other_user = users(:another_tenant)
     other_conversations = Conversation.for_user(other_user)
     assert_not_includes other_conversations, @conversation
   end

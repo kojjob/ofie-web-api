@@ -1,31 +1,59 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  title: MyString
-  description: MyText
-  address: MyString
-  city: MyString
-  state: MyString
-  zip_code: MyString
-  price: 9.99
-  bedrooms: 1
-  bathrooms: 9.99
-  square_feet: 1
-  property_type: MyString
-  available: false
-  user: one
+property_one:
+  title: Beautiful Downtown Apartment
+  description: A spacious 2-bedroom apartment in the heart of downtown with modern amenities.
+  address: 123 Main Street
+  city: San Francisco
+  price: 2500.00
+  bedrooms: 2
+  bathrooms: 2.0
+  square_feet: 1200
+  property_type: apartment
+  availability_status: available
+  status: active
+  parking_available: true
+  pets_allowed: false
+  furnished: false
+  utilities_included: true
+  laundry: true
+  gym: false
+  pool: false
+  balcony: true
+  air_conditioning: true
+  heating: true
+  internet_included: true
+  latitude: 37.7749
+  longitude: -122.4194
+  user: landlord
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.day.ago %>
 
-two:
-  title: MyString
-  description: MyText
-  address: MyString
-  city: MyString
-  state: MyString
-  zip_code: MyString
-  price: 9.99
-  bedrooms: 1
-  bathrooms: 9.99
-  square_feet: 1
-  property_type: MyString
-  available: false
-  user: two
+property_two:
+  title: Cozy Suburban House
+  description: A charming 3-bedroom house with a garden in a quiet neighborhood.
+  address: 456 Oak Avenue
+  city: Oakland
+  price: 3200.00
+  bedrooms: 3
+  bathrooms: 2.5
+  square_feet: 1800
+  property_type: house
+  availability_status: available
+  status: active
+  parking_available: true
+  pets_allowed: true
+  furnished: false
+  utilities_included: false
+  laundry: true
+  gym: false
+  pool: false
+  balcony: false
+  air_conditioning: true
+  heating: true
+  internet_included: false
+  latitude: 37.8044
+  longitude: -122.2712
+  user: another_landlord
+  created_at: <%= 2.weeks.ago %>
+  updated_at: <%= 2.days.ago %>

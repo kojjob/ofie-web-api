@@ -1,5 +1,4 @@
 conversation_one:
-  id: <%= SecureRandom.uuid %>
   landlord: landlord
   tenant: tenant
   property: property_one
@@ -10,7 +9,6 @@ conversation_one:
   updated_at: <%= 1.hour.ago %>
 
 conversation_two:
-  id: <%= SecureRandom.uuid %>
   landlord: another_landlord
   tenant: another_tenant
   property: property_two
@@ -21,7 +19,6 @@ conversation_two:
   updated_at: <%= 2.hours.ago %>
 
 archived_conversation:
-  id: <%= SecureRandom.uuid %>
   landlord: landlord
   tenant: another_tenant
   property: property_one

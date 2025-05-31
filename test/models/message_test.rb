@@ -158,6 +158,9 @@ class MessageTest < ActiveSupport::TestCase
   end
 
   test "recent scope should return messages in descending order" do
+    # Clear existing messages to avoid fixture interference
+    Message.delete_all
+
     old_message = Message.create!(
       conversation: @conversation,
       sender: @sender,
@@ -178,12 +181,7 @@ class MessageTest < ActiveSupport::TestCase
   end
 
   test "for_conversation scope should return messages for specific conversation" do
-    other_conversation = Conversation.create!(
-      landlord: users(:another_landlord),
-      tenant: users(:another_tenant),
-      property: properties(:property_two),
-      subject: "Other conversation"
-    )
+    other_conversation = conversations(:conversation_two)
 
     message_in_conversation = Message.create!(
       conversation: @conversation,
