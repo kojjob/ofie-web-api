@@ -2,18 +2,55 @@
 <div id="flash-container" class="flash-container">
   <% flash.each do |type, message| %>
     <% next if message.blank? %>
-    
-    <div class="flash-message-wrapper flash-message" 
-         data-controller="flash" 
+
+    <div class="flash-message-wrapper flash-message <%= type %>"
+         data-controller="flash"
          data-flash-type-value="<%= type %>"
          data-flash-duration-value="5000"
          data-flash-position-value="inline"
          data-flash-animation-value="slide"
          data-flash-dismissible-value="true"
          data-action="mouseenter->flash#pauseAutoHide mouseleave->flash#resumeAutoHide">
-      
-      <div class="flash-content">
-        <%= message %>
+
+      <div class="flash-content bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl shadow-gray-200/50 border border-white/20 p-4 mx-4 my-2 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+        <div class="flex items-center space-x-3">
+          <div class="flex-shrink-0">
+            <% case type.to_s %>
+            <% when 'success' %>
+              <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+            <% when 'error' %>
+              <div class="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-600 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </div>
+            <% when 'warning' %>
+              <div class="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+              </div>
+            <% else %>
+              <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            <% end %>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-900"><%= message %></p>
+          </div>
+          <button type="button" class="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors duration-200" data-action="click->flash#dismiss">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   <% end %>
