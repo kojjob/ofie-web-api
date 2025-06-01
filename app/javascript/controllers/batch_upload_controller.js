@@ -111,6 +111,9 @@ export default class extends Controller {
       // Upload file
       const response = await fetch('/batch_properties/upload', {
         method: 'POST',
+        headers: {
+          'Accept': 'application/json'
+        },
         body: formData,
         credentials: 'same-origin'
       })
@@ -120,6 +123,11 @@ export default class extends Controller {
       if (response.ok) {
         this.showUploadSuccess(data)
       } else {
+        // Check if we need to redirect to login
+        if (data.redirect_to) {
+          window.location.href = data.redirect_to
+          return
+        }
         this.showUploadError(data.error || 'Upload failed')
       }
 

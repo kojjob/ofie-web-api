@@ -160,12 +160,20 @@ class BatchPropertiesController < ApplicationController
   private
 
   def authenticate_web_request
-    # For web requests (HTML, CSV, etc.), use session-based authentication
+    # For web requests (HTML, CSV, etc.) and AJAX requests with CSRF tokens, use session-based authentication
     unless current_user
       respond_to do |format|
         format.html { redirect_to login_path, alert: "Please sign in to continue" }
         format.csv { redirect_to login_path, alert: "Please sign in to download the template" }
-        format.json { render json: { error: "Not Authorized" }, status: :unauthorized }
+        format.json do
+          if params[:authenticity_token].present?
+            # This is a web form submission via AJAX, redirect to login
+            render json: { error: "Not Authorized", redirect_to: login_path }, status: :unauthorized
+          else
+            # This is a pure API request
+            render json: { error: "Not Authorized" }, status: :unauthorized
+          end
+        end
       end
     end
   end

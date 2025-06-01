@@ -32,7 +32,11 @@ class ApplicationController < ActionController::Base
 
   def web_request?
     # Consider HTML, CSV, and other web formats as web requests
-    request.format.html? || request.format.csv? || request.format.xml?
+    # Also include JSON requests that come from web forms (with CSRF tokens)
+    request.format.html? ||
+    request.format.csv? ||
+    request.format.xml? ||
+    (request.format.json? && params[:authenticity_token].present?)
   end
 
   def authenticate_request
