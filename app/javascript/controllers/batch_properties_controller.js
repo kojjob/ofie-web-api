@@ -51,16 +51,20 @@ export default class extends Controller {
     const title = button.dataset.title
     const status = button.dataset.status
 
+    console.log('Opening modal with:', { itemId, title, status })
+
     this.currentPropertyId = itemId
-    
+
     // Update modal content
     this.updateModalTitle(title, status, itemId)
     this.updateModalButtons(status)
-    
+
     // Show modal
     this.modalTarget.classList.remove('hidden')
     this.modalTarget.classList.add('flex')
     document.body.style.overflow = 'hidden'
+
+    console.log('Modal should now be visible')
   }
 
   // Close modal action
@@ -90,19 +94,26 @@ export default class extends Controller {
   }
 
   updateModalButtons(status) {
+    console.log('Updating modal buttons for status:', status)
+    console.log('Available targets:', {
+      viewPropertyBtn: this.hasViewPropertyBtnTarget,
+      editPropertyBtn: this.hasEditPropertyBtnTarget,
+      retryItemBtn: this.hasRetryItemBtnTarget
+    })
+
     // Show/hide buttons based on status
     if (status === 'completed') {
-      this.showElement(this.viewPropertyBtnTarget)
-      this.showElement(this.editPropertyBtnTarget)
-      this.hideElement(this.retryItemBtnTarget)
+      this.showElement(this.hasViewPropertyBtnTarget ? this.viewPropertyBtnTarget : null)
+      this.showElement(this.hasEditPropertyBtnTarget ? this.editPropertyBtnTarget : null)
+      this.hideElement(this.hasRetryItemBtnTarget ? this.retryItemBtnTarget : null)
     } else if (status === 'failed') {
-      this.hideElement(this.viewPropertyBtnTarget)
-      this.hideElement(this.editPropertyBtnTarget)
-      this.showElement(this.retryItemBtnTarget)
+      this.hideElement(this.hasViewPropertyBtnTarget ? this.viewPropertyBtnTarget : null)
+      this.hideElement(this.hasEditPropertyBtnTarget ? this.editPropertyBtnTarget : null)
+      this.showElement(this.hasRetryItemBtnTarget ? this.retryItemBtnTarget : null)
     } else {
-      this.hideElement(this.viewPropertyBtnTarget)
-      this.hideElement(this.editPropertyBtnTarget)
-      this.hideElement(this.retryItemBtnTarget)
+      this.hideElement(this.hasViewPropertyBtnTarget ? this.viewPropertyBtnTarget : null)
+      this.hideElement(this.hasEditPropertyBtnTarget ? this.editPropertyBtnTarget : null)
+      this.hideElement(this.hasRetryItemBtnTarget ? this.retryItemBtnTarget : null)
     }
   }
 
