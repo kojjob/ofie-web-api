@@ -181,8 +181,12 @@ class BatchPropertiesController < ApplicationController
   end
 
   def generate_csv_template
-    require 'csv'
-    
+    # CSV should be loaded at application level, but add fallback just in case
+    unless defined?(CSV)
+      Rails.logger.warn "CSV library not available, using manual CSV generation"
+      return generate_manual_csv_template
+    end
+
     CSV.generate(headers: true) do |csv|
       # Header row with all property fields
       csv << [
@@ -222,14 +226,60 @@ class BatchPropertiesController < ApplicationController
     end
   end
 
+  def generate_manual_csv_template
+    # Manual CSV generation as fallback
+    headers = [
+      'title', 'description', 'address', 'city', 'price', 'bedrooms', 'bathrooms',
+      'square_feet', 'property_type', 'availability_status', 'parking_available',
+      'pets_allowed', 'furnished', 'utilities_included', 'laundry_available',
+      'air_conditioning', 'heating', 'internet_included', 'gym_access',
+      'pool_access', 'balcony', 'garden', 'photo_filenames'
+    ]
+
+    example_row = [
+      'Beautiful 2BR Apartment Downtown',
+      'Spacious apartment with modern amenities in the heart of downtown. Close to public transportation and shopping.',
+      '123 Main Street, Apt 4B',
+      'New York',
+      '2500',
+      '2',
+      '1',
+      '900',
+      'apartment',
+      'available',
+      'true',
+      'false',
+      'false',
+      'true',
+      'true',
+      'true',
+      'true',
+      'true',
+      'false',
+      'false',
+      'true',
+      'false',
+      'property_1_photo_1.jpg,property_1_photo_2.jpg,property_1_photo_3.jpg'
+    ]
+
+    # Manually format CSV
+    csv_content = headers.join(',') + "\n"
+    csv_content += example_row.map { |field| "\"#{field}\"" }.join(',') + "\n"
+
+    csv_content
+  end
+
   def parse_csv_data(csv_data)
-    require 'csv'
-    
+    unless defined?(CSV)
+      Rails.logger.error "CSV library not available for parsing uploaded data"
+      raise StandardError, "CSV processing is not available. Please contact support."
+    end
+
     properties = []
     CSV.parse(csv_data, headers: true, header_converters: :symbol) do |row|
       properties << row.to_hash
     end
-    
+
     properties
   end
 

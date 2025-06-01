@@ -30,6 +30,9 @@ gem "omniauth-rails_csrf_protection"
 # Token generation for password reset and email verification
 gem "securerandom"
 
+# CSV processing for batch property uploads
+gem "csv"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mswin mswin64 mingw x64_mingw jruby ]
 

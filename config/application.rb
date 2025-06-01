@@ -2,6 +2,13 @@ require_relative "boot"
 
 require "rails/all"
 
+# Load CSV library for batch property uploads
+begin
+  require 'csv'
+rescue LoadError
+  # CSV gem will be loaded via Bundler if available
+end
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
