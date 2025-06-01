@@ -175,10 +175,6 @@ Rails.application.routes.draw do
   get "reset_password", to: "auth#reset_password"
   patch "reset_password", to: "auth#reset_password"
 
-  # API routes for backward compatibility
-  post "auth/register", to: "auth#register"
-  post "auth/login", to: "auth#login"
-
   # User profile routes (Web)
   get "profile", to: "users#show", as: "profile"
   get "profile/edit", to: "users#edit", as: "edit_profile"
