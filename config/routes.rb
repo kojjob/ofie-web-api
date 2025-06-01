@@ -322,6 +322,9 @@ Rails.application.routes.draw do
 
   # Home page
   get "/home", to: "home#index", as: "home"
+  get "/about", to: "home#about", as: "about"
+  get "/help", to: "home#help", as: "help"
+  get "/contact_support", to: "home#contact_support", as: "contact_support"
 
   # Defines the root path route ("/")
   root "home#index"
