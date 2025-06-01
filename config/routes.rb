@@ -287,7 +287,7 @@ Rails.application.routes.draw do
   get "/favorites", to: "property_favorites#index", as: "favorites"
 
   # Rental Applications routes (Web)
-  resources :rental_applications, only: [:index, :show, :edit, :update, :destroy] do
+  resources :rental_applications, only: [ :index, :show, :edit, :update, :destroy ] do
     member do
       post :approve
       post :reject
@@ -295,11 +295,11 @@ Rails.application.routes.draw do
     end
 
     # Nested lease agreements routes
-    resources :lease_agreements, only: [:new, :create]
+    resources :lease_agreements, only: [ :new, :create ]
   end
 
   # Lease Agreements routes (Web)
-  resources :lease_agreements, only: [:index, :show, :edit, :update, :destroy] do
+  resources :lease_agreements, only: [ :index, :show, :edit, :update, :destroy ] do
     member do
       post :sign_tenant
       post :sign_landlord
@@ -308,11 +308,11 @@ Rails.application.routes.draw do
     end
 
     # Nested payments routes
-    resources :payments, only: [:new, :create]
+    resources :payments, only: [ :new, :create ]
   end
 
   # Payments routes (Web)
-  resources :payments, only: [:index, :show] do
+  resources :payments, only: [ :index, :show ] do
     member do
       post :pay
       post :cancel

@@ -127,9 +127,9 @@ class Notification < ApplicationRecord
 
     def create_application_status_notification(tenant, rental_application, status)
       status_messages = {
-        'approved' => "Your application for '#{rental_application.property.title}' has been approved! 🎉",
-        'rejected' => "Your application for '#{rental_application.property.title}' was not approved.",
-        'under_review' => "Your application for '#{rental_application.property.title}' is now under review."
+        "approved" => "Your application for '#{rental_application.property.title}' has been approved! 🎉",
+        "rejected" => "Your application for '#{rental_application.property.title}' was not approved.",
+        "under_review" => "Your application for '#{rental_application.property.title}' is now under review."
       }
 
       create!(
@@ -165,7 +165,7 @@ class Notification < ApplicationRecord
     end
 
     def create_lease_signed_notification(recipient, lease_agreement, signer_type)
-      signer_name = signer_type == 'tenant' ?
+      signer_name = signer_type == "tenant" ?
         (lease_agreement.tenant.name || lease_agreement.tenant.email) :
         (lease_agreement.landlord.name || lease_agreement.landlord.email)
 

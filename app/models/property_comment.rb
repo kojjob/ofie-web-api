@@ -2,7 +2,7 @@ class PropertyComment < ApplicationRecord
   belongs_to :user
   belongs_to :property
   belongs_to :parent, class_name: "PropertyComment", optional: true
-  
+
   has_many :replies, class_name: "PropertyComment", foreign_key: "parent_id", dependent: :destroy
   has_many :comment_likes, dependent: :destroy
   has_many :liked_by_users, through: :comment_likes, source: :user
@@ -54,7 +54,7 @@ class PropertyComment < ApplicationRecord
       flagged_reason: reason,
       flagged_at: Time.current
     )
-    
+
     # Create notification for property owner and admins
     create_flag_notification(flagged_by_user) if flagged_by_user
   end

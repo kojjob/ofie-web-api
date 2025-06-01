@@ -15,8 +15,8 @@ class CreatePropertyComments < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :property_comments, [:property_id, :created_at]
-    add_index :property_comments, [:user_id, :created_at]
+    add_index :property_comments, [ :property_id, :created_at ]
+    add_index :property_comments, [ :user_id, :created_at ]
     add_index :property_comments, :parent_id
     add_index :property_comments, :flagged
 

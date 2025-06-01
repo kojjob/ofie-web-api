@@ -4,9 +4,9 @@ class AnalyticsController < ApplicationController
 
   def index
     @analytics_data = build_analytics_data
-    @date_range = params[:date_range] || '30_days'
+    @date_range = params[:date_range] || "30_days"
     @property_filter = params[:property_id]
-    
+
     respond_to do |format|
       format.html
       format.json { render json: @analytics_data }
@@ -24,9 +24,9 @@ class AnalyticsController < ApplicationController
   def build_analytics_data
     properties = current_user.properties
     properties = properties.where(id: @property_filter) if @property_filter.present?
-    
+
     date_range = get_date_range(@date_range)
-    
+
     {
       overview: build_overview_stats(properties, date_range),
       properties: build_property_stats(properties, date_range),
@@ -41,13 +41,13 @@ class AnalyticsController < ApplicationController
 
   def get_date_range(range_param)
     case range_param
-    when '7_days'
+    when "7_days"
       7.days.ago..Time.current
-    when '30_days'
+    when "30_days"
       30.days.ago..Time.current
-    when '90_days'
+    when "90_days"
       90.days.ago..Time.current
-    when '1_year'
+    when "1_year"
       1.year.ago..Time.current
     else
       30.days.ago..Time.current
@@ -57,9 +57,9 @@ class AnalyticsController < ApplicationController
   def build_overview_stats(properties, date_range)
     {
       total_properties: properties.count,
-      occupied_properties: properties.joins(:lease_agreements).where(lease_agreements: { status: 'active' }).count,
+      occupied_properties: properties.joins(:lease_agreements).where(lease_agreements: { status: "active" }).count,
       total_revenue: calculate_total_revenue(properties, date_range),
-      pending_maintenance: properties.joins(:maintenance_requests).where(maintenance_requests: { status: 'pending' }).count,
+      pending_maintenance: properties.joins(:maintenance_requests).where(maintenance_requests: { status: "pending" }).count,
       new_inquiries: count_new_inquiries(properties, date_range),
       average_rating: calculate_average_rating(properties)
     }
@@ -87,9 +87,9 @@ class AnalyticsController < ApplicationController
     # This would integrate with your payment system
     # For now, we'll use estimated revenue based on property prices
     monthly_revenue = properties.joins(:lease_agreements)
-                               .where(lease_agreements: { status: 'active' })
+                               .where(lease_agreements: { status: "active" })
                                .sum(:price)
-    
+
     {
       monthly_revenue: monthly_revenue,
       yearly_projection: monthly_revenue * 12,
@@ -103,8 +103,8 @@ class AnalyticsController < ApplicationController
 
   def build_occupancy_stats(properties, date_range)
     total_properties = properties.count
-    occupied = properties.joins(:lease_agreements).where(lease_agreements: { status: 'active' }).count
-    
+    occupied = properties.joins(:lease_agreements).where(lease_agreements: { status: "active" }).count
+
     {
       total_units: total_properties,
       occupied_units: occupied,
@@ -118,12 +118,12 @@ class AnalyticsController < ApplicationController
     maintenance_requests = MaintenanceRequest.joins(:property)
                                            .where(properties: { user_id: current_user.id })
                                            .where(created_at: date_range)
-    
+
     {
       total_requests: maintenance_requests.count,
-      pending: maintenance_requests.where(status: 'pending').count,
-      in_progress: maintenance_requests.where(status: 'in_progress').count,
-      completed: maintenance_requests.where(status: 'completed').count,
+      pending: maintenance_requests.where(status: "pending").count,
+      in_progress: maintenance_requests.where(status: "in_progress").count,
+      completed: maintenance_requests.where(status: "completed").count,
       average_resolution_time: calculate_average_resolution_time(maintenance_requests),
       cost_estimate: maintenance_requests.sum(:estimated_cost) || 0
     }
@@ -134,7 +134,7 @@ class AnalyticsController < ApplicationController
     conversations = Conversation.joins(:property)
                                .where(properties: { user_id: current_user.id })
                                .where(created_at: date_range)
-    
+
     {
       total_inquiries: conversations.count,
       response_rate: calculate_response_rate(conversations),
@@ -147,7 +147,7 @@ class AnalyticsController < ApplicationController
     reviews = PropertyReview.joins(:property)
                            .where(properties: { user_id: current_user.id })
                            .where(created_at: date_range)
-    
+
     {
       total_reviews: reviews.count,
       average_rating: reviews.average(:rating) || 0,
@@ -169,18 +169,18 @@ class AnalyticsController < ApplicationController
   def calculate_total_revenue(properties, date_range)
     # This would integrate with your payment system
     properties.joins(:lease_agreements)
-             .where(lease_agreements: { status: 'active' })
+             .where(lease_agreements: { status: "active" })
              .sum(:price)
   end
 
   def calculate_property_revenue(property, date_range)
     # This would integrate with your payment system
-    property.lease_agreements.where(status: 'active').sum(&:monthly_rent) || property.price
+    property.lease_agreements.where(status: "active").sum(&:monthly_rent) || property.price
   end
 
   def calculate_occupancy_rate(property, date_range)
     # Simple calculation - in reality this would be more complex
-    property.lease_agreements.where(status: 'active').any? ? 100 : 0
+    property.lease_agreements.where(status: "active").any? ? 100 : 0
   end
 
   def count_new_inquiries(properties, date_range)
@@ -206,24 +206,24 @@ class AnalyticsController < ApplicationController
   end
 
   def calculate_average_resolution_time(maintenance_requests)
-    completed = maintenance_requests.where(status: 'completed')
+    completed = maintenance_requests.where(status: "completed")
     return 0 if completed.empty?
-    
+
     total_time = completed.sum do |request|
       (request.updated_at - request.created_at) / 1.day
     end
-    
+
     (total_time / completed.count).round(1)
   end
 
   def calculate_response_rate(conversations)
     return 0 if conversations.empty?
-    
+
     responded = conversations.joins(:messages)
                            .where(messages: { sender_id: current_user.id })
                            .distinct
                            .count
-    
+
     (responded.to_f / conversations.count * 100).round(2)
   end
 

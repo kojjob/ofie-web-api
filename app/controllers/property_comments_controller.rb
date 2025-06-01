@@ -1,9 +1,9 @@
 class PropertyCommentsController < ApplicationController
-  before_action :authenticate_request, except: [:index]
-  before_action :set_property, only: [:index, :create]
-  before_action :set_comment, only: [:show, :edit, :update, :destroy, :toggle_like, :flag]
-  before_action :ensure_can_edit, only: [:edit, :update]
-  before_action :ensure_can_delete, only: [:destroy]
+  before_action :authenticate_request, except: [ :index ]
+  before_action :set_property, only: [ :index, :create ]
+  before_action :set_comment, only: [ :show, :edit, :update, :destroy, :toggle_like, :flag ]
+  before_action :ensure_can_edit, only: [ :edit, :update ]
+  before_action :ensure_can_delete, only: [ :destroy ]
 
   # GET /properties/:property_id/comments
   def index
@@ -30,7 +30,7 @@ class PropertyCommentsController < ApplicationController
   # GET /property_comments/:id
   def show
     @property = @comment.property
-    
+
     respond_to do |format|
       format.html
       format.json { render json: { comment: comment_json(@comment) } }
@@ -46,16 +46,16 @@ class PropertyCommentsController < ApplicationController
       if @comment.save
         # Create notification for property owner
         create_comment_notification(@comment) unless current_user == @property.user
-        
+
         format.html {
           redirect_to property_property_comments_path(@property),
           notice: "Comment was successfully posted."
         }
-        format.json { 
-          render json: { 
+        format.json {
+          render json: {
             message: "Comment posted successfully",
             comment: comment_json(@comment)
-          }, status: :created 
+          }, status: :created
         }
       else
         format.html {
@@ -67,11 +67,11 @@ class PropertyCommentsController < ApplicationController
                               .limit(10)
           render :index, status: :unprocessable_entity
         }
-        format.json { 
-          render json: { 
+        format.json {
+          render json: {
             error: "Failed to post comment",
-            details: @comment.errors.full_messages 
-          }, status: :unprocessable_entity 
+            details: @comment.errors.full_messages
+          }, status: :unprocessable_entity
         }
       end
     end
@@ -87,24 +87,24 @@ class PropertyCommentsController < ApplicationController
     respond_to do |format|
       if @comment.update(comment_params)
         @comment.mark_as_edited!
-        
+
         format.html {
           redirect_to property_property_comments_path(@comment.property),
           notice: "Comment was successfully updated."
         }
-        format.json { 
-          render json: { 
+        format.json {
+          render json: {
             message: "Comment updated successfully",
             comment: comment_json(@comment)
-          } 
+          }
         }
       else
         format.html { render :edit, status: :unprocessable_entity }
-        format.json { 
-          render json: { 
+        format.json {
+          render json: {
             error: "Failed to update comment",
-            details: @comment.errors.full_messages 
-          }, status: :unprocessable_entity 
+            details: @comment.errors.full_messages
+          }, status: :unprocessable_entity
         }
       end
     end
@@ -120,8 +120,8 @@ class PropertyCommentsController < ApplicationController
         redirect_to property_property_comments_path(property),
         notice: "Comment was successfully deleted."
       }
-      format.json { 
-        render json: { message: "Comment deleted successfully" } 
+      format.json {
+        render json: { message: "Comment deleted successfully" }
       }
     end
   end
@@ -129,15 +129,15 @@ class PropertyCommentsController < ApplicationController
   # POST /property_comments/:id/toggle_like
   def toggle_like
     liked = @comment.toggle_like!(current_user)
-    
+
     respond_to do |format|
       format.html { redirect_back(fallback_location: @comment.property) }
-      format.json { 
-        render json: { 
+      format.json {
+        render json: {
           liked: liked,
           likes_count: @comment.likes_count,
           message: liked ? "Comment liked" : "Comment unliked"
-        } 
+        }
       }
     end
   end
@@ -145,30 +145,30 @@ class PropertyCommentsController < ApplicationController
   # POST /property_comments/:id/flag
   def flag
     reason = params[:reason] || "Inappropriate content"
-    
+
     if @comment.flag!(reason, current_user)
       respond_to do |format|
-        format.html { 
+        format.html {
           redirect_back(
-            fallback_location: @comment.property, 
+            fallback_location: @comment.property,
             notice: "Comment has been flagged for review."
-          ) 
+          )
         }
-        format.json { 
-          render json: { message: "Comment flagged successfully" } 
+        format.json {
+          render json: { message: "Comment flagged successfully" }
         }
       end
     else
       respond_to do |format|
-        format.html { 
+        format.html {
           redirect_back(
-            fallback_location: @comment.property, 
+            fallback_location: @comment.property,
             alert: "Unable to flag comment."
-          ) 
+          )
         }
-        format.json { 
-          render json: { error: "Failed to flag comment" }, 
-          status: :unprocessable_entity 
+        format.json {
+          render json: { error: "Failed to flag comment" },
+          status: :unprocessable_entity
         }
       end
     end
@@ -191,15 +191,15 @@ class PropertyCommentsController < ApplicationController
   def ensure_can_edit
     unless @comment.can_be_edited_by?(current_user)
       respond_to do |format|
-        format.html { 
+        format.html {
           redirect_back(
-            fallback_location: @comment.property, 
+            fallback_location: @comment.property,
             alert: "You can only edit your own comments within 15 minutes of posting."
-          ) 
+          )
         }
-        format.json { 
-          render json: { error: "Unauthorized" }, 
-          status: :forbidden 
+        format.json {
+          render json: { error: "Unauthorized" },
+          status: :forbidden
         }
       end
     end
@@ -208,15 +208,15 @@ class PropertyCommentsController < ApplicationController
   def ensure_can_delete
     unless @comment.can_be_deleted_by?(current_user)
       respond_to do |format|
-        format.html { 
+        format.html {
           redirect_back(
-            fallback_location: @comment.property, 
+            fallback_location: @comment.property,
             alert: "You don't have permission to delete this comment."
-          ) 
+          )
         }
-        format.json { 
-          render json: { error: "Unauthorized" }, 
-          status: :forbidden 
+        format.json {
+          render json: { error: "Unauthorized" },
+          status: :forbidden
         }
       end
     end
@@ -239,7 +239,7 @@ class PropertyCommentsController < ApplicationController
       content: comment.display_content,
       user: {
         id: comment.user.id,
-        name: comment.user.name || comment.user.email.split('@').first,
+        name: comment.user.name || comment.user.email.split("@").first,
         email: comment.user.email
       },
       likes_count: comment.likes_count,

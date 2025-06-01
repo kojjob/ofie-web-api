@@ -51,17 +51,17 @@ class PropertyCommentTest < ActiveSupport::TestCase
 
   test "should allow replies to top level comments" do
     @comment.save!
-    
+
     reply = PropertyComment.new(
       user: users(:two),
       property: @property,
       content: "This is a reply to the comment.",
       parent: @comment
     )
-    
+
     assert reply.valid?
     reply.save!
-    
+
     assert reply.reply?
     assert_not reply.top_level?
     assert_equal @comment, reply.parent
@@ -70,21 +70,21 @@ class PropertyCommentTest < ActiveSupport::TestCase
 
   test "should not allow replies to replies" do
     @comment.save!
-    
+
     reply = PropertyComment.create!(
       user: users(:two),
       property: @property,
       content: "This is a reply to the comment.",
       parent: @comment
     )
-    
+
     reply_to_reply = PropertyComment.new(
       user: @user,
       property: @property,
       content: "This is a reply to a reply.",
       parent: reply
     )
-    
+
     assert_not reply_to_reply.valid?
     assert_includes reply_to_reply.errors[:parent], "cannot be a reply to another reply"
   end
@@ -102,16 +102,16 @@ class PropertyCommentTest < ActiveSupport::TestCase
       zip_code: "54321",
       user: users(:two)
     )
-    
+
     @comment.save!
-    
+
     reply = PropertyComment.new(
       user: users(:two),
       property: other_property,
       content: "This is a reply to a comment on a different property.",
       parent: @comment
     )
-    
+
     assert_not reply.valid?
     assert_includes reply.errors[:parent], "must belong to the same property"
   end
@@ -119,12 +119,12 @@ class PropertyCommentTest < ActiveSupport::TestCase
   test "should track likes count" do
     @comment.save!
     assert_equal 0, @comment.likes_count
-    
+
     # Create a like
     like = CommentLike.create!(user: users(:two), property_comment: @comment)
     @comment.reload
     assert_equal 1, @comment.likes_count
-    
+
     # Remove the like
     like.destroy!
     @comment.reload
@@ -134,13 +134,13 @@ class PropertyCommentTest < ActiveSupport::TestCase
   test "should toggle likes correctly" do
     @comment.save!
     user = users(:two)
-    
+
     # Like the comment
     result = @comment.toggle_like!(user)
     assert result # should return true for liked
     assert_equal 1, @comment.likes_count
     assert @comment.liked_by?(user)
-    
+
     # Unlike the comment
     result = @comment.toggle_like!(user)
     assert_not result # should return false for unliked
@@ -150,14 +150,14 @@ class PropertyCommentTest < ActiveSupport::TestCase
 
   test "should flag and unflag comments" do
     @comment.save!
-    
+
     assert_not @comment.flagged?
-    
+
     @comment.flag!("Inappropriate content", users(:two))
     assert @comment.flagged?
     assert_equal "Inappropriate content", @comment.flagged_reason
     assert_not_nil @comment.flagged_at
-    
+
     @comment.unflag!
     assert_not @comment.flagged?
     assert_nil @comment.flagged_reason
@@ -166,22 +166,22 @@ class PropertyCommentTest < ActiveSupport::TestCase
 
   test "should display flagged content appropriately" do
     @comment.save!
-    
+
     assert_equal @comment.content, @comment.display_content
-    
+
     @comment.flag!("Inappropriate content")
     assert_equal "[This comment has been flagged and is under review]", @comment.display_content
   end
 
   test "should check edit permissions correctly" do
     @comment.save!
-    
+
     # Owner can edit within 15 minutes
     assert @comment.can_be_edited_by?(@user)
-    
+
     # Other users cannot edit
     assert_not @comment.can_be_edited_by?(users(:two))
-    
+
     # Owner cannot edit after 15 minutes
     @comment.update!(created_at: 20.minutes.ago)
     assert_not @comment.can_be_edited_by?(@user)
@@ -189,13 +189,13 @@ class PropertyCommentTest < ActiveSupport::TestCase
 
   test "should check delete permissions correctly" do
     @comment.save!
-    
+
     # Owner can delete
     assert @comment.can_be_deleted_by?(@user)
-    
+
     # Property owner can delete
     assert @comment.can_be_deleted_by?(@property.user)
-    
+
     # Other users cannot delete
     assert_not @comment.can_be_deleted_by?(users(:two))
   end

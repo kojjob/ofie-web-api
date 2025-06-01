@@ -21,13 +21,13 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create comment when authenticated" do
     # Simulate login by setting session
-    post login_path, params: { 
-      user: { 
-        email: @user.email, 
-        password: "password123" 
-      } 
+    post login_path, params: {
+      user: {
+        email: @user.email,
+        password: "password123"
+      }
     }
-    
+
     assert_difference("PropertyComment.count") do
       post property_property_comments_path(@property), params: {
         property_comment: {
@@ -35,7 +35,7 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    
+
     assert_redirected_to property_property_comments_path(@property)
     follow_redirect!
     assert_match "Comment was successfully posted", response.body
@@ -43,13 +43,13 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not create comment without content" do
     # Simulate login
-    post login_path, params: { 
-      user: { 
-        email: @user.email, 
-        password: "password123" 
-      } 
+    post login_path, params: {
+      user: {
+        email: @user.email,
+        password: "password123"
+      }
     }
-    
+
     assert_no_difference("PropertyComment.count") do
       post property_property_comments_path(@property), params: {
         property_comment: {
@@ -57,7 +57,7 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    
+
     assert_response :unprocessable_entity
   end
 
@@ -69,24 +69,24 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    
+
     assert_redirected_to login_path
   end
 
   test "should toggle like when authenticated" do
     # Simulate login
-    post login_path, params: { 
-      user: { 
-        email: @user.email, 
-        password: "password123" 
-      } 
+    post login_path, params: {
+      user: {
+        email: @user.email,
+        password: "password123"
+      }
     }
-    
+
     # Like the comment
     assert_difference("CommentLike.count") do
       post toggle_like_property_comment_path(@comment)
     end
-    
+
     # Unlike the comment
     assert_difference("CommentLike.count", -1) do
       post toggle_like_property_comment_path(@comment)
@@ -96,17 +96,17 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
   test "should flag comment when authenticated" do
     # Simulate login with different user
     other_user = users(:two)
-    post login_path, params: { 
-      user: { 
-        email: other_user.email, 
-        password: "password123" 
-      } 
+    post login_path, params: {
+      user: {
+        email: other_user.email,
+        password: "password123"
+      }
     }
-    
+
     post flag_property_comment_path(@comment), params: {
       reason: "Test flagging"
     }
-    
+
     @comment.reload
     assert @comment.flagged?
     assert_equal "Test flagging", @comment.flagged_reason
@@ -114,47 +114,47 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should delete comment when owner" do
     # Simulate login as comment owner
-    post login_path, params: { 
-      user: { 
-        email: @comment.user.email, 
-        password: "password123" 
-      } 
+    post login_path, params: {
+      user: {
+        email: @comment.user.email,
+        password: "password123"
+      }
     }
-    
+
     assert_difference("PropertyComment.count", -1) do
       delete property_comment_path(@comment)
     end
-    
+
     assert_redirected_to property_property_comments_path(@comment.property)
   end
 
   test "should not delete comment when not owner" do
     # Simulate login as different user
     other_user = users(:two)
-    post login_path, params: { 
-      user: { 
-        email: other_user.email, 
-        password: "password123" 
-      } 
+    post login_path, params: {
+      user: {
+        email: other_user.email,
+        password: "password123"
+      }
     }
-    
+
     assert_no_difference("PropertyComment.count") do
       delete property_comment_path(@comment)
     end
-    
+
     # Should redirect back with error
     assert_response :redirect
   end
 
   test "should create reply to comment" do
     # Simulate login
-    post login_path, params: { 
-      user: { 
-        email: @user.email, 
-        password: "password123" 
-      } 
+    post login_path, params: {
+      user: {
+        email: @user.email,
+        password: "password123"
+      }
     }
-    
+
     assert_difference("PropertyComment.count") do
       post property_property_comments_path(@property), params: {
         property_comment: {
@@ -163,7 +163,7 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    
+
     reply = PropertyComment.last
     assert_equal @comment, reply.parent
     assert_equal @property, reply.property
@@ -178,15 +178,15 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
       content: "This is a reply",
       parent: @comment
     )
-    
+
     # Simulate login
-    post login_path, params: { 
-      user: { 
-        email: @user.email, 
-        password: "password123" 
-      } 
+    post login_path, params: {
+      user: {
+        email: @user.email,
+        password: "password123"
+      }
     }
-    
+
     # Try to reply to the reply
     assert_no_difference("PropertyComment.count") do
       post property_property_comments_path(@property), params: {
@@ -196,7 +196,7 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    
+
     assert_response :unprocessable_entity
   end
 end
