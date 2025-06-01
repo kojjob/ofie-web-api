@@ -1,6 +1,6 @@
 class ToolsController < ApplicationController
   # Skip authentication for public tools
-  skip_before_action :authenticate_user!, only: [ :calculators, :market_analysis, :landlord_tools ]
+  skip_before_action :authenticate_request, only: [ :calculators, :market_analysis, :landlord_tools ]
 
   def calculators
     @page_title = "Rental Calculators"

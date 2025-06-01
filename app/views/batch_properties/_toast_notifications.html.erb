@@ -1,0 +1,124 @@
+<%# Toast Notification Component %>
+<%# Used for showing success, error, warning, and info messages %>
+
+<div data-batch-properties-target="toastContainer" 
+     class="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+  <!-- Toast notifications will be dynamically inserted here -->
+</div>
+
+<!-- Toast Template (hidden, used by JavaScript) -->
+<template data-batch-properties-target="toastTemplate">
+  <div class="toast bg-white border-l-4 border-gray-400 rounded-lg shadow-lg p-4 transform transition-all duration-300 ease-out translate-x-full opacity-0"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true">
+    
+    <div class="flex items-start">
+      <!-- Icon -->
+      <div class="flex-shrink-0 mr-3">
+        <div class="toast-icon w-6 h-6 rounded-full flex items-center justify-center">
+          <!-- Icon will be inserted by JavaScript -->
+        </div>
+      </div>
+      
+      <!-- Content -->
+      <div class="flex-1 min-w-0">
+        <div class="toast-title text-sm font-semibold text-gray-900 mb-1">
+          <!-- Title will be inserted by JavaScript -->
+        </div>
+        <div class="toast-message text-sm text-gray-700">
+          <!-- Message will be inserted by JavaScript -->
+        </div>
+      </div>
+      
+      <!-- Close Button -->
+      <button type="button" 
+              class="toast-close ml-4 bg-white rounded-md text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+              aria-label="Close notification">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Progress Bar (for auto-dismiss) -->
+    <div class="toast-progress mt-3 w-full bg-gray-200 rounded-full h-1 overflow-hidden">
+      <div class="toast-progress-bar h-full bg-current transition-all duration-100 ease-linear" 
+           style="width: 100%; transition-duration: 5s;"></div>
+    </div>
+  </div>
+</template>
+
+<style>
+  /* Toast-specific styles for better separation of concerns */
+  .toast {
+    min-width: 320px;
+    max-width: 400px;
+  }
+  
+  .toast.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  
+  .toast.hide {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  
+  /* Success Toast */
+  .toast.toast-success {
+    border-color: #10b981;
+  }
+  
+  .toast.toast-success .toast-icon {
+    background-color: #d1fae5;
+    color: #10b981;
+  }
+  
+  .toast.toast-success .toast-progress-bar {
+    background-color: #10b981;
+  }
+  
+  /* Error Toast */
+  .toast.toast-error {
+    border-color: #ef4444;
+  }
+  
+  .toast.toast-error .toast-icon {
+    background-color: #fee2e2;
+    color: #ef4444;
+  }
+  
+  .toast.toast-error .toast-progress-bar {
+    background-color: #ef4444;
+  }
+  
+  /* Warning Toast */
+  .toast.toast-warning {
+    border-color: #f59e0b;
+  }
+  
+  .toast.toast-warning .toast-icon {
+    background-color: #fef3c7;
+    color: #f59e0b;
+  }
+  
+  .toast.toast-warning .toast-progress-bar {
+    background-color: #f59e0b;
+  }
+  
+  /* Info Toast */
+  .toast.toast-info {
+    border-color: #3b82f6;
+  }
+  
+  .toast.toast-info .toast-icon {
+    background-color: #dbeafe;
+    color: #3b82f6;
+  }
+  
+  .toast.toast-info .toast-progress-bar {
+    background-color: #3b82f6;
+  }
+</style>

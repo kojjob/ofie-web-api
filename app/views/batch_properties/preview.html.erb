@@ -98,7 +98,11 @@
         <p class="text-sm text-gray-600">Review each property before processing</p>
       </div>
 
-      <div class="overflow-x-auto" data-controller="batch-properties" data-batch-properties-batch-upload-id-value="<%= @batch_upload.id %>">
+      <div class="overflow-x-auto" 
+           data-controller="batch-properties" 
+           data-batch-properties-batch-upload-id-value="<%= @batch_upload.id %>"
+           data-batch-properties-table-container-target="tableContainer">
+        
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
@@ -132,59 +136,12 @@
           </tbody>
         </table>
 
-        <%= render 'batch_properties/simple_modal' %>
+        <%= render 'batch_properties/enhanced_modal' %>
+        <%= render 'batch_properties/toast_notifications' %>
       </div>
 
-      <!-- AJAX Pagination -->
-      <% if @batch_items.respond_to?(:total_pages) && @batch_items.total_pages > 1 %>
-        <div class="px-8 py-6 border-t border-gray-200" id="pagination-container">
-          <div class="flex items-center justify-between">
-            <div class="text-sm text-gray-700">
-              Showing <%= @batch_items.offset_value + 1 %> to <%= [@batch_items.offset_value + @batch_items.limit_value, @batch_items.total_count].min %> of <%= @batch_items.total_count %> results
-            </div>
-
-            <div class="flex items-center space-x-2">
-              <% if @batch_items.prev_page %>
-                <button type="button"
-                        onclick="loadPage(<%= @batch_items.prev_page %>)"
-                        class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md transition-colors duration-200">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                  </svg>
-                  Previous
-                </button>
-              <% end %>
-
-              <% (@batch_items.current_page - 2..@batch_items.current_page + 2).each do |page| %>
-                <% if page > 0 && page <= @batch_items.total_pages %>
-                  <% if page == @batch_items.current_page %>
-                    <span class="relative inline-flex items-center px-4 py-2 border border-blue-500 bg-blue-50 text-sm font-medium text-blue-600 rounded-md">
-                      <%= page %>
-                    </span>
-                  <% else %>
-                    <button type="button"
-                            onclick="loadPage(<%= page %>)"
-                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md transition-colors duration-200">
-                      <%= page %>
-                    </button>
-                  <% end %>
-                <% end %>
-              <% end %>
-
-              <% if @batch_items.next_page %>
-                <button type="button"
-                        onclick="loadPage(<%= @batch_items.next_page %>)"
-                        class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md transition-colors duration-200">
-                  Next
-                  <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </button>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      <% end %>
+      <!-- Pagination Component (Proper Separation of Concerns) -->
+      <%= render 'batch_properties/pagination', items: @batch_items %>
     </div>
 
     <!-- Error Messages (if any) -->

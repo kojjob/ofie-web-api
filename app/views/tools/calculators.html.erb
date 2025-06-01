@@ -1,0 +1,161 @@
+<% content_for :title, @page_title %>
+<% content_for :description, @page_description %>
+
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
+  <div class="container mx-auto px-4 py-12">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">
+        <%= @page_title %>
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        <%= @page_description %>
+      </p>
+    </div>
+
+    <!-- Calculators Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      
+      <!-- Rental Yield Calculator -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Rental Yield Calculator</h3>
+        <p class="text-gray-600 mb-4">Calculate the annual rental yield and return on investment for your properties.</p>
+        <button class="inline-flex items-center text-green-600 hover:text-green-700 font-medium" onclick="openCalculator('rental-yield')">
+          Calculate Now →
+        </button>
+      </div>
+
+      <!-- Mortgage Calculator -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Mortgage Calculator</h3>
+        <p class="text-gray-600 mb-4">Calculate monthly mortgage payments, interest, and amortization schedules.</p>
+        <button class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium" onclick="openCalculator('mortgage')">
+          Calculate Now →
+        </button>
+      </div>
+
+      <!-- Cash Flow Calculator -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Cash Flow Calculator</h3>
+        <p class="text-gray-600 mb-4">Analyze monthly cash flow from rental income minus all expenses.</p>
+        <button class="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium" onclick="openCalculator('cash-flow')">
+          Calculate Now →
+        </button>
+      </div>
+
+      <!-- ROI Calculator -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">ROI Calculator</h3>
+        <p class="text-gray-600 mb-4">Calculate return on investment for property purchases and improvements.</p>
+        <button class="inline-flex items-center text-yellow-600 hover:text-yellow-700 font-medium" onclick="openCalculator('roi')">
+          Calculate Now →
+        </button>
+      </div>
+
+      <!-- Affordability Calculator -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Affordability Calculator</h3>
+        <p class="text-gray-600 mb-4">Determine how much property you can afford based on your income and expenses.</p>
+        <button class="inline-flex items-center text-red-600 hover:text-red-700 font-medium" onclick="openCalculator('affordability')">
+          Calculate Now →
+        </button>
+      </div>
+
+      <!-- Refinance Calculator -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Refinance Calculator</h3>
+        <p class="text-gray-600 mb-4">Calculate potential savings from refinancing your investment property.</p>
+        <button class="inline-flex items-center text-indigo-600 hover:text-indigo-700 font-medium" onclick="openCalculator('refinance')">
+          Calculate Now →
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Calculator Modal Placeholder -->
+    <div id="calculator-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden">
+      <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 id="calculator-title" class="text-lg font-medium">Calculator</h3>
+            <button onclick="closeCalculator()" class="text-gray-400 hover:text-gray-600">×</button>
+          </div>
+          <div id="calculator-content">
+            <!-- Calculator content will be loaded here -->
+            <p class="text-gray-600">Calculator functionality coming soon...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-16">
+      <div class="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto border border-gray-100">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Need More Advanced Tools?</h2>
+        <p class="text-gray-600 mb-6">Get access to professional property management tools and detailed analytics.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <%= link_to "Sign Up Free", new_user_registration_path, class: "inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-xl text-base font-medium text-white bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl" %>
+          <%= link_to "Landlord Tools", tools_landlord_tools_path, class: "inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-xl text-base font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all duration-200" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openCalculator(type) {
+  const modal = document.getElementById('calculator-modal');
+  const title = document.getElementById('calculator-title');
+  const content = document.getElementById('calculator-content');
+  
+  title.textContent = type.charAt(0).toUpperCase() + type.slice(1).replace('-', ' ') + ' Calculator';
+  content.innerHTML = '<p class="text-gray-600">Calculator functionality coming soon...</p>';
+  
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCalculator() {
+  const modal = document.getElementById('calculator-modal');
+  modal.classList.add('hidden');
+  document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside
+document.getElementById('calculator-modal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeCalculator();
+  }
+});
+</script>
