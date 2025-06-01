@@ -184,6 +184,33 @@ class BatchPropertiesController < ApplicationController
     end
   end
 
+  # POST /batch_properties/:id/retry_failed
+  def retry_failed
+    @batch_upload = current_user.batch_property_uploads.find(params[:id])
+
+    failed_items = @batch_upload.batch_property_items.failed_items
+
+    if failed_items.empty?
+      render json: { error: "No failed items to retry" }, status: :unprocessable_entity
+      return
+    end
+
+    # Reset failed items to pending
+    failed_items.each(&:retry_processing!)
+
+    # Update batch upload counters
+    @batch_upload.update!(
+      status: "validated",
+      failed_items: 0,
+      processed_items: @batch_upload.processed_items - failed_items.count
+    )
+
+    render json: {
+      message: "#{failed_items.count} failed items reset for retry",
+      batch_upload: batch_upload_json(@batch_upload)
+    }
+  end
+
   # DELETE /batch_properties/:id
   def destroy
     @batch_upload = current_user.batch_property_uploads.find(params[:id])

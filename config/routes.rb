@@ -273,6 +273,7 @@ Rails.application.routes.draw do
       get :preview
       post :process_batch
       post :fix_status
+      post :retry_failed
       get :status
     end
   end

@@ -78,6 +78,14 @@
                   class: "inline-flex items-center px-6 py-3 border border-transparent rounded-xl text-sm font-medium text-white bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl",
                   data: { confirm: "This will fix the batch upload status so it can be processed. Continue?" } %>
             <% end %>
+
+            <% if @batch_upload.failed_items && @batch_upload.failed_items > 0 %>
+              <%= button_to "Retry Failed (#{@batch_upload.failed_items})",
+                  retry_failed_batch_property_path(@batch_upload),
+                  method: :post,
+                  class: "inline-flex items-center px-6 py-3 border border-transparent rounded-xl text-sm font-medium text-white bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl",
+                  data: { confirm: "This will retry all #{@batch_upload.failed_items} failed items. Continue?" } %>
+            <% end %>
           </div>
         </div>
       </div>
@@ -135,12 +143,17 @@
                     <%= item.status.humanize %>
                   </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <td class="px-6 py-4 text-sm font-medium">
                   <% if item.property_id %>
-                    <%= link_to "View Property", property_path(item.property_id), 
+                    <%= link_to "View Property", property_path(item.property_id),
                         class: "text-blue-600 hover:text-blue-900", target: "_blank" %>
                   <% elsif item.error_message %>
-                    <span class="text-red-600" title="<%= item.error_message %>">Error</span>
+                    <div class="text-red-600">
+                      <div class="font-medium">Error</div>
+                      <div class="text-xs text-red-500 mt-1 max-w-xs">
+                        <%= truncate(item.error_message, length: 100) %>
+                      </div>
+                    </div>
                   <% else %>
                     <span class="text-gray-400">Pending</span>
                   <% end %>

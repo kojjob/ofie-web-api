@@ -122,21 +122,35 @@ class BatchPropertyItem < ApplicationRecord
       data = property_data_hash
       user = batch_property_upload.user
 
+      # Sanitize and prepare property data
+      sanitized_data = sanitize_property_data(data)
+
+      Rails.logger.debug "Creating property with data: #{sanitized_data.inspect}"
+
       # Create property
-      property = user.properties.build(sanitize_property_data(data))
+      property = user.properties.build(sanitized_data)
 
       if property.save
+        Rails.logger.info "Successfully created property #{property.id} for batch item #{id}"
+
         # Handle photo attachments if specified
         attach_photos(property, photo_filenames) if has_photos?
 
         mark_as_completed!(property)
         true
       else
-        mark_as_failed!(property.errors.full_messages.join(", "))
+        error_msg = property.errors.full_messages.join(", ")
+        Rails.logger.error "Failed to create property for batch item #{id}: #{error_msg}"
+        Rails.logger.error "Property data was: #{sanitized_data.inspect}"
+
+        mark_as_failed!(error_msg)
         false
       end
 
     rescue StandardError => e
+      Rails.logger.error "Exception creating property for batch item #{id}: #{e.message}"
+      Rails.logger.error "Backtrace: #{e.backtrace.first(5).join("\n")}"
+
       mark_as_failed!("Processing error: #{e.message}")
       false
     end
@@ -196,10 +210,10 @@ class BatchPropertyItem < ApplicationRecord
     # Convert string values to appropriate types
     sanitized = data.dup
 
-    # Convert boolean fields
+    # Convert boolean fields (using correct field names from Property model)
     boolean_fields = %w[parking_available pets_allowed furnished utilities_included
-                       laundry_available air_conditioning heating internet_included
-                       gym_access pool_access balcony garden]
+                       laundry air_conditioning heating internet_included
+                       gym pool balcony]
 
     boolean_fields.each do |field|
       if sanitized[field].present?
@@ -212,6 +226,28 @@ class BatchPropertyItem < ApplicationRecord
     sanitized["bedrooms"] = sanitized["bedrooms"].to_i if sanitized["bedrooms"].present?
     sanitized["bathrooms"] = sanitized["bathrooms"].to_i if sanitized["bathrooms"].present?
     sanitized["square_feet"] = sanitized["square_feet"].to_f if sanitized["square_feet"].present?
+
+    # Set default values for required fields if missing
+    sanitized["availability_status"] ||= "available"
+
+    # Convert availability_status to enum value if it's a string
+    if sanitized["availability_status"].present?
+      status_mapping = {
+        "available" => 0, "rented" => 1, "pending" => 2, "maintenance" => 3,
+        "0" => 0, "1" => 1, "2" => 2, "3" => 3
+      }
+      sanitized["availability_status"] = status_mapping[sanitized["availability_status"].to_s] || 0
+    end
+
+    # Ensure property_type is valid
+    if sanitized["property_type"].present?
+      valid_types = %w[apartment house condo townhouse studio loft]
+      unless valid_types.include?(sanitized["property_type"].to_s.downcase)
+        sanitized["property_type"] = "apartment" # Default fallback
+      end
+    else
+      sanitized["property_type"] = "apartment" # Default if missing
+    end
 
     # Remove fields that aren't property attributes
     sanitized.except("photo_filenames")
