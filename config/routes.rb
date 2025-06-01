@@ -272,6 +272,7 @@ Rails.application.routes.draw do
     member do
       get :preview
       post :process_batch
+      post :fix_status
       get :status
     end
   end

@@ -119,7 +119,27 @@ class BatchPropertiesController < ApplicationController
     @batch_upload = current_user.batch_property_uploads.find(params[:id])
 
     unless @batch_upload.validated?
-      render json: { error: "Batch upload must be validated before processing" }, status: :unprocessable_entity
+      render json: {
+        error: "Batch upload must be validated before processing",
+        current_status: @batch_upload.status,
+        required_status: "validated",
+        debug_info: {
+          id: @batch_upload.id,
+          status: @batch_upload.status,
+          total_items: @batch_upload.total_items,
+          valid_items: @batch_upload.valid_items,
+          invalid_items: @batch_upload.invalid_items
+        }
+      }, status: :unprocessable_entity
+      return
+    end
+
+    # Check if there are valid items to process
+    unless @batch_upload.valid_items && @batch_upload.valid_items > 0
+      render json: {
+        error: "No valid items to process",
+        valid_items: @batch_upload.valid_items
+      }, status: :unprocessable_entity
       return
     end
 
@@ -142,6 +162,26 @@ class BatchPropertiesController < ApplicationController
       batch_upload: batch_upload_json(@batch_upload),
       progress: calculate_progress(@batch_upload)
     }
+  end
+
+  # POST /batch_properties/:id/fix_status
+  def fix_status
+    @batch_upload = current_user.batch_property_uploads.find(params[:id])
+
+    # If batch upload has valid items but is stuck in processing, fix it
+    if @batch_upload.processing? && @batch_upload.valid_items && @batch_upload.valid_items > 0
+      @batch_upload.update!(status: "validated")
+      render json: {
+        message: "Batch upload status fixed",
+        batch_upload: batch_upload_json(@batch_upload)
+      }
+    else
+      render json: {
+        error: "Cannot fix status for this batch upload",
+        current_status: @batch_upload.status,
+        valid_items: @batch_upload.valid_items
+      }, status: :unprocessable_entity
+    end
   end
 
   # DELETE /batch_properties/:id
