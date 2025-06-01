@@ -64,7 +64,6 @@ export default class extends Controller {
 
     // Show modal
     this.modalTarget.classList.remove('hidden')
-    this.modalTarget.classList.add('flex')
     document.body.style.overflow = 'hidden'
 
     console.log('Modal should now be visible')
@@ -73,7 +72,6 @@ export default class extends Controller {
   // Close modal action
   closeModal() {
     this.modalTarget.classList.add('hidden')
-    this.modalTarget.classList.remove('flex')
     document.body.style.overflow = 'auto'
     
     // Reset modal state
@@ -98,31 +96,24 @@ export default class extends Controller {
   }
 
   updateModalButtons(status) {
-    console.log('Updating modal buttons for status:', status)
-    console.log('Available targets:', {
-      viewPropertyBtn: this.hasViewPropertyBtnTarget,
-      editPropertyBtn: this.hasEditPropertyBtnTarget,
-      retryItemBtn: this.hasRetryItemBtnTarget
-    })
-
     // Show/hide buttons based on status
     if (status === 'completed') {
-      this.showElement(this.hasViewPropertyBtnTarget ? this.viewPropertyBtnTarget : null)
-      this.showElement(this.hasEditPropertyBtnTarget ? this.editPropertyBtnTarget : null)
-      this.hideElement(this.hasRetryItemBtnTarget ? this.retryItemBtnTarget : null)
+      this.showElement(this.viewPropertyBtnTarget)
+      this.showElement(this.editPropertyBtnTarget)
+      this.hideElement(this.retryItemBtnTarget)
     } else if (status === 'failed') {
-      this.hideElement(this.hasViewPropertyBtnTarget ? this.viewPropertyBtnTarget : null)
-      this.hideElement(this.hasEditPropertyBtnTarget ? this.editPropertyBtnTarget : null)
-      this.showElement(this.hasRetryItemBtnTarget ? this.retryItemBtnTarget : null)
+      this.hideElement(this.viewPropertyBtnTarget)
+      this.hideElement(this.editPropertyBtnTarget)
+      this.showElement(this.retryItemBtnTarget)
     } else {
-      this.hideElement(this.hasViewPropertyBtnTarget ? this.viewPropertyBtnTarget : null)
-      this.hideElement(this.hasEditPropertyBtnTarget ? this.editPropertyBtnTarget : null)
-      this.hideElement(this.hasRetryItemBtnTarget ? this.retryItemBtnTarget : null)
+      this.hideElement(this.viewPropertyBtnTarget)
+      this.hideElement(this.editPropertyBtnTarget)
+      this.hideElement(this.retryItemBtnTarget)
     }
   }
 
   showElement(element) {
-    if (element) element.style.display = 'flex'
+    if (element) element.style.display = 'block'
   }
 
   hideElement(element) {
