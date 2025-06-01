@@ -263,6 +263,19 @@ Rails.application.routes.draw do
     end
   end
 
+  # Batch Properties routes (Web)
+  resources :batch_properties, only: [:index, :new, :show, :destroy] do
+    collection do
+      get :template
+      post :upload
+    end
+    member do
+      get :preview
+      post :process
+      get :status
+    end
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

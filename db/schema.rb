@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,46 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "batch_property_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "batch_property_upload_id", null: false
+    t.uuid "property_id"
+    t.integer "row_number", null: false
+    t.text "property_data", null: false
+    t.string "status", default: "pending", null: false
+    t.text "error_message"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["batch_property_upload_id", "row_number"], name: "idx_on_batch_property_upload_id_row_number_c7be2a97bf"
+    t.index ["batch_property_upload_id", "status"], name: "idx_on_batch_property_upload_id_status_78e998a09b"
+    t.index ["batch_property_upload_id"], name: "index_batch_property_items_on_batch_property_upload_id"
+    t.index ["property_id"], name: "index_batch_property_items_on_property_id"
+    t.index ["row_number"], name: "index_batch_property_items_on_row_number"
+    t.index ["status"], name: "index_batch_property_items_on_status"
+  end
+
+  create_table "batch_property_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "filename", null: false
+    t.string "status", default: "pending", null: false
+    t.integer "total_items", default: 0
+    t.integer "valid_items", default: 0
+    t.integer "invalid_items", default: 0
+    t.integer "processed_items", default: 0
+    t.integer "successful_items", default: 0
+    t.integer "failed_items", default: 0
+    t.text "error_message"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_batch_property_uploads_on_created_at"
+    t.index ["status"], name: "index_batch_property_uploads_on_status"
+    t.index ["user_id", "created_at"], name: "index_batch_property_uploads_on_user_id_and_created_at"
+    t.index ["user_id", "status"], name: "index_batch_property_uploads_on_user_id_and_status"
+    t.index ["user_id"], name: "index_batch_property_uploads_on_user_id"
   end
 
   create_table "bot_context_stores", force: :cascade do |t|
@@ -469,6 +509,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "batch_property_items", "batch_property_uploads"
+  add_foreign_key "batch_property_items", "properties"
+  add_foreign_key "batch_property_uploads", "users"
   add_foreign_key "bot_context_stores", "conversations"
   add_foreign_key "bot_context_stores", "users"
   add_foreign_key "bot_feedbacks", "messages"

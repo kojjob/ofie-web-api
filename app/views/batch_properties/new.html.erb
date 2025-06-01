@@ -1,0 +1,198 @@
+<% content_for :title, "Upload Batch Properties" %>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50" data-controller="batch-upload">
+  <!-- Header Section -->
+  <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold mb-4">Upload Batch Properties</h1>
+        <p class="text-xl text-blue-100">Upload multiple properties at once using a CSV file</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Instructions -->
+    <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 mb-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">How to Upload Properties</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl font-bold text-white">1</span>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Download Template</h3>
+          <p class="text-gray-600">Download our CSV template with all required fields and example data</p>
+          <%= link_to "Download Template", template_batch_properties_path(format: :csv),
+                      class: "inline-block mt-3 text-blue-600 hover:text-blue-800 font-medium" %>
+        </div>
+        
+        <div class="text-center">
+          <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl font-bold text-white">2</span>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Fill Your Data</h3>
+          <p class="text-gray-600">Add your property information to the template. Each row represents one property</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="text-2xl font-bold text-white">3</span>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Upload & Process</h3>
+          <p class="text-gray-600">Upload your completed CSV file and we'll validate and create your properties</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden">
+      <div class="px-8 py-6 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-900">Upload CSV File</h2>
+        <p class="text-gray-600 mt-1">Select your CSV file containing property data</p>
+      </div>
+
+      <div class="p-8">
+        <!-- File Upload Area -->
+        <div class="border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center hover:border-blue-400 transition-all duration-300 bg-gradient-to-br from-gray-50 to-gray-100 hover:from-blue-50 hover:to-indigo-50"
+             data-batch-upload-target="dropZone"
+             data-action="dragover->batch-upload#handleDragOver dragenter->batch-upload#handleDragEnter dragleave->batch-upload#handleDragLeave drop->batch-upload#handleDrop">
+          
+          <input type="file" 
+                 accept=".csv"
+                 class="hidden"
+                 data-batch-upload-target="fileInput"
+                 data-action="change->batch-upload#handleFileSelect">
+          
+          <div data-batch-upload-target="uploadPrompt">
+            <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+              </svg>
+            </div>
+            
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Drop your CSV file here</h3>
+            <p class="text-gray-600 mb-6">or click to browse and select a file</p>
+            
+            <button type="button" 
+                    class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-2xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    data-action="click->batch-upload#openFileDialog">
+              Select CSV File
+            </button>
+            
+            <p class="text-sm text-gray-500 mt-4">Maximum file size: 10MB</p>
+          </div>
+          
+          <!-- File Selected State -->
+          <div data-batch-upload-target="fileSelected" class="hidden">
+            <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">File Selected</h3>
+            <p class="text-gray-600 mb-6" data-batch-upload-target="fileName"></p>
+            
+            <div class="flex justify-center space-x-4">
+              <button type="button" 
+                      class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-3 rounded-2xl font-medium hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                      data-action="click->batch-upload#uploadFile"
+                      data-batch-upload-target="uploadButton">
+                Upload & Validate
+              </button>
+              
+              <button type="button" 
+                      class="bg-gray-200 text-gray-700 px-8 py-3 rounded-2xl font-medium hover:bg-gray-300 transition-all duration-300"
+                      data-action="click->batch-upload#clearFile">
+                Choose Different File
+              </button>
+            </div>
+          </div>
+          
+          <!-- Upload Progress -->
+          <div data-batch-upload-target="uploadProgress" class="hidden">
+            <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <svg class="w-10 h-10 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+            </div>
+            
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Uploading & Validating</h3>
+            <p class="text-gray-600 mb-6">Please wait while we process your file...</p>
+            
+            <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+              <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-300" 
+                   style="width: 0%" 
+                   data-batch-upload-target="progressBar"></div>
+            </div>
+            
+            <p class="text-sm text-gray-500" data-batch-upload-target="progressText">Initializing...</p>
+          </div>
+        </div>
+
+        <!-- Upload Results -->
+        <div data-batch-upload-target="uploadResults" class="hidden mt-8">
+          <!-- Results will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 mt-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Tips for Success</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Required Fields</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li class="flex items-center">
+              <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Title, Address, City
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Price, Bedrooms, Bathrooms
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Property Type
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Data Format Tips</h3>
+          <ul class="space-y-2 text-gray-600">
+            <li class="flex items-center">
+              <svg class="w-4 h-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+              </svg>
+              Use true/false for boolean fields
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+              </svg>
+              Numbers only for price and dimensions
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+              </svg>
+              Separate photo filenames with commas
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

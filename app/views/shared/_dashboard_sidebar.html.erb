@@ -232,6 +232,37 @@
               <div class="text-xs opacity-75 mt-0.5">List new property</div>
             </div>
           <% end %>
+
+          <%= link_to batch_properties_path,
+              class: "group flex items-center px-5 py-4 text-sm font-semibold rounded-2xl transition-all duration-300 transform hover:scale-[1.02] #{current_page?(batch_properties_path) ? 'bg-gradient-to-r from-cyan-50 via-blue-50 to-indigo-50 text-cyan-700 border border-cyan-200/50 shadow-lg shadow-cyan-500/10' : 'text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-slate-50 hover:text-gray-900 hover:shadow-lg'}" do %>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-all duration-300 #{current_page?(batch_properties_path) ? 'bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-600 text-white shadow-xl shadow-cyan-500/25' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-600 group-hover:from-cyan-100 group-hover:to-blue-100 group-hover:text-cyan-600 group-hover:shadow-lg'}">
+              <!-- Premium Batch Upload Icon -->
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <g opacity="0.95">
+                  <!-- Multiple documents/properties -->
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  <!-- Batch indicator - multiple layers -->
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 3h10a2 2 0 012 2v14" opacity="0.6"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5h10a2 2 0 012 2v14" opacity="0.4"/>
+                  <!-- Upload arrow -->
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l3-3m0 0l3 3m-3-3v8" opacity="0.8"/>
+                  <!-- Data rows -->
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 8h6m-6 4h4" opacity="0.7"/>
+                  <!-- Batch processing indicators -->
+                  <circle cx="16" cy="8" r="1" fill="currentColor" opacity="0.6"/>
+                  <circle cx="18" cy="10" r="0.8" fill="currentColor" opacity="0.5"/>
+                  <circle cx="16" cy="12" r="0.6" fill="currentColor" opacity="0.4"/>
+                </g>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <div class="font-semibold">Batch Upload</div>
+              <div class="text-xs opacity-75 mt-0.5">Upload multiple properties</div>
+            </div>
+            <% if current_page?(batch_properties_path) %>
+              <div class="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
+            <% end %>
+          <% end %>
         <% else %>
           <%= link_to favorites_path,
               class: "group flex items-center px-5 py-4 text-sm font-semibold rounded-2xl transition-all duration-300 transform hover:scale-[1.02] #{current_page?(favorites_path) ? 'bg-gradient-to-r from-pink-50 via-rose-50 to-red-50 text-pink-700 border border-pink-200/50 shadow-lg shadow-pink-500/10' : 'text-gray-700 hover:bg-gradient-to-r hover:from-gray-50 hover:to-slate-50 hover:text-gray-900 hover:shadow-lg'}" do %>
