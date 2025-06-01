@@ -98,75 +98,19 @@
         <p class="text-sm text-gray-600">Review each property before processing</p>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Row</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% @batch_items.each do |item| %>
-              <% property_data = JSON.parse(item.property_data) %>
-              <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  <%= item.row_number %>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-gray-900"><%= property_data['title'] %></div>
-                  <div class="text-sm text-gray-500"><%= truncate(property_data['description'], length: 50) %></div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900"><%= property_data['address'] %></div>
-                  <div class="text-sm text-gray-500"><%= property_data['city'] %></div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  $<%= number_with_delimiter(property_data['price']) %>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    <%= property_data['property_type']&.humanize %>
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                               <%= item.status == 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                   item.status == 'processed' ? 'bg-green-100 text-green-800' :
-                                   item.status == 'failed' ? 'bg-red-100 text-red-800' :
-                                   'bg-gray-100 text-gray-800' %>">
-                    <%= item.status.humanize %>
-                  </span>
-                </td>
-                <td class="px-6 py-4 text-sm font-medium">
-                  <% if item.property_id %>
-                    <%= link_to "View Property", property_path(item.property_id),
-                        class: "text-blue-600 hover:text-blue-900", target: "_blank" %>
-                  <% elsif item.error_message %>
-                    <div class="text-red-600">
-                      <div class="font-medium">Error</div>
-                      <div class="text-xs text-red-500 mt-1 max-w-xs">
-                        <%= truncate(item.error_message, length: 100) %>
-                      </div>
-                    </div>
-                  <% else %>
-                    <span class="text-gray-400">Pending</span>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+      <div class="overflow-x-auto" data-controller="batch-properties" data-batch-properties-batch-upload-id-value="<%= @batch_upload.id %>">
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-6" id="batch-items-grid">
+          <% @batch_items.each do |item| %>
+            <%= render 'batch_properties/property_card', item: item %>
+          <% end %>
+        </div>
+
+        <%= render 'batch_properties/property_actions_modal' %>
       </div>
 
-      <!-- Pagination -->
+      <!-- AJAX Pagination -->
       <% if @batch_items.respond_to?(:total_pages) && @batch_items.total_pages > 1 %>
-        <div class="px-8 py-6 border-t border-gray-200">
+        <div class="px-8 py-6 border-t border-gray-200" id="pagination-container">
           <div class="flex items-center justify-between">
             <div class="text-sm text-gray-700">
               Showing <%= @batch_items.offset_value + 1 %> to <%= [@batch_items.offset_value + @batch_items.limit_value, @batch_items.total_count].min %> of <%= @batch_items.total_count %> results
@@ -174,13 +118,14 @@
 
             <div class="flex items-center space-x-2">
               <% if @batch_items.prev_page %>
-                <%= link_to preview_batch_property_path(@batch_upload, page: @batch_items.prev_page),
-                    class: "relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md" do %>
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button type="button"
+                        onclick="loadPage(<%= @batch_items.prev_page %>)"
+                        class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md transition-colors duration-200">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                   </svg>
                   Previous
-                <% end %>
+                </button>
               <% end %>
 
               <% (@batch_items.current_page - 2..@batch_items.current_page + 2).each do |page| %>
@@ -190,20 +135,24 @@
                       <%= page %>
                     </span>
                   <% else %>
-                    <%= link_to page, preview_batch_property_path(@batch_upload, page: page),
-                        class: "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md" %>
+                    <button type="button"
+                            onclick="loadPage(<%= page %>)"
+                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md transition-colors duration-200">
+                      <%= page %>
+                    </button>
                   <% end %>
                 <% end %>
               <% end %>
 
               <% if @batch_items.next_page %>
-                <%= link_to preview_batch_property_path(@batch_upload, page: @batch_items.next_page),
-                    class: "relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md" do %>
+                <button type="button"
+                        onclick="loadPage(<%= @batch_items.next_page %>)"
+                        class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md transition-colors duration-200">
                   Next
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                   </svg>
-                <% end %>
+                </button>
               <% end %>
             </div>
           </div>

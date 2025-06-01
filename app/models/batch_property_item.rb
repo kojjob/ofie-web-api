@@ -101,15 +101,23 @@ class BatchPropertyItem < ApplicationRecord
   end
 
   def retry_processing!
-    return false unless can_be_retried?
+    # Allow retry for failed items even if they don't have property_data
+    # (the can_be_retried? method requires property_data, but we want to be more lenient)
+    return false unless failed?
 
-    update!(
-      status: "pending",
-      error_message: nil,
-      started_at: nil,
-      completed_at: nil,
-      property: nil
-    )
+    begin
+      update!(
+        status: "pending",
+        error_message: nil,
+        started_at: nil,
+        completed_at: nil,
+        property: nil
+      )
+      true
+    rescue StandardError => e
+      Rails.logger.error "Failed to retry processing for item #{id}: #{e.message}"
+      false
+    end
   end
 
   def create_property!

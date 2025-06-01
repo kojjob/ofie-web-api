@@ -118,7 +118,13 @@ class BatchPropertiesController < ApplicationController
   def process_batch
     @batch_upload = current_user.batch_property_uploads.find(params[:id])
 
+    Rails.logger.info "Processing batch #{@batch_upload.id} for user #{current_user.id}"
+    Rails.logger.debug "Batch upload details: status=#{@batch_upload.status}, total_items=#{@batch_upload.total_items}, valid_items=#{@batch_upload.valid_items}, invalid_items=#{@batch_upload.invalid_items}"
+
+    # Check batch upload status
     unless @batch_upload.validated?
+      Rails.logger.warn "Batch upload #{@batch_upload.id} is not validated. Current status: #{@batch_upload.status}"
+
       render json: {
         error: "Batch upload must be validated before processing",
         current_status: @batch_upload.status,
@@ -128,7 +134,9 @@ class BatchPropertiesController < ApplicationController
           status: @batch_upload.status,
           total_items: @batch_upload.total_items,
           valid_items: @batch_upload.valid_items,
-          invalid_items: @batch_upload.invalid_items
+          invalid_items: @batch_upload.invalid_items,
+          pending_items_count: @batch_upload.batch_property_items.where(status: "pending").count,
+          all_items_statuses: @batch_upload.batch_property_items.pluck(:status).tally
         }
       }, status: :unprocessable_entity
       return
@@ -136,22 +144,47 @@ class BatchPropertiesController < ApplicationController
 
     # Check if there are valid items to process
     unless @batch_upload.valid_items && @batch_upload.valid_items > 0
+      Rails.logger.warn "Batch upload #{@batch_upload.id} has no valid items. valid_items=#{@batch_upload.valid_items}"
+
       render json: {
         error: "No valid items to process",
-        valid_items: @batch_upload.valid_items
+        valid_items: @batch_upload.valid_items,
+        debug_info: {
+          total_items: @batch_upload.total_items,
+          pending_items_count: @batch_upload.batch_property_items.where(status: "pending").count,
+          all_items_statuses: @batch_upload.batch_property_items.pluck(:status).tally
+        }
       }, status: :unprocessable_entity
       return
     end
 
-    # Process in background job
-    BatchPropertyProcessorJob.perform_later(@batch_upload.id)
+    begin
+      Rails.logger.info "Starting background job for batch #{@batch_upload.id}"
 
-    @batch_upload.update!(status: "processing")
+      # Process in background job
+      BatchPropertyProcessorJob.perform_later(@batch_upload.id)
 
-    render json: {
-      message: "Batch processing started",
-      batch_upload: batch_upload_json(@batch_upload)
-    }
+      @batch_upload.update!(status: "processing")
+
+      Rails.logger.info "Successfully started processing for batch #{@batch_upload.id}"
+
+      render json: {
+        message: "Batch processing started",
+        batch_upload: batch_upload_json(@batch_upload)
+      }
+
+    rescue StandardError => e
+      Rails.logger.error "Failed to start batch processing for #{@batch_upload.id}: #{e.message}"
+      Rails.logger.error "Backtrace: #{e.backtrace.first(5).join("\n")}"
+
+      render json: {
+        error: "Failed to start batch processing: #{e.message}",
+        debug_info: {
+          batch_id: @batch_upload.id,
+          status: @batch_upload.status
+        }
+      }, status: :unprocessable_entity
+    end
   end
 
   # GET /batch_properties/:id/status
@@ -168,18 +201,45 @@ class BatchPropertiesController < ApplicationController
   def fix_status
     @batch_upload = current_user.batch_property_uploads.find(params[:id])
 
-    # If batch upload has valid items but is stuck in processing, fix it
-    if @batch_upload.processing? && @batch_upload.valid_items && @batch_upload.valid_items > 0
-      @batch_upload.update!(status: "validated")
+    Rails.logger.info "Fixing status for batch #{@batch_upload.id}"
+    Rails.logger.debug "Current status: #{@batch_upload.status}, valid_items: #{@batch_upload.valid_items}"
+
+    # Count pending items to determine if we should fix the status
+    pending_items_count = @batch_upload.batch_property_items.where(status: "pending").count
+
+    Rails.logger.debug "Pending items count: #{pending_items_count}"
+
+    # Fix status if batch has pending items but wrong status or counters
+    if pending_items_count > 0
+      @batch_upload.update!(
+        status: "validated",
+        valid_items: pending_items_count,
+        total_items: @batch_upload.batch_property_items.count,
+        processed_items: @batch_upload.batch_property_items.where(status: ["completed", "failed"]).count,
+        failed_items: @batch_upload.batch_property_items.where(status: "failed").count,
+        successful_items: @batch_upload.batch_property_items.where(status: "completed").count
+      )
+
+      Rails.logger.info "Fixed batch #{@batch_upload.id} status and counters"
+
       render json: {
-        message: "Batch upload status fixed",
-        batch_upload: batch_upload_json(@batch_upload)
+        message: "Batch upload status and counters fixed",
+        batch_upload: batch_upload_json(@batch_upload),
+        debug_info: {
+          pending_items: pending_items_count,
+          total_items: @batch_upload.total_items,
+          valid_items: @batch_upload.valid_items
+        }
       }
     else
       render json: {
-        error: "Cannot fix status for this batch upload",
+        error: "Cannot fix status - no pending items found",
         current_status: @batch_upload.status,
-        valid_items: @batch_upload.valid_items
+        valid_items: @batch_upload.valid_items,
+        debug_info: {
+          pending_items: pending_items_count,
+          all_items_statuses: @batch_upload.batch_property_items.pluck(:status).tally
+        }
       }, status: :unprocessable_entity
     end
   end
@@ -188,27 +248,111 @@ class BatchPropertiesController < ApplicationController
   def retry_failed
     @batch_upload = current_user.batch_property_uploads.find(params[:id])
 
-    failed_items = @batch_upload.batch_property_items.failed_items
+    # Get all items with failed status
+    failed_items = @batch_upload.batch_property_items.where(status: "failed")
+
+    Rails.logger.info "Retry failed items for batch #{@batch_upload.id}: found #{failed_items.count} failed items"
+    Rails.logger.debug "Batch upload failed_items counter: #{@batch_upload.failed_items}"
+    Rails.logger.debug "All batch items statuses: #{@batch_upload.batch_property_items.pluck(:status).tally}"
 
     if failed_items.empty?
-      render json: { error: "No failed items to retry" }, status: :unprocessable_entity
+      # Check if there are any items that might be in a different status but should be retryable
+      all_items = @batch_upload.batch_property_items.includes(:property)
+      items_with_errors = all_items.where.not(error_message: nil)
+
+      Rails.logger.warn "No failed items found, but #{items_with_errors.count} items have error messages"
+
+      render json: {
+        error: "No failed items to retry",
+        debug_info: {
+          total_items: all_items.count,
+          items_with_errors: items_with_errors.count,
+          status_breakdown: all_items.pluck(:status).tally,
+          batch_failed_counter: @batch_upload.failed_items
+        }
+      }, status: :unprocessable_entity
       return
     end
 
-    # Reset failed items to pending
-    failed_items.each(&:retry_processing!)
+    begin
+      # Reset failed items to pending
+      retry_count = 0
+      failed_items.each do |item|
+        if item.retry_processing!
+          retry_count += 1
+          Rails.logger.debug "Successfully reset item #{item.id} to pending"
+        else
+          Rails.logger.warn "Failed to reset item #{item.id}: #{item.errors.full_messages.join(', ')}"
+        end
+      end
 
-    # Update batch upload counters
-    @batch_upload.update!(
-      status: "validated",
-      failed_items: 0,
-      processed_items: @batch_upload.processed_items - failed_items.count
-    )
+      # Update batch upload counters
+      @batch_upload.reload
+      @batch_upload.update!(
+        status: "validated",
+        failed_items: [@batch_upload.failed_items - retry_count, 0].max,
+        processed_items: [@batch_upload.processed_items - retry_count, 0].max
+      )
+
+      Rails.logger.info "Successfully reset #{retry_count} failed items for batch #{@batch_upload.id}"
+
+      render json: {
+        message: "#{retry_count} failed items reset for retry",
+        batch_upload: batch_upload_json(@batch_upload),
+        debug_info: {
+          items_reset: retry_count,
+          total_failed_found: failed_items.count
+        }
+      }
+
+    rescue StandardError => e
+      Rails.logger.error "Error resetting failed items for batch #{@batch_upload.id}: #{e.message}"
+      Rails.logger.error "Backtrace: #{e.backtrace.first(5).join("\n")}"
+
+      render json: {
+        error: "Failed to reset items: #{e.message}",
+        debug_info: {
+          batch_id: @batch_upload.id,
+          failed_items_count: failed_items.count
+        }
+      }, status: :unprocessable_entity
+    end
+  end
+
+  # GET /batch_properties/:id/item_details/:item_id
+  def item_details
+    @batch_upload = current_user.batch_property_uploads.find(params[:id])
+    @batch_item = @batch_upload.batch_property_items.find(params[:item_id])
 
     render json: {
-      message: "#{failed_items.count} failed items reset for retry",
-      batch_upload: batch_upload_json(@batch_upload)
+      id: @batch_item.id,
+      row_number: @batch_item.row_number,
+      status: @batch_item.status,
+      property_data: @batch_item.property_data,
+      property_id: @batch_item.property_id,
+      error_message: @batch_item.error_message,
+      created_at: @batch_item.created_at.iso8601
     }
+  end
+
+  # POST /batch_properties/:id/retry_item/:item_id
+  def retry_item
+    @batch_upload = current_user.batch_property_uploads.find(params[:id])
+    @batch_item = @batch_upload.batch_property_items.find(params[:item_id])
+
+    if @batch_item.retry_processing!
+      render json: {
+        success: true,
+        message: "Item retry initiated successfully",
+        item: batch_item_json(@batch_item)
+      }
+    else
+      render json: {
+        success: false,
+        error: "Failed to retry item",
+        errors: @batch_item.errors.full_messages
+      }, status: :unprocessable_entity
+    end
   end
 
   # DELETE /batch_properties/:id
@@ -287,36 +431,41 @@ class BatchPropertiesController < ApplicationController
   end
 
   def generate_example_values(headers)
-    # Generate example values based on field types and names
+    # Generate realistic example values that will pass validation
     headers.map do |header|
       case header.to_s
       when "title"
-        "[Property Title]"
+        "Modern Downtown Apartment"
       when "description"
-        "[Property Description]"
+        "Stunning 2-bedroom apartment in the heart of downtown with city views"
       when "address"
-        "[Street Address]"
+        "123 Main Street, Unit 4B"
       when "city"
-        "[City Name]"
+        "San Francisco"
+      when "state"
+        "CA"
+      when "zip_code"
+        "94102"
       when "price"
-        "[Monthly Rent Amount]"
+        "2800"
       when "bedrooms"
-        "[Number of Bedrooms]"
+        "2"
       when "bathrooms"
-        "[Number of Bathrooms]"
+        "2"
       when "square_feet"
-        "[Square Footage]"
+        "1200"
       when "property_type"
-        "[apartment/house/condo/etc]"
+        "apartment"
       when "availability_status"
-        "[available/rented/maintenance]"
+        "0"
       when "photo_filenames"
-        "[photo1.jpg,photo2.jpg,photo3.jpg]"
+        "photo1.jpg,photo2.jpg,photo3.jpg"
       when /.*_available$/, /.*_allowed$/, /.*_included$/, /furnished/, /air_conditioning/, /heating/, /gym/, /pool/, /balcony/, /laundry/
         # Boolean fields
-        "[true/false]"
+        "true"
       else
-        "[#{header.humanize}]"
+        # For any other fields, provide empty string
+        ""
       end
     end
   end
@@ -444,10 +593,26 @@ class BatchPropertiesController < ApplicationController
       end
     end
 
-    # Convert availability_status from integer to enum key
+    # Set default values for required fields if missing
+    sanitized[:availability_status] ||= "available"
+
+    # Convert availability_status to enum value if it's a string
     if sanitized[:availability_status].present?
-      status_mapping = { '0' => 'available', '1' => 'rented', '2' => 'pending', '3' => 'maintenance' }
-      sanitized[:availability_status] = status_mapping[sanitized[:availability_status].to_s] || 'available'
+      status_mapping = {
+        "available" => 0, "rented" => 1, "pending" => 2, "maintenance" => 3,
+        "0" => 0, "1" => 1, "2" => 2, "3" => 3
+      }
+      sanitized[:availability_status] = status_mapping[sanitized[:availability_status].to_s] || 0
+    end
+
+    # Ensure property_type is valid
+    if sanitized[:property_type].present?
+      valid_types = %w[apartment house condo townhouse studio loft]
+      unless valid_types.include?(sanitized[:property_type].to_s.downcase)
+        sanitized[:property_type] = "apartment" # Default fallback
+      end
+    else
+      sanitized[:property_type] = "apartment" # Default if missing
     end
 
     # Remove photo_filenames from property params (handled separately)

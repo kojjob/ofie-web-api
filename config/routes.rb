@@ -275,6 +275,8 @@ Rails.application.routes.draw do
       post :fix_status
       post :retry_failed
       get :status
+      get 'item_details/:item_id', action: :item_details, as: :item_details
+      post 'retry_item/:item_id', action: :retry_item, as: :retry_item
     end
   end
 
