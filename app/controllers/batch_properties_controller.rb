@@ -269,7 +269,7 @@ class BatchPropertiesController < ApplicationController
         "[available/rented/maintenance]"
       when "photo_filenames"
         "[photo1.jpg,photo2.jpg,photo3.jpg]"
-      when /.*_available$/, /.*_allowed$/, /.*_included$/, /furnished/, /air_conditioning/, /heating/, /gym_access/, /pool_access/, /balcony/, /garden/
+      when /.*_available$/, /.*_allowed$/, /.*_included$/, /furnished/, /air_conditioning/, /heating/, /gym/, /pool/, /balcony/, /laundry/
         # Boolean fields
         "[true/false]"
       else
@@ -395,10 +395,10 @@ class BatchPropertiesController < ApplicationController
     # Convert string values to appropriate types
     sanitized = property_data.dup
 
-    # Convert boolean fields
+    # Convert boolean fields (using actual Property model column names)
     boolean_fields = [ :parking_available, :pets_allowed, :furnished, :utilities_included,
-                     :laundry_available, :air_conditioning, :heating, :internet_included,
-                     :gym_access, :pool_access, :balcony, :garden ]
+                     :laundry, :air_conditioning, :heating, :internet_included,
+                     :gym, :pool, :balcony ]
 
     boolean_fields.each do |field|
       if sanitized[field].present?
