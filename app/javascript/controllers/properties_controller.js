@@ -2,12 +2,11 @@ import { Controller } from "@hotwired/stimulus"
 
 // Properties Management Stimulus Controller
 export default class extends Controller {
-  static targets = ["modal", "modalTitle", "modalSubtitle", "searchInput", "filterSelect"]
+  static targets = ["searchInput", "filterSelect"]
   static values = { }
 
   connect() {
-    this.currentPropertyId = null
-    this.currentPropertyTitle = null
+    this.currentDropdown = null
     this.bindGlobalEvents()
   }
 
@@ -16,95 +15,113 @@ export default class extends Controller {
   }
 
   bindGlobalEvents() {
+    this.handleClickOutside = this.handleClickOutside.bind(this)
     this.handleEscapeKey = this.handleEscapeKey.bind(this)
-    this.handleModalClick = this.handleModalClick.bind(this)
-    
+
+    document.addEventListener('click', this.handleClickOutside)
     document.addEventListener('keydown', this.handleEscapeKey)
-    if (this.hasModalTarget) {
-      this.modalTarget.addEventListener('click', this.handleModalClick)
-    }
   }
 
   unbindGlobalEvents() {
+    document.removeEventListener('click', this.handleClickOutside)
     document.removeEventListener('keydown', this.handleEscapeKey)
-    if (this.hasModalTarget) {
-      this.modalTarget.removeEventListener('click', this.handleModalClick)
+  }
+
+  handleClickOutside(event) {
+    if (this.currentDropdown && !this.currentDropdown.contains(event.target)) {
+      this.closeAllDropdowns()
     }
   }
 
   handleEscapeKey(event) {
-    if (event.key === 'Escape' && this.isModalOpen()) {
-      this.closeModal()
+    if (event.key === 'Escape') {
+      this.closeAllDropdowns()
     }
   }
 
-  handleModalClick(event) {
-    if (event.target === this.modalTarget) {
-      this.closeModal()
-    }
-  }
+  // Toggle dropdown action
+  toggleDropdown(event) {
+    event.preventDefault()
+    event.stopPropagation()
 
-  // Open modal action
-  openModal(event) {
     const button = event.currentTarget
-    const propertyId = button.dataset.propertyId
-    const title = button.dataset.title
-    const status = button.dataset.status
+    const dropdown = button.nextElementSibling
 
-    this.currentPropertyId = propertyId
-    this.currentPropertyTitle = title
-    
-    // Update modal content
-    this.updateModalTitle(title, status)
-    
-    // Show modal
-    this.modalTarget.classList.remove('hidden')
-    document.body.style.overflow = 'hidden'
-  }
+    // Close other dropdowns first
+    this.closeAllDropdowns()
 
-  // Close modal action
-  closeModal() {
-    this.modalTarget.classList.add('hidden')
-    document.body.style.overflow = 'auto'
-    
-    // Reset modal state
-    this.currentPropertyId = null
-    this.currentPropertyTitle = null
-  }
+    if (dropdown && dropdown.classList.contains('hidden')) {
+      // Show this dropdown
+      dropdown.classList.remove('hidden')
+      this.currentDropdown = dropdown
 
-  isModalOpen() {
-    return this.hasModalTarget && !this.modalTarget.classList.contains('hidden')
-  }
-
-  updateModalTitle(title, status) {
-    if (this.hasModalTitleTarget) {
-      this.modalTitleTarget.textContent = title || 'Property Actions'
+      // Position dropdown
+      this.positionDropdown(button, dropdown)
     }
-    if (this.hasModalSubtitleTarget) {
-      this.modalSubtitleTarget.textContent = `Status: ${status} • Choose an action`
+  }
+
+  closeAllDropdowns() {
+    const dropdowns = document.querySelectorAll('[data-dropdown]')
+    dropdowns.forEach(dropdown => {
+      dropdown.classList.add('hidden')
+    })
+    this.currentDropdown = null
+  }
+
+  positionDropdown(button, dropdown) {
+    const rect = button.getBoundingClientRect()
+    const dropdownRect = dropdown.getBoundingClientRect()
+    const viewportHeight = window.innerHeight
+    const viewportWidth = window.innerWidth
+
+    // Reset positioning
+    dropdown.style.top = ''
+    dropdown.style.bottom = ''
+    dropdown.style.left = ''
+    dropdown.style.right = ''
+
+    // Position horizontally (prefer right-aligned)
+    if (rect.right - dropdownRect.width >= 0) {
+      dropdown.style.right = '0'
+    } else {
+      dropdown.style.left = '0'
+    }
+
+    // Position vertically (prefer below, but above if no space)
+    if (rect.bottom + dropdownRect.height <= viewportHeight) {
+      dropdown.style.top = '100%'
+    } else {
+      dropdown.style.bottom = '100%'
     }
   }
 
   // Property actions
-  async viewProperty() {
-    if (!this.currentPropertyId) return
-    window.open(`/properties/${this.currentPropertyId}`, '_blank')
-    this.closeModal()
+  async viewProperty(event) {
+    const propertyId = event.currentTarget.dataset.propertyId
+    if (!propertyId) return
+
+    window.open(`/properties/${propertyId}`, '_blank')
+    this.closeAllDropdowns()
   }
 
-  async editProperty() {
-    if (!this.currentPropertyId) return
-    window.location.href = `/properties/${this.currentPropertyId}/edit`
+  async editProperty(event) {
+    const propertyId = event.currentTarget.dataset.propertyId
+    if (!propertyId) return
+
+    window.location.href = `/properties/${propertyId}/edit`
   }
 
-  async deleteProperty() {
-    if (!this.currentPropertyId || !this.currentPropertyTitle) return
-    
-    const confirmed = confirm(`Are you sure you want to delete '${this.currentPropertyTitle}'? This action cannot be undone.`)
-    
+  async deleteProperty(event) {
+    const propertyId = event.currentTarget.dataset.propertyId
+    const propertyTitle = event.currentTarget.dataset.propertyTitle
+
+    if (!propertyId || !propertyTitle) return
+
+    const confirmed = confirm(`Are you sure you want to delete '${propertyTitle}'? This action cannot be undone.`)
+
     if (confirmed) {
       try {
-        const response = await fetch(`/properties/${this.currentPropertyId}`, {
+        const response = await fetch(`/properties/${propertyId}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -123,15 +140,16 @@ export default class extends Controller {
         this.showErrorMessage('Failed to delete property. Please try again.')
       }
     }
-    
-    this.closeModal()
+
+    this.closeAllDropdowns()
   }
 
-  async duplicateProperty() {
-    if (!this.currentPropertyId) return
-    
+  async duplicateProperty(event) {
+    const propertyId = event.currentTarget.dataset.propertyId
+    if (!propertyId) return
+
     try {
-      const response = await fetch(`/properties/${this.currentPropertyId}/duplicate`, {
+      const response = await fetch(`/properties/${propertyId}/duplicate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -149,8 +167,8 @@ export default class extends Controller {
       console.error('Error:', error)
       this.showErrorMessage('Failed to duplicate property. Please try again.')
     }
-    
-    this.closeModal()
+
+    this.closeAllDropdowns()
   }
 
   // Search functionality

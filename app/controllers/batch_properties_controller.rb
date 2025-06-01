@@ -89,6 +89,57 @@ class BatchPropertiesController < ApplicationController
     end
   end
 
+  # GET /batch_properties/progress (for real-time updates)
+  def progress
+    @recent_uploads = current_user.batch_property_uploads
+                                 .includes(:batch_property_items)
+                                 .order(created_at: :desc)
+                                 .limit(10)
+
+    # Check for active uploads
+    active_uploads = @recent_uploads.where(status: ['processing', 'validated'])
+    has_active_uploads = active_uploads.any?
+
+    # Prepare upload data for updates
+    uploads_data = active_uploads.map do |upload|
+      {
+        id: upload.id,
+        status: upload.status,
+        status_html: render_to_string('batch_properties/status_badge_enhanced', locals: { upload: upload }, layout: false),
+        progress_percentage: upload.progress_percentage,
+        successful_items: upload.successful_items || 0,
+        failed_items: upload.failed_items || 0,
+        processed_items: upload.processed_items || 0
+      }
+    end
+
+    # Prepare processing queue data
+    processing_queue = {
+      items: active_uploads.limit(3).map do |upload|
+        {
+          id: upload.id,
+          filename: upload.filename,
+          progress_percentage: upload.progress_percentage,
+          total_items: upload.total_items,
+          created_at: upload.created_at
+        }
+      end
+    }
+
+    render json: {
+      has_active_uploads: has_active_uploads,
+      stats: {
+        total_uploads: @recent_uploads.count,
+        properties_created: @recent_uploads.sum(:successful_items),
+        processing: @recent_uploads.where(status: ['processing', 'validated']).count,
+        failed_items: @recent_uploads.sum(:failed_items)
+      },
+      uploads: uploads_data,
+      processing_queue: processing_queue,
+      timestamp: Time.current.iso8601
+    }
+  end
+
   # GET /batch_properties/:id/preview
   def preview
     @batch_upload = current_user.batch_property_uploads.find(params[:id])

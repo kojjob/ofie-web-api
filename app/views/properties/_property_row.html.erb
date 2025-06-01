@@ -109,7 +109,7 @@
     <div class="flex items-center justify-end space-x-2">
       <!-- Quick View (Desktop only) -->
       <div class="hidden lg:flex items-center space-x-2">
-        <%= link_to property_path(property), 
+        <%= link_to property_path(property),
             target: "_blank",
             class: "text-blue-600 hover:text-blue-900 transition-colors duration-200",
             title: "View Property" do %>
@@ -120,18 +120,20 @@
         <% end %>
       </div>
 
-      <!-- 3-Dots Menu -->
-      <button type="button"
-              class="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-2 rounded-full hover:bg-gray-100"
-              data-action="click->properties#openModal"
-              data-property-id="<%= property.id %>"
-              data-title="<%= j(property.title) %>"
-              data-status="<%= property.availability_status %>"
-              title="More Actions">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
-        </svg>
-      </button>
+      <!-- 3-Dots Menu with Dropdown -->
+      <div class="relative">
+        <button type="button"
+                class="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-2 rounded-full hover:bg-gray-100"
+                data-action="click->properties#toggleDropdown"
+                title="More Actions">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <%= render 'properties/actions_dropdown', property: property %>
+      </div>
     </div>
   </td>
 </tr>
