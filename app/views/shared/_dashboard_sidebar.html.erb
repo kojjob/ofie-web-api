@@ -1,0 +1,252 @@
+<!-- Enhanced Dashboard Sidebar -->
+<div class="fixed inset-y-0 left-0 z-50 w-72 bg-white/95 backdrop-blur-xl shadow-2xl shadow-gray-200/50 border-r border-gray-200/50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0" 
+     data-sidebar-target="sidebar"
+     data-controller="sidebar">
+  
+  <!-- Sidebar Header -->
+  <div class="flex items-center justify-between h-20 px-6 border-b border-gray-200/50">
+    <div class="flex items-center space-x-3">
+      <%= link_to root_path, class: "flex items-center space-x-3 group" do %>
+        <div class="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:scale-110 transition-transform duration-300">
+          <span class="text-white font-bold text-lg">O</span>
+        </div>
+        <span class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Ofie</span>
+      <% end %>
+    </div>
+    
+    <!-- Mobile Close Button -->
+    <button class="lg:hidden p-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+            data-action="click->sidebar#close">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- User Info Section -->
+  <div class="px-6 py-4 border-b border-gray-200/50">
+    <div class="flex items-center space-x-3">
+      <% if current_user.avatar.attached? %>
+        <div class="relative">
+          <%= image_tag current_user.avatar, class: "h-12 w-12 rounded-2xl object-cover border-2 border-white shadow-lg", alt: "#{current_user.name} avatar" %>
+          <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full border-2 border-white"></div>
+        </div>
+      <% else %>
+        <div class="h-12 w-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/25">
+          <span class="text-white font-semibold text-lg"><%= current_user.name&.first&.upcase || current_user.email.first.upcase %></span>
+        </div>
+      <% end %>
+      
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold text-gray-900 truncate">
+          <%= current_user.name || current_user.email.split('@').first.capitalize %>
+        </p>
+        <p class="text-xs text-gray-500 truncate">
+          <%= current_user.landlord? ? "Property Owner" : "Tenant" %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+    <!-- Dashboard Section -->
+    <div class="space-y-1">
+      <%= link_to dashboard_path, 
+          class: "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 #{current_page?(dashboard_path) ? 'bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 border border-blue-200' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}" do %>
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center mr-3 #{current_page?(dashboard_path) ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/25' : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </div>
+        Dashboard
+      <% end %>
+
+      <% if current_user.landlord? %>
+        <%= link_to analytics_path, 
+            class: "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 #{current_page?(analytics_path) ? 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}" do %>
+          <div class="w-8 h-8 rounded-xl flex items-center justify-center mr-3 #{current_page?(analytics_path) ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/25' : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          Analytics
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Properties Section -->
+    <div class="pt-4">
+      <h3 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+        <%= current_user.landlord? ? "Property Management" : "Properties" %>
+      </h3>
+      
+      <% if current_user.landlord? %>
+        <%= link_to properties_path, 
+            class: "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 #{current_page?(properties_path) ? 'bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-700 border border-purple-200' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}" do %>
+          <div class="w-8 h-8 rounded-xl flex items-center justify-center mr-3 #{current_page?(properties_path) ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-500/25' : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          My Properties
+        <% end %>
+
+        <%= link_to new_property_path, 
+            class: "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900" do %>
+          <div class="w-8 h-8 rounded-xl flex items-center justify-center mr-3 bg-gray-100 text-gray-600 group-hover:bg-gray-200">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+          </div>
+          Add Property
+        <% end %>
+      <% else %>
+        <%= link_to favorites_path, 
+            class: "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 #{current_page?(favorites_path) ? 'bg-gradient-to-r from-pink-50 to-rose-50 text-pink-700 border border-pink-200' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}" do %>
+          <div class="w-8 h-8 rounded-xl flex items-center justify-center mr-3 #{current_page?(favorites_path) ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-lg shadow-pink-500/25' : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </div>
+          Favorites
+          <% if @favorites_count && @favorites_count > 0 %>
+            <span class="ml-auto bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              <%= @favorites_count > 9 ? '9+' : @favorites_count %>
+            </span>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Applications & Leases Section -->
+    <div class="pt-4">
+      <h3 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+        Rental Management
+      </h3>
+      
+      <%= link_to rental_applications_path, 
+          class: "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 #{current_page?(rental_applications_path) ? 'bg-gradient-to-r from-amber-50 to-orange-50 text-amber-700 border border-amber-200' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}" do %>
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center mr-3 #{current_page?(rental_applications_path) ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/25' : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+        </div>
+        <%= current_user.landlord? ? "Applications" : "My Applications" %>
+        <% if current_user.landlord? && @pending_applications_count && @pending_applications_count > 0 %>
+          <span class="ml-auto bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <%= @pending_applications_count > 9 ? '9+' : @pending_applications_count %>
+          </span>
+        <% end %>
+      <% end %>
+
+      <%= link_to lease_agreements_path, 
+          class: "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 #{current_page?(lease_agreements_path) ? 'bg-gradient-to-r from-indigo-50 to-blue-50 text-indigo-700 border border-indigo-200' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}" do %>
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center mr-3 #{current_page?(lease_agreements_path) ? 'bg-gradient-to-r from-indigo-500 to-blue-600 text-white shadow-lg shadow-indigo-500/25' : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+        </div>
+        <%= current_user.landlord? ? "Lease Agreements" : "My Leases" %>
+        <% if current_user.landlord? && @active_leases_count && @active_leases_count > 0 %>
+          <span class="ml-auto bg-gradient-to-r from-indigo-500 to-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <%= @active_leases_count > 9 ? '9+' : @active_leases_count %>
+          </span>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Financial Section -->
+    <div class="pt-4">
+      <h3 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+        Financial
+      </h3>
+      
+      <%= link_to payments_path, 
+          class: "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 #{current_page?(payments_path) ? 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}" do %>
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center mr-3 #{current_page?(payments_path) ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/25' : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+          </svg>
+        </div>
+        <%= current_user.landlord? ? "Payment Management" : "My Payments" %>
+        <% unless current_user.landlord? %>
+          <% if @overdue_payments_count && @overdue_payments_count > 0 %>
+            <span class="ml-auto bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              <%= @overdue_payments_count > 9 ? '9+' : @overdue_payments_count %>
+            </span>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Communication Section -->
+    <div class="pt-4">
+      <h3 class="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+        Communication
+      </h3>
+      
+      <%= link_to messages_path, 
+          class: "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 #{current_page?(messages_path) ? 'bg-gradient-to-r from-blue-50 to-cyan-50 text-blue-700 border border-blue-200' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}" do %>
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center mr-3 #{current_page?(messages_path) ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-lg shadow-blue-500/25' : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+        </div>
+        Messages
+        <% if @unread_messages_count && @unread_messages_count > 0 %>
+          <span class="ml-auto bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <%= @unread_messages_count > 9 ? '9+' : @unread_messages_count %>
+          </span>
+        <% end %>
+      <% end %>
+
+      <%= link_to maintenance_requests_path, 
+          class: "group flex items-center px-4 py-3 text-sm font-medium rounded-2xl transition-all duration-200 #{current_page?(maintenance_requests_path) ? 'bg-gradient-to-r from-orange-50 to-red-50 text-orange-700 border border-orange-200' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}" do %>
+        <div class="w-8 h-8 rounded-xl flex items-center justify-center mr-3 #{current_page?(maintenance_requests_path) ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg shadow-orange-500/25' : 'bg-gray-100 text-gray-600 group-hover:bg-gray-200'}">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </div>
+        <%= current_user.landlord? ? "Maintenance" : "Requests" %>
+        <% if @pending_maintenance_count && @pending_maintenance_count > 0 %>
+          <span class="ml-auto bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+            <%= @pending_maintenance_count > 9 ? '9+' : @pending_maintenance_count %>
+          </span>
+        <% end %>
+      <% end %>
+    </div>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="px-4 py-4 border-t border-gray-200/50">
+    <div class="space-y-1">
+      <%= link_to edit_user_registration_path, 
+          class: "group flex items-center px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900" do %>
+        <div class="w-6 h-6 rounded-lg flex items-center justify-center mr-3 text-gray-500 group-hover:text-gray-700">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+        </div>
+        Settings
+      <% end %>
+
+      <%= link_to help_path, 
+          class: "group flex items-center px-4 py-2 text-sm font-medium rounded-xl transition-all duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900" do %>
+        <div class="w-6 h-6 rounded-lg flex items-center justify-center mr-3 text-gray-500 group-hover:text-gray-700">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        Help & Support
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Sidebar Overlay -->
+<div class="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 transition-opacity duration-300 ease-linear lg:hidden hidden"
+     data-sidebar-target="overlay"
+     data-action="click->sidebar#close"></div>
