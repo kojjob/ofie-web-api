@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   # Skip CSRF protection for API requests
   protect_from_forgery with: :null_session
-  before_action :authenticate_request, unless: :html_request?
+  before_action :authenticate_request, unless: :web_request?
 
   attr_reader :current_user
   helper_method :current_user, :user_signed_in?
@@ -17,10 +17,10 @@ class ApplicationController < ActionController::Base
   private
 
   def find_current_user
-    if html_request? && session[:user_id]
-      # For HTML requests, use session-based authentication
+    if web_request? && session[:user_id]
+      # For web requests (HTML, CSV, etc.), use session-based authentication
       User.find_by(id: session[:user_id])
-    elsif !html_request?
+    elsif !web_request?
       # For API requests, use JWT authentication
       authenticate_with_jwt
     end
@@ -30,11 +30,21 @@ class ApplicationController < ActionController::Base
     request.format.html?
   end
 
+  def web_request?
+    # Consider HTML, CSV, and other web formats as web requests
+    request.format.html? || request.format.csv? || request.format.xml?
+  end
+
   def authenticate_request
-    if html_request?
-      # For HTML requests, redirect to login if not authenticated
+    if web_request?
+      # For web requests (HTML, CSV, etc.), redirect to login if not authenticated
       unless current_user
-        redirect_to login_path, alert: "Please sign in to continue"
+        respond_to do |format|
+          format.html { redirect_to login_path, alert: "Please sign in to continue" }
+          format.csv { redirect_to login_path, alert: "Please sign in to continue" }
+          format.xml { redirect_to login_path, alert: "Please sign in to continue" }
+          format.any { redirect_to login_path, alert: "Please sign in to continue" }
+        end
       end
     else
       # For API requests, use JWT authentication

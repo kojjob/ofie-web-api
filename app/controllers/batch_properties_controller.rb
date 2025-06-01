@@ -1,5 +1,5 @@
 class BatchPropertiesController < ApplicationController
-  before_action :authenticate_request
+  before_action :authenticate_web_request
   before_action :authorize_landlord
   
   # GET /batch_properties
@@ -19,11 +19,20 @@ class BatchPropertiesController < ApplicationController
   def template
     respond_to do |format|
       format.csv do
-        csv_data = generate_csv_template
-        send_data csv_data, 
-                  filename: "property_listing_template_#{Date.current.strftime('%Y%m%d')}.csv",
-                  type: 'text/csv',
-                  disposition: 'attachment'
+        begin
+          csv_data = generate_csv_template
+          send_data csv_data,
+                    filename: "property_listing_template_#{Date.current.strftime('%Y%m%d')}.csv",
+                    type: 'text/csv',
+                    disposition: 'attachment'
+        rescue StandardError => e
+          Rails.logger.error "CSV template generation failed: #{e.message}"
+          redirect_to batch_properties_path, alert: "Failed to generate CSV template. Please try again."
+        end
+      end
+      format.html do
+        # If someone tries to access template without .csv format, redirect to batch properties
+        redirect_to batch_properties_path, notice: "Please use the 'Download Template' button to get the CSV template."
       end
     end
   end
@@ -150,10 +159,22 @@ class BatchPropertiesController < ApplicationController
 
   private
 
+  def authenticate_web_request
+    # For web requests (HTML, CSV, etc.), use session-based authentication
+    unless current_user
+      respond_to do |format|
+        format.html { redirect_to login_path, alert: "Please sign in to continue" }
+        format.csv { redirect_to login_path, alert: "Please sign in to download the template" }
+        format.json { render json: { error: "Not Authorized" }, status: :unauthorized }
+      end
+    end
+  end
+
   def authorize_landlord
     unless current_user&.landlord?
       respond_to do |format|
         format.html { redirect_to properties_path, alert: "You must be a landlord to access batch property listing." }
+        format.csv { redirect_to properties_path, alert: "You must be a landlord to download the template." }
         format.json { render json: { error: "Forbidden: You must be a landlord to access this feature" }, status: :forbidden }
       end
     end
