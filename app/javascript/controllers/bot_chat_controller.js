@@ -183,10 +183,10 @@ export default class extends Controller {
     messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} mb-4 animate-fade-in-up`
 
     const isBot = sender === 'bot'
-    const bgColor = isBot ? 'bg-white/80 backdrop-blur-sm border border-gray-200/50' : 'bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500'
+    const bgColor = isBot ? 'bg-white/80 backdrop-blur-sm border border-gray-200/50' : 'bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900'
     const textColor = isBot ? 'text-gray-800' : 'text-white'
     const alignment = isBot ? 'rounded-br-2xl' : 'rounded-bl-2xl'
-    const shadow = isBot ? 'shadow-sm' : 'shadow-lg shadow-cyan-500/25'
+    const shadow = isBot ? 'shadow-sm' : 'shadow-lg shadow-slate-800/25'
 
     // Format message with line breaks
     const formattedMessage = this.formatMessage(message)
@@ -195,8 +195,8 @@ export default class extends Controller {
       <div class="max-w-xs lg:max-w-md px-4 py-3 ${bgColor} ${textColor} rounded-2xl ${alignment} ${shadow} transition-all duration-300 hover:shadow-lg">
         ${isBot ? `
           <div class="flex items-center mb-2">
-            <div class="w-4 h-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mr-2"></div>
-            <span class="text-xs font-semibold text-cyan-600">Ofie Assistant</span>
+            <div class="w-4 h-4 bg-gradient-to-r from-slate-600 to-slate-700 rounded-full mr-2"></div>
+            <span class="text-xs font-semibold text-slate-600">Ofie Assistant</span>
           </div>
         ` : ''}
         <div class="text-sm leading-relaxed">${formattedMessage}</div>
@@ -228,11 +228,11 @@ export default class extends Controller {
     typingDiv.innerHTML = `
       <div class="bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl rounded-br-2xl px-4 py-3 shadow-sm">
         <div class="flex items-center space-x-1">
-          <div class="w-4 h-4 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full mr-2"></div>
+          <div class="w-4 h-4 bg-gradient-to-r from-slate-600 to-slate-700 rounded-full mr-2"></div>
           <div class="flex space-x-1">
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+            <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+            <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+            <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
           </div>
         </div>
       </div>
