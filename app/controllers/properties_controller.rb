@@ -186,9 +186,14 @@ class PropertiesController < ApplicationController
                              .includes(photos_attachments: :blob)
                              .order(created_at: :desc)
 
-    render json: {
-      properties: @properties.map { |property| property_json(property, include_stats: true) }
-    }
+    respond_to do |format|
+      format.html # Render the HTML view for landlord property management
+      format.json do
+        render json: {
+          properties: @properties.map { |property| property_json(property, include_stats: true) }
+        }
+      end
+    end
   end
 
   private
