@@ -85,31 +85,73 @@ class DashboardController < ApplicationController
   private
 
   def load_sidebar_data
-    # Load counts for sidebar badges
-    if current_user.landlord?
-      @pending_applications_count = RentalApplication.joins(:property)
-                                                   .where(properties: { user_id: current_user.id }, status: "pending")
-                                                   .count
-      @active_leases_count = LeaseAgreement.joins(:property)
-                                          .where(properties: { user_id: current_user.id }, status: "active")
-                                          .count
-    else
-      @favorites_count = current_user.favorites.count
-      @overdue_payments_count = current_user.payments
-                                           .where("due_date < ? AND status IN (?)", Date.current, %w[pending failed])
-                                           .count
-    end
+    # Load counts for sidebar badges with safe defaults
+    begin
+      if current_user.landlord?
+        @pending_applications_count = if defined?(RentalApplication)
+                                        RentalApplication.joins(:property)
+                                                       .where(properties: { user_id: current_user.id }, status: "pending")
+                                                       .count
+                                      else
+                                        0
+                                      end
+        @active_leases_count = if defined?(LeaseAgreement)
+                                 LeaseAgreement.joins(:property)
+                                              .where(properties: { user_id: current_user.id }, status: "active")
+                                              .count
+                               else
+                                 0
+                               end
+      else
+        @favorites_count = if current_user.respond_to?(:property_favorites)
+                             current_user.property_favorites.count
+                           else
+                             0
+                           end
+        @overdue_payments_count = if current_user.respond_to?(:payments) && defined?(Payment)
+                                    current_user.payments
+                                               .where("due_date < ? AND status IN (?)", Date.current, %w[pending failed])
+                                               .count
+                                  else
+                                    0
+                                  end
+      end
 
-    # Common counts for both user types
-    @unread_messages_count = current_user.received_messages.where(read: false).count if current_user.respond_to?(:received_messages)
-    @pending_maintenance_count = if current_user.landlord?
-                                   MaintenanceRequest.joins(lease_agreement: :property)
-                                                    .where(properties: { user_id: current_user.id }, status: "pending")
-                                                    .count if defined?(MaintenanceRequest)
-                                 else
-                                   current_user.maintenance_requests.where(status: "pending").count if current_user.respond_to?(:maintenance_requests)
-                                 end || 0
-    @unread_notifications_count = current_user.notifications.where(read: false).count if current_user.respond_to?(:notifications)
+      # Common counts for both user types
+      @unread_messages_count = if current_user.respond_to?(:received_messages)
+                                 current_user.received_messages.where(read: false).count
+                               else
+                                 0
+                               end
+
+      @pending_maintenance_count = if defined?(MaintenanceRequest)
+                                     if current_user.landlord?
+                                       MaintenanceRequest.joins(:property)
+                                                        .where(properties: { user_id: current_user.id }, status: "pending")
+                                                        .count
+                                     else
+                                       MaintenanceRequest.where(tenant_id: current_user.id, status: "pending").count
+                                     end
+                                   else
+                                     0
+                                   end
+
+      @unread_notifications_count = if current_user.respond_to?(:notifications)
+                                      current_user.notifications.where(read: false).count
+                                    else
+                                      0
+                                    end
+    rescue => e
+      # Log error and set safe defaults
+      Rails.logger.error "Error loading sidebar data: #{e.message}"
+      @pending_applications_count = 0
+      @active_leases_count = 0
+      @favorites_count = 0
+      @overdue_payments_count = 0
+      @unread_messages_count = 0
+      @pending_maintenance_count = 0
+      @unread_notifications_count = 0
+    end
   end
 
   def calculate_total_revenue
