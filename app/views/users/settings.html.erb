@@ -1,0 +1,553 @@
+<% content_for :title, "Account Settings" %>
+
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-6 sm:py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Enhanced Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3 bg-white/70 backdrop-blur-sm rounded-full px-4 py-2 shadow-sm border border-white/20">
+        <li class="inline-flex items-center">
+          <%= link_to root_path, class: "inline-flex items-center text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors duration-200" do %>
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+            </svg>
+            Home
+          <% end %>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="ml-1 text-sm font-medium text-slate-500 md:ml-2">Settings</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Enhanced Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-4xl font-bold text-slate-800 mb-3">Account Settings</h1>
+      <p class="text-lg text-slate-600 max-w-2xl mx-auto">Customize your experience and manage your account preferences with advanced security options</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+      <!-- Enhanced Settings Navigation -->
+      <div class="lg:col-span-4">
+        <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8 sticky top-6">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-xl font-bold text-slate-800">Settings</h2>
+            <div class="h-1 w-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></div>
+          </div>
+          
+          <nav class="space-y-2">
+            <a href="#general" class="settings-nav-link active group flex items-center p-4 rounded-2xl transition-all duration-300">
+              <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-200">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-slate-800">General</p>
+                <p class="text-sm text-slate-500">Profile & preferences</p>
+              </div>
+            </a>
+
+            <a href="#security" class="settings-nav-link group flex items-center p-4 rounded-2xl transition-all duration-300">
+              <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-200">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-slate-800">Security</p>
+                <p class="text-sm text-slate-500">Password & sessions</p>
+              </div>
+            </a>
+
+            <a href="#notifications" class="settings-nav-link group flex items-center p-4 rounded-2xl transition-all duration-300">
+              <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-200">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 15h8v-2H4v2zM4 11h10V9H4v2z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-slate-800">Notifications</p>
+                <p class="text-sm text-slate-500">Email & alerts</p>
+              </div>
+            </a>
+
+            <a href="#privacy" class="settings-nav-link group flex items-center p-4 rounded-2xl transition-all duration-300">
+              <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-500 rounded-xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-200">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="font-semibold text-slate-800">Privacy</p>
+                <p class="text-sm text-slate-500">Data & visibility</p>
+              </div>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Enhanced Settings Content -->
+      <div class="lg:col-span-8">
+        <!-- Enhanced General Settings -->
+        <div id="general" class="settings-section bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-300">
+          <%= form_with model: @user, url: settings_path, method: :patch, local: true, data: { turbo: false } do |form| %>
+            <div class="relative bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-8">
+              <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+              <div class="relative">
+                <h3 class="text-2xl font-bold text-white mb-2">General Settings</h3>
+                <p class="text-indigo-100">Customize your profile and account preferences</p>
+              </div>
+            </div>
+            
+            <div class="p-8 space-y-8">
+              <!-- Enhanced Profile Picture -->
+              <div class="bg-slate-50/50 rounded-2xl p-6">
+                <label class="block text-lg font-semibold text-slate-800 mb-4">Profile Picture</label>
+                <div class="flex items-center space-x-8">
+                  <div class="relative flex-shrink-0">
+                    <% if @user.avatar.attached? %>
+                      <%= image_tag @user.avatar, class: "h-24 w-24 object-cover rounded-2xl border-4 border-white shadow-xl" %>
+                    <% else %>
+                      <div class="h-24 w-24 rounded-2xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center border-4 border-white shadow-xl">
+                        <svg class="h-10 w-10 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                      </div>
+                    <% end %>
+                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="flex-1">
+                    <%= form.file_field :avatar, 
+                        accept: "image/*",
+                        class: "block w-full text-sm text-slate-600 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gradient-to-r file:from-indigo-500 file:to-purple-500 file:text-white hover:file:from-indigo-600 hover:file:to-purple-600 file:cursor-pointer cursor-pointer file:shadow-lg file:transition-all file:duration-200" %>
+                    <p class="mt-3 text-sm text-slate-500 bg-white/50 rounded-lg px-3 py-2">JPG, PNG or GIF up to 10MB. Recommended: 400x400px</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Enhanced Language Preference -->
+              <div class="bg-slate-50/50 rounded-2xl p-6">
+                <%= form.label :language, "Language Preference", class: "block text-lg font-semibold text-slate-800 mb-4" %>
+                <div class="relative">
+                  <%= form.select :language, 
+                      options_for_select([['🇺🇸 English', 'en'], ['🇪🇸 Spanish', 'es'], ['🇫🇷 French', 'fr']], @user.language || 'en'), 
+                      {}, 
+                      { class: "w-full px-6 py-4 text-lg border-2 border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 appearance-none bg-white shadow-sm hover:shadow-md" } %>
+                  <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Enhanced Timezone -->
+              <div class="bg-slate-50/50 rounded-2xl p-6">
+                <%= form.label :timezone, "Time Zone", class: "block text-lg font-semibold text-slate-800 mb-4" %>
+                <div class="relative">
+                  <%= form.select :timezone, 
+                      options_for_select([
+                        ['🌍 UTC (Coordinated Universal Time)', 'UTC'],
+                        ['🇺🇸 Eastern Time (ET)', 'America/New_York'],
+                        ['🇺🇸 Central Time (CT)', 'America/Chicago'],
+                        ['🇺🇸 Mountain Time (MT)', 'America/Denver'],
+                        ['🇺🇸 Pacific Time (PT)', 'America/Los_Angeles']
+                      ], @user.timezone || 'UTC'), 
+                      {}, 
+                      { class: "w-full px-6 py-4 text-lg border-2 border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 appearance-none bg-white shadow-sm hover:shadow-md" } %>
+                  <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-slate-50 to-slate-100 px-8 py-6 border-t border-slate-200/50">
+              <%= form.submit "Save General Settings", class: "w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-lg font-semibold rounded-2xl hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Enhanced Security Settings -->
+        <div id="security" class="settings-section bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-300 hidden">
+          <div class="relative bg-gradient-to-r from-emerald-600 to-teal-600 px-8 py-8">
+            <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+            <div class="relative">
+              <h3 class="text-2xl font-bold text-white mb-2">Security Settings</h3>
+              <p class="text-emerald-100">Manage your password and account security</p>
+            </div>
+          </div>
+          
+          <div class="p-8 space-y-8">
+            <!-- Enhanced Change Password -->
+            <%= form_with url: change_password_path, method: :patch, local: true, data: { turbo: false } do |form| %>
+              <div class="bg-slate-50/50 rounded-2xl p-6 border-2 border-slate-200/50">
+                <h4 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                  <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mr-3">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                    </svg>
+                  </div>
+                  Change Password
+                </h4>
+                <div class="space-y-6">
+                  <div>
+                    <%= form.label :current_password, "Current Password", class: "block text-sm font-semibold text-slate-700 mb-2 uppercase tracking-wider" %>
+                    <%= form.password_field :current_password, required: true, 
+                        class: "w-full px-6 py-4 text-lg border-2 border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md" %>
+                  </div>
+                  <div>
+                    <%= form.label :new_password, "New Password", class: "block text-sm font-semibold text-slate-700 mb-2 uppercase tracking-wider" %>
+                    <%= form.password_field :new_password, required: true, 
+                        class: "w-full px-6 py-4 text-lg border-2 border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md" %>
+                    <p class="mt-2 text-sm text-slate-500 bg-white/50 rounded-lg px-3 py-2">Must be at least 8 characters with numbers and symbols</p>
+                  </div>
+                  <div>
+                    <%= form.label :new_password_confirmation, "Confirm New Password", class: "block text-sm font-semibold text-slate-700 mb-2 uppercase tracking-wider" %>
+                    <%= form.password_field :new_password_confirmation, required: true, 
+                        class: "w-full px-6 py-4 text-lg border-2 border-slate-200 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all duration-200 bg-white shadow-sm hover:shadow-md" %>
+                  </div>
+                  <div class="pt-4">
+                    <%= form.submit "Update Password", class: "px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-semibold rounded-2xl hover:from-emerald-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Enhanced Two-Factor Authentication -->
+            <div class="bg-slate-50/50 rounded-2xl p-6 border-2 border-slate-200/50">
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <h4 class="text-xl font-bold text-slate-800 flex items-center">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mr-3">
+                      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                      </svg>
+                    </div>
+                    Two-Factor Authentication
+                  </h4>
+                  <p class="text-slate-600 mt-1">Add an extra layer of security to your account</p>
+                </div>
+                <div class="flex items-center">
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="two-factor" class="sr-only peer" disabled>
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+              </div>
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <p class="text-sm text-blue-700 font-medium">🚀 Coming Soon - SMS and authenticator app support</p>
+              </div>
+            </div>
+
+            <!-- Enhanced Login Sessions -->
+            <div class="bg-slate-50/50 rounded-2xl p-6 border-2 border-slate-200/50">
+              <h4 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                Active Sessions
+              </h4>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-slate-200">
+                  <div class="flex items-center">
+                    <div class="w-3 h-3 bg-emerald-400 rounded-full mr-4 shadow-lg"></div>
+                    <div>
+                      <p class="font-semibold text-slate-800">Current Session</p>
+                      <p class="text-sm text-slate-500">Chrome on macOS • <%= Time.current.strftime("%B %d, %Y at %I:%M %p") %></p>
+                    </div>
+                  </div>
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                    Active
+                  </span>
+                </div>
+              </div>
+              <button type="button" class="mt-6 text-sm text-rose-600 hover:text-white bg-rose-50 hover:bg-rose-600 font-semibold px-4 py-2 rounded-xl transition-all duration-200 border border-rose-200 hover:border-rose-600">
+                Sign out all other sessions
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Notification Settings -->
+        <div id="notifications" class="settings-section bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-300 hidden">
+          <%= form_with model: @user, url: settings_path, method: :patch, local: true, data: { turbo: false } do |form| %>
+            <div class="relative bg-gradient-to-r from-amber-600 to-orange-600 px-8 py-8">
+              <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+              <div class="relative">
+                <h3 class="text-2xl font-bold text-white mb-2">Notification Preferences</h3>
+                <p class="text-amber-100">Customize how and when you want to be notified</p>
+              </div>
+            </div>
+            
+            <div class="p-8">
+              <div class="bg-slate-50/50 rounded-2xl p-6">
+                <h4 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                  <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center mr-3">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                  </div>
+                  Email Notifications
+                </h4>
+                <div class="space-y-6">
+                  <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                      <p class="font-semibold text-slate-800">Property Updates</p>
+                      <p class="text-sm text-slate-600">New properties matching your preferences</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" name="notifications[property_updates]" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                    </label>
+                  </div>
+                  <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                      <p class="font-semibold text-slate-800">Viewing Reminders</p>
+                      <p class="text-sm text-slate-600">Reminders for scheduled property viewings</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" name="notifications[viewing_reminders]" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                    </label>
+                  </div>
+                  <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                      <p class="font-semibold text-slate-800">Messages</p>
+                      <p class="text-sm text-slate-600">New messages from landlords or tenants</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" name="notifications[messages]" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                    </label>
+                  </div>
+                  <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                      <p class="font-semibold text-slate-800">Marketing</p>
+                      <p class="text-sm text-slate-600">Tips, news, and promotional content</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" name="notifications[marketing]" class="sr-only peer">
+                      <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-amber-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-slate-50 to-slate-100 px-8 py-6 border-t border-slate-200/50">
+              <%= form.submit "Save Notification Settings", class: "w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white text-lg font-semibold rounded-2xl hover:from-amber-700 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Enhanced Privacy Settings -->
+        <div id="privacy" class="settings-section bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-300 hidden">
+          <%= form_with model: @user, url: settings_path, method: :patch, local: true, data: { turbo: false } do |form| %>
+            <div class="relative bg-gradient-to-r from-rose-600 to-pink-600 px-8 py-8">
+              <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+              <div class="relative">
+                <h3 class="text-2xl font-bold text-white mb-2">Privacy Settings</h3>
+                <p class="text-rose-100">Control your privacy and data sharing preferences</p>
+              </div>
+            </div>
+            
+            <div class="p-8 space-y-8">
+              <!-- Enhanced Profile Visibility -->
+              <div class="bg-slate-50/50 rounded-2xl p-6">
+                <h4 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                  <div class="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-500 rounded-xl flex items-center justify-center mr-3">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                  </div>
+                  Profile Visibility
+                </h4>
+                <div class="space-y-4">
+                  <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                      <p class="font-semibold text-slate-800">Public Profile</p>
+                      <p class="text-sm text-slate-600">Allow others to view your profile</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" name="privacy[public_profile]" class="sr-only peer" checked>
+                      <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-rose-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-500"></div>
+                    </label>
+                  </div>
+                  <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-slate-200">
+                    <div>
+                      <p class="font-semibold text-slate-800">Show Contact Info</p>
+                      <p class="text-sm text-slate-600">Display your contact information to other users</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" name="privacy[show_contact]" class="sr-only peer">
+                      <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-rose-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-500"></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Enhanced Data Sharing -->
+              <div class="bg-slate-50/50 rounded-2xl p-6">
+                <h4 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                  <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mr-3">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                  </div>
+                  Data Sharing
+                </h4>
+                <div class="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-slate-200">
+                  <div>
+                    <p class="font-semibold text-slate-800">Analytics</p>
+                    <p class="text-sm text-slate-600">Help improve our service with anonymous usage data</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="privacy[analytics]" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Enhanced Account Deletion -->
+              <div class="bg-gradient-to-br from-red-50 to-rose-50 rounded-2xl p-6 border-2 border-red-200/50">
+                <h4 class="text-xl font-bold text-red-900 mb-6 flex items-center">
+                  <div class="w-8 h-8 bg-gradient-to-br from-red-500 to-rose-500 rounded-xl flex items-center justify-center mr-3">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                  </div>
+                  Danger Zone
+                </h4>
+                <div class="bg-white border-2 border-red-200 rounded-xl p-6">
+                  <div class="flex items-start">
+                    <svg class="h-6 w-6 text-red-500 mt-1 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    <div class="flex-1">
+                      <h5 class="text-lg font-bold text-red-800 mb-2">Delete Account</h5>
+                      <p class="text-red-700 mb-4">Once you delete your account, there is no going back. Please be certain about this action.</p>
+                      <button type="button" class="px-6 py-3 bg-gradient-to-r from-red-600 to-rose-600 text-white font-semibold rounded-xl hover:from-red-700 hover:to-rose-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                        Delete Account
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-slate-50 to-slate-100 px-8 py-6 border-t border-slate-200/50">
+              <%= form.submit "Save Privacy Settings", class: "w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-rose-600 to-pink-600 text-white text-lg font-semibold rounded-2xl hover:from-rose-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Enhanced settings navigation with smooth animations
+    const navLinks = document.querySelectorAll('.settings-nav-link');
+    const sections = document.querySelectorAll('.settings-section');
+    
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all links
+        navLinks.forEach(l => l.classList.remove('active'));
+        
+        // Add active class to clicked link
+        this.classList.add('active');
+        
+        // Hide all sections with fade out
+        sections.forEach(section => {
+          section.style.opacity = '0';
+          section.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            section.classList.add('hidden');
+          }, 200);
+        });
+        
+        // Show target section with fade in
+        const targetId = this.getAttribute('href').substring(1);
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          setTimeout(() => {
+            targetSection.classList.remove('hidden');
+            requestAnimationFrame(() => {
+              targetSection.style.opacity = '1';
+              targetSection.style.transform = 'translateY(0)';
+            });
+          }, 250);
+        }
+      });
+    });
+    
+    // Enhanced password confirmation validation
+    const newPassword = document.querySelector('input[name="new_password"]');
+    const confirmPassword = document.querySelector('input[name="new_password_confirmation"]');
+    
+    if (newPassword && confirmPassword) {
+      function validatePasswords() {
+        if (confirmPassword.value && newPassword.value !== confirmPassword.value) {
+          confirmPassword.setCustomValidity('Passwords do not match');
+          confirmPassword.classList.add('border-red-400', 'ring-red-400');
+          confirmPassword.classList.remove('border-slate-200', 'focus:border-emerald-500');
+        } else {
+          confirmPassword.setCustomValidity('');
+          confirmPassword.classList.remove('border-red-400', 'ring-red-400');
+          confirmPassword.classList.add('border-slate-200', 'focus:border-emerald-500');
+        }
+      }
+      
+      newPassword.addEventListener('input', validatePasswords);
+      confirmPassword.addEventListener('input', validatePasswords);
+    }
+
+    // Add smooth transitions to all sections
+    sections.forEach(section => {
+      section.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    });
+  });
+</script>
+
+<style>
+  .settings-nav-link {
+    @apply text-slate-600 hover:text-slate-800 hover:bg-slate-50/50 backdrop-blur-sm;
+  }
+  
+  .settings-nav-link.active {
+    @apply text-indigo-700 bg-gradient-to-r from-indigo-50 to-purple-50 shadow-lg border-2 border-indigo-200/50;
+  }
+
+  .settings-nav-link .w-10 {
+    @apply opacity-70;
+  }
+
+  .settings-nav-link.active .w-10 {
+    @apply opacity-100 shadow-lg;
+  }
+
+  /* Custom toggle switches */
+  input[type="checkbox"]:checked + div {
+    @apply shadow-lg;
+  }
+</style>

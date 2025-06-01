@@ -7,6 +7,7 @@ export default class extends Controller {
   connect() {
     this.isOpen = false;
     this.setupKeyboardNavigation();
+    this.setupOutsideClickListener();
   }
 
   toggle(event) {
@@ -46,17 +47,32 @@ export default class extends Controller {
       if (event.key === 'Escape' && this.isOpen) {
         this.close();
       }
-      
+
       if (event.key === 'ArrowDown' && !this.isOpen) {
         event.preventDefault();
         this.open();
       }
-      
+
       if (this.isOpen && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
         event.preventDefault();
         this.navigateMenu(event.key === 'ArrowDown' ? 1 : -1);
       }
     });
+  }
+
+  setupOutsideClickListener() {
+    this.boundClickHandler = (event) => {
+      if (this.isOpen && !this.element.contains(event.target)) {
+        this.close();
+      }
+    };
+    document.addEventListener('click', this.boundClickHandler);
+  }
+
+  disconnect() {
+    if (this.boundClickHandler) {
+      document.removeEventListener('click', this.boundClickHandler);
+    }
   }
 
   navigateMenu(direction) {

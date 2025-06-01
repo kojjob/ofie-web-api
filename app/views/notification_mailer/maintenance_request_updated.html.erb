@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maintenance Request Updated</title>
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+      .header { background-color: #059669; color: white; padding: 20px; text-align: center; }
+      .content { padding: 20px; background-color: #f9fafb; }
+      .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+      .status-pending { background-color: #fef3c7; color: #d97706; }
+      .status-in_progress { background-color: #dbeafe; color: #2563eb; }
+      .status-scheduled { background-color: #e0e7ff; color: #7c3aed; }
+      .status-completed { background-color: #dcfce7; color: #16a34a; }
+      .status-cancelled { background-color: #f3f4f6; color: #6b7280; }
+      .status-on_hold { background-color: #fed7aa; color: #ea580c; }
+      .button { display: inline-block; padding: 12px 24px; background-color: #059669; color: white; text-decoration: none; border-radius: 6px; margin: 10px 0; }
+      .details { background-color: white; padding: 15px; border-radius: 6px; margin: 15px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Maintenance Request Updated</h1>
+      </div>
+      
+      <div class="content">
+        <p>Hello <%= @user.name || @user.email %>,</p>
+        
+        <p>Your maintenance request for <strong><%= @property.title %></strong> has been updated.</p>
+        
+        <div class="details">
+          <h3><%= @maintenance_request.title %></h3>
+          <p><strong>Current Status:</strong> 
+            <span class="status-badge status-<%= @maintenance_request.status %>">
+              <%= @maintenance_request.status.humanize %>
+            </span>
+          </p>
+          
+          <% if @maintenance_request.scheduled_at && @maintenance_request.scheduled? %>
+            <p><strong>Scheduled for:</strong> <%= @maintenance_request.scheduled_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+          <% end %>
+          
+          <% if @maintenance_request.assigned_to %>
+            <p><strong>Assigned to:</strong> <%= @maintenance_request.assigned_to.name || @maintenance_request.assigned_to.email %></p>
+          <% end %>
+          
+          <% if @maintenance_request.estimated_cost %>
+            <p><strong>Estimated Cost:</strong> $<%= @maintenance_request.estimated_cost %></p>
+          <% end %>
+          
+          <% if @maintenance_request.landlord_notes.present? %>
+            <p><strong>Landlord Notes:</strong></p>
+            <p><%= simple_format(@maintenance_request.landlord_notes) %></p>
+          <% end %>
+          
+          <% if @maintenance_request.completed? && @maintenance_request.completion_notes.present? %>
+            <p><strong>Completion Notes:</strong></p>
+            <p><%= simple_format(@maintenance_request.completion_notes) %></p>
+          <% end %>
+        </div>
+        
+        <p>
+          <a href="<%= Rails.application.routes.url_helpers.maintenance_request_url(@maintenance_request, host: Rails.application.config.action_mailer.default_url_options[:host]) %>" class="button">
+            View Request Details
+          </a>
+        </p>
+        
+        <% if @maintenance_request.completed? %>
+          <div style="background-color: #dcfce7; border: 1px solid #bbf7d0; padding: 15px; border-radius: 6px; margin: 15px 0;">
+            <p style="color: #16a34a; font-weight: bold; margin: 0;">
+              ✅ Your maintenance request has been completed!
+            </p>
+          </div>
+        <% elsif @maintenance_request.scheduled? %>
+          <div style="background-color: #e0e7ff; border: 1px solid #c7d2fe; padding: 15px; border-radius: 6px; margin: 15px 0;">
+            <p style="color: #7c3aed; font-weight: bold; margin: 0;">
+              📅 Your maintenance request has been scheduled. Please ensure access is available at the scheduled time.
+            </p>
+          </div>
+        <% end %>
+        
+        <p>Thank you for using our maintenance request system.</p>
+        
+        <p>Best regards,<br>The Ofie Team</p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -10,10 +10,13 @@ Rails.application.routes.draw do
 
       # Enhanced authentication routes
       post "/auth/refresh", to: "auth#refresh_token"
+      get "/auth/verify_email", to: "auth#verify_email", as: :verify_email
       post "/auth/verify_email", to: "auth#verify_email"
       post "/auth/resend_verification", to: "auth#resend_verification"
+      get "/auth/forgot_password", to: "auth#forgot_password"
       post "/auth/forgot_password", to: "auth#forgot_password"
-      post "/auth/reset_password", to: "auth#reset_password"
+      get "/auth/reset_password", to: "auth#reset_password"
+      patch "/auth/reset_password", to: "auth#reset_password"
 
       # OAuth callback routes
       get "/auth/google/callback", to: "auth#google_callback"
@@ -29,6 +32,12 @@ Rails.application.routes.draw do
 
         # Property reviews
         resources :reviews, controller: "property_reviews", only: [ :index, :create ]
+
+        # Property comments
+        resources :comments, controller: "property_comments", only: [ :index, :create ]
+
+        # Maintenance requests
+        resources :maintenance_requests, only: [ :index, :create ]
       end
 
       # Standalone property feature routes
@@ -40,8 +49,95 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :property_comments, only: [ :show, :update, :destroy ] do
+        member do
+          post :toggle_like
+          post :flag
+        end
+      end
+
       # User-specific routes
       get "/users/:user_id/reviews", to: "property_reviews#user_reviews"
+
+      # User profile and settings routes
+      get "/profile", to: "users#show"
+      get "/profile/edit", to: "users#edit"
+      patch "/profile", to: "users#update"
+      get "/settings", to: "users#settings"
+      patch "/settings", to: "users#update_settings"
+      patch "/change_password", to: "users#change_password", as: :change_password
+
+      # Payment routes
+      resources :payments, only: [ :index, :show, :create ] do
+        member do
+          post :retry
+          post :cancel
+        end
+        collection do
+          get :summary
+        end
+      end
+
+      # Payment methods routes
+      resources :payment_methods, only: [ :index, :show, :create, :update, :destroy ] do
+        member do
+          post :make_default
+        end
+        collection do
+          post :setup_intent_success
+          get :validate
+        end
+      end
+
+      # Payment schedules routes
+      resources :payment_schedules, only: [ :index, :show, :update, :destroy ] do
+        member do
+          post :activate
+          post :deactivate
+          post :toggle_auto_pay
+          post :create_payment
+        end
+        collection do
+          get :upcoming
+        end
+      end
+
+      # Lease agreements with nested payment resources
+      resources :lease_agreements, only: [ :index, :show, :create, :update ] do
+        resources :payments, only: [ :index, :create ]
+        resources :payment_schedules, only: [ :index, :create ]
+      end
+
+      # Rental applications routes
+      resources :rental_applications, only: [ :index, :show, :create, :update ] do
+        member do
+          post :approve
+          post :reject
+          post :under_review
+        end
+      end
+
+      # Security deposits routes
+      resources :security_deposits, only: [ :index, :show, :update ] do
+        member do
+          post :mark_collected
+          post :process_refund
+          post :add_deduction
+        end
+      end
+
+      # Maintenance requests routes
+      resources :maintenance_requests, only: [ :index, :show, :update, :destroy ] do
+        member do
+          post :complete
+          post :schedule
+        end
+      end
+
+      # Webhook routes
+      namespace :webhooks do
+        post :stripe, to: "stripe#create"
+      end
 
       # Messaging routes
       resources :conversations, only: [ :index, :show, :new, :create, :update, :destroy ] do
@@ -64,11 +160,23 @@ Rails.application.routes.draw do
   get "register", to: "auth#register_form", as: "register"
   post "register", to: "auth#register"
   delete "logout", to: "auth#logout", as: "logout"
-get "logout", to: "auth#logout", as: "logout_get"
+  get "logout", to: "auth#logout", as: "logout_get"
+  get "forgot_password", to: "auth#forgot_password"
+  post "forgot_password", to: "auth#forgot_password"
+  get "reset_password", to: "auth#reset_password"
+  patch "reset_password", to: "auth#reset_password"
 
   # API routes for backward compatibility
   post "auth/register", to: "auth#register"
   post "auth/login", to: "auth#login"
+
+  # User profile routes (Web)
+  get "profile", to: "users#show", as: "profile"
+  get "profile/edit", to: "users#edit", as: "edit_profile"
+  patch "profile", to: "users#update"
+  get "settings", to: "users#settings", as: "settings"
+  patch "settings", to: "users#update_settings"
+  patch "change_password", to: "users#change_password", as: "change_password"
 
   # Property routes for web/API
   # Add this to the properties resource
@@ -86,7 +194,35 @@ get "logout", to: "auth#logout", as: "logout_get"
         get :available_slots
       end
     end
+
+    # Add nested property_comments routes
+    resources :property_comments, only: [ :index, :create ] do
+      collection do
+        get :recent
+      end
+    end
+
+    # Add nested rental_applications routes
+    resources :rental_applications, only: [ :new, :create ]
   end
+
+  # Standalone property comments routes (Web)
+  resources :property_comments, only: [ :show, :edit, :update, :destroy ] do
+    member do
+      post :toggle_like
+      post :flag
+    end
+  end
+
+  # Property reviews routes (Web)
+  resources :property_reviews, only: [ :index, :show, :new, :create, :edit, :update, :destroy ] do
+    member do
+      patch :helpful
+    end
+  end
+
+  # User reviews route
+  get "/users/:user_id/reviews", to: "property_reviews#user_reviews", as: "user_reviews"
 
   # Notification routes
   resources :notifications, only: [ :index, :show ] do
@@ -95,6 +231,7 @@ get "logout", to: "auth#logout", as: "logout_get"
     end
     collection do
       patch :mark_all_read
+      get :unread_count
     end
   end
 
@@ -107,6 +244,14 @@ get "logout", to: "auth#logout", as: "logout_get"
       collection do
         patch :mark_all_read
       end
+    end
+  end
+
+  # Maintenance Request routes (Web)
+  resources :maintenance_requests do
+    member do
+      post :complete
+      post :schedule
     end
   end
 
@@ -128,6 +273,52 @@ get "logout", to: "auth#logout", as: "logout_get"
 
   # Health check
   get "/health", to: "application#health"
+
+  # Dashboard routes
+  get "/dashboard", to: "dashboard#index", as: "dashboard"
+  get "/dashboard/landlord", to: "dashboard#landlord_dashboard", as: "landlord_dashboard"
+  get "/dashboard/tenant", to: "dashboard#tenant_dashboard", as: "tenant_dashboard"
+  get "/dashboard/analytics", to: "dashboard#analytics", as: "dashboard_analytics"
+
+  # Analytics routes
+  get "/analytics", to: "analytics#index", as: "analytics"
+
+  # Favorites routes
+  get "/favorites", to: "property_favorites#index", as: "favorites"
+
+  # Rental Applications routes (Web)
+  resources :rental_applications, only: [ :index, :show, :edit, :update, :destroy ] do
+    member do
+      post :approve
+      post :reject
+      post :under_review
+    end
+
+    # Nested lease agreements routes
+    resources :lease_agreements, only: [ :new, :create ]
+  end
+
+  # Lease Agreements routes (Web)
+  resources :lease_agreements, only: [ :index, :show, :edit, :update, :destroy ] do
+    member do
+      post :sign_tenant
+      post :sign_landlord
+      post :activate
+      post :terminate
+    end
+
+    # Nested payments routes
+    resources :payments, only: [ :new, :create ]
+  end
+
+  # Payments routes (Web)
+  resources :payments, only: [ :index, :show ] do
+    member do
+      post :pay
+      post :cancel
+      post :refund
+    end
+  end
 
   # Home page
   get "/home", to: "home#index", as: "home"

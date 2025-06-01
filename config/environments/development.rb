@@ -42,19 +42,15 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # Email configuration for development
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address: "localhost",
-    port: 1025,
-    domain: "localhost:3000"
-  }
+  # Use custom logger delivery method to show verification links in terminal
+  config.action_mailer.delivery_method = :logger
+  config.action_mailer.logger = Logger.new(STDOUT)
+
+  # Alternative: Use letter_opener for browser preview (comment out logger above and uncomment below)
+  # config.action_mailer.delivery_method = :letter_opener
 
   # Set default URL options for mailer
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
-
-  # Use letter_opener for email preview in development
-  # Uncomment the line below if you want to use letter_opener
-  # config.action_mailer.delivery_method = :letter_opener
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

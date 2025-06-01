@@ -1,0 +1,252 @@
+<% content_for :title, "Edit Review" %>
+
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-6">
+        <!-- Breadcrumbs -->
+        <nav class="flex" aria-label="Breadcrumb">
+          <ol class="flex items-center space-x-4">
+            <li>
+              <%= link_to "Properties", properties_path, class: "text-gray-500 hover:text-gray-700" %>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+                <%= link_to @property.title, @property, class: "ml-4 text-gray-500 hover:text-gray-700" %>
+              </div>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+                <%= link_to "Reviews", property_reviews_path(@property), class: "ml-4 text-gray-500 hover:text-gray-700" %>
+              </div>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+                <span class="ml-4 text-gray-900 font-medium">Edit Review</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="mt-6">
+          <h1 class="text-3xl font-bold text-gray-900">Edit Your Review</h1>
+          <p class="mt-2 text-gray-600">Update your review for <%= @property.title %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Edit Form -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-lg shadow-sm p-8">
+          <%= form_with model: @review, local: true, class: "space-y-6" do |form| %>
+            <!-- Error Messages -->
+            <% if @review.errors.any? %>
+              <div class="bg-red-50 border border-red-200 rounded-md p-4">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                  </div>
+                  <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                    <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                      <% @review.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Rating -->
+            <div>
+              <%= form.label :rating, "Rating", class: "block text-sm font-medium text-gray-700 mb-3" %>
+              <div class="flex items-center space-x-1">
+                <% (1..5).each do |i| %>
+                  <button type="button" onclick="setRating(<%= i %>)" class="star-button focus:outline-none">
+                    <svg class="h-10 w-10 <%= i <= @review.rating ? 'text-yellow-400' : 'text-gray-300' %> hover:text-yellow-400 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  </button>
+                <% end %>
+              </div>
+              <%= form.hidden_field :rating, id: "rating-input" %>
+              <p class="mt-2 text-sm text-gray-500">Click on the stars to set your rating</p>
+            </div>
+
+            <!-- Title -->
+            <div>
+              <%= form.label :title, "Review Title", class: "block text-sm font-medium text-gray-700 mb-2" %>
+              <%= form.text_field :title, class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg", placeholder: "Summarize your experience" %>
+              <p class="mt-1 text-sm text-gray-500">Give your review a descriptive title</p>
+            </div>
+
+            <!-- Content -->
+            <div>
+              <%= form.label :content, "Your Review", class: "block text-sm font-medium text-gray-700 mb-2" %>
+              <%= form.text_area :content, rows: 6, class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg", placeholder: "Share your experience with this property..." %>
+              <div class="mt-2 flex items-center justify-between">
+                <p class="text-sm text-gray-500">Minimum 50 characters</p>
+                <span id="char-count" class="text-sm text-gray-500"><%= @review.content&.length || 0 %> characters</span>
+              </div>
+            </div>
+
+            <!-- Review Guidelines -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 class="text-sm font-medium text-blue-900 mb-2">Review Guidelines</h4>
+              <ul class="text-sm text-blue-800 space-y-1">
+                <li>• Be honest and fair in your assessment</li>
+                <li>• Focus on your personal experience with the property</li>
+                <li>• Avoid personal attacks or inappropriate language</li>
+                <li>• Include specific details that would help other tenants</li>
+                <li>• Consider factors like location, amenities, management, and value</li>
+              </ul>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex items-center justify-between pt-6 border-t">
+              <div class="flex items-center space-x-4">
+                <%= link_to "Cancel", @review, class: "text-gray-600 hover:text-gray-800 font-medium" %>
+                <%= link_to "Delete Review", property_review_path(@review), method: :delete, 
+                    confirm: "Are you sure you want to delete this review? This action cannot be undone.", 
+                    class: "text-red-600 hover:text-red-800 font-medium" %>
+              </div>
+              <%= form.submit "Update Review", class: "bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1">
+        <!-- Property Info -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Property Details</h3>
+          <div class="space-y-3">
+            <h4 class="font-medium text-gray-900"><%= @property.title %></h4>
+            <p class="text-gray-600 text-sm"><%= @property.address %></p>
+            
+            <div class="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <span class="text-gray-500">Type:</span>
+                <div class="font-medium"><%= @property.property_type&.humanize || 'N/A' %></div>
+              </div>
+              <div>
+                <span class="text-gray-500">Bedrooms:</span>
+                <div class="font-medium"><%= @property.bedrooms || 'N/A' %></div>
+              </div>
+              <div>
+                <span class="text-gray-500">Bathrooms:</span>
+                <div class="font-medium"><%= @property.bathrooms || 'N/A' %></div>
+              </div>
+              <div>
+                <span class="text-gray-500">Sq Ft:</span>
+                <div class="font-medium"><%= number_with_delimiter(@property.square_footage) if @property.square_footage %></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-4 pt-4 border-t">
+            <%= link_to "View Property", @property, class: "w-full bg-gray-100 text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center block" %>
+          </div>
+        </div>
+
+        <!-- Current Review Preview -->
+        <div class="bg-white rounded-lg shadow-sm p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Current Review</h3>
+          
+          <!-- Current Rating -->
+          <div class="mb-4">
+            <div class="flex items-center space-x-2">
+              <div class="flex items-center">
+                <% (1..5).each do |i| %>
+                  <svg class="h-4 w-4 <%= i <= @review.rating ? 'text-yellow-400' : 'text-gray-300' %>" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                <% end %>
+              </div>
+              <span class="text-sm font-medium text-gray-900"><%= @review.rating %>/5</span>
+            </div>
+          </div>
+          
+          <!-- Current Title -->
+          <% if @review.title.present? %>
+            <h4 class="font-medium text-gray-900 mb-2"><%= @review.title %></h4>
+          <% end %>
+          
+          <!-- Current Content -->
+          <p class="text-gray-600 text-sm mb-4"><%= truncate(@review.content, length: 150) %></p>
+          
+          <!-- Review Stats -->
+          <div class="space-y-2 text-xs text-gray-500">
+            <div class="flex justify-between">
+              <span>Posted:</span>
+              <span><%= @review.created_at.strftime("%B %d, %Y") %></span>
+            </div>
+            <div class="flex justify-between">
+              <span>Helpful votes:</span>
+              <span><%= @review.helpful_count %></span>
+            </div>
+            <% if @review.verified? %>
+              <div class="flex justify-between">
+                <span>Status:</span>
+                <span class="text-green-600">Verified</span>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="mt-4 pt-4 border-t">
+            <%= link_to "View Full Review", @review, class: "w-full bg-gray-100 text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors text-center block" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setRating(rating) {
+    document.getElementById('rating-input').value = rating;
+    
+    // Update star display
+    const stars = document.querySelectorAll('.star-button svg');
+    stars.forEach((star, index) => {
+      if (index < rating) {
+        star.classList.remove('text-gray-300');
+        star.classList.add('text-yellow-400');
+      } else {
+        star.classList.remove('text-yellow-400');
+        star.classList.add('text-gray-300');
+      }
+    });
+  }
+
+  // Character counter for content
+  document.addEventListener('DOMContentLoaded', function() {
+    const contentTextarea = document.querySelector('textarea[name="property_review[content]"]');
+    const charCount = document.getElementById('char-count');
+    
+    if (contentTextarea && charCount) {
+      contentTextarea.addEventListener('input', function() {
+        charCount.textContent = this.value.length + ' characters';
+      });
+    }
+  });
+</script>

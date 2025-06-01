@@ -1,0 +1,476 @@
+<% content_for :title, "Maintenance Requests" %>
+
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Maintenance Requests</h1>
+    <% if current_user&.tenant? %>
+      <button id="new-request-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+        <i class="fas fa-plus mr-2"></i>New Request
+      </button>
+    <% end %>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <h3 class="text-lg font-semibold mb-4">Filters</h3>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+        <select id="status-filter" class="w-full border border-gray-300 rounded-md px-3 py-2">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="in_progress">In Progress</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+        <select id="priority-filter" class="w-full border border-gray-300 rounded-md px-3 py-2">
+          <option value="">All Priorities</option>
+          <option value="emergency">Emergency</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+        <select id="category-filter" class="w-full border border-gray-300 rounded-md px-3 py-2">
+          <option value="">All Categories</option>
+          <option value="plumbing">Plumbing</option>
+          <option value="electrical">Electrical</option>
+          <option value="hvac">HVAC</option>
+          <option value="appliances">Appliances</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="flex items-end">
+        <button id="apply-filters" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md transition duration-200">
+          Apply Filters
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Maintenance Requests List -->
+  <div id="maintenance-requests-container">
+    <div class="text-center py-8">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+      <p class="mt-4 text-gray-600">Loading maintenance requests...</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div id="pagination-container" class="mt-8"></div>
+</div>
+
+<!-- New Request Modal -->
+<div id="new-request-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+  <div class="flex items-center justify-center min-h-screen px-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-screen overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">New Maintenance Request</h2>
+          <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times text-xl"></i>
+          </button>
+        </div>
+        
+        <form id="new-request-form" enctype="multipart/form-data">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Property</label>
+              <select id="property-select" name="property_id" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+                <option value="">Select a property...</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+              <input type="text" name="title" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+              <select name="category" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+                <option value="">Select category...</option>
+                <option value="plumbing">Plumbing</option>
+                <option value="electrical">Electrical</option>
+                <option value="hvac">HVAC</option>
+                <option value="appliances">Appliances</option>
+                <option value="flooring">Flooring</option>
+                <option value="painting">Painting</option>
+                <option value="windows_doors">Windows & Doors</option>
+                <option value="pest_control">Pest Control</option>
+                <option value="cleaning">Cleaning</option>
+                <option value="landscaping">Landscaping</option>
+                <option value="security">Security</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+              <select name="priority" class="w-full border border-gray-300 rounded-md px-3 py-2" required>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+                <option value="high">High</option>
+                <option value="emergency">Emergency</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <textarea name="description" rows="4" class="w-full border border-gray-300 rounded-md px-3 py-2" required></textarea>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Location Details</label>
+              <input type="text" name="location_details" class="w-full border border-gray-300 rounded-md px-3 py-2" placeholder="e.g., Kitchen sink, Master bedroom, etc.">
+            </div>
+            
+            <div class="flex items-center">
+              <input type="checkbox" name="urgent" id="urgent-checkbox" class="mr-2">
+              <label for="urgent-checkbox" class="text-sm font-medium text-gray-700">Mark as urgent</label>
+            </div>
+            
+            <div class="flex items-center">
+              <input type="checkbox" name="tenant_present_required" id="tenant-present-checkbox" class="mr-2">
+              <label for="tenant-present-checkbox" class="text-sm font-medium text-gray-700">Tenant presence required</label>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Photos</label>
+              <input type="file" name="photos[]" multiple accept="image/*" class="w-full border border-gray-300 rounded-md px-3 py-2">
+              <p class="text-sm text-gray-500 mt-1">Upload photos to help describe the issue</p>
+            </div>
+          </div>
+          
+          <div class="flex justify-end space-x-4 mt-6">
+            <button type="button" id="cancel-request" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+              Cancel
+            </button>
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              Submit Request
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Maintenance Requests JavaScript
+class MaintenanceRequestsManager {
+  constructor() {
+    this.currentPage = 1;
+    this.filters = {};
+    this.init();
+  }
+
+  init() {
+    this.loadMaintenanceRequests();
+    this.setupEventListeners();
+    this.loadUserProperties();
+  }
+
+  setupEventListeners() {
+    // Modal controls
+    document.getElementById('new-request-btn')?.addEventListener('click', () => {
+      document.getElementById('new-request-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('close-modal')?.addEventListener('click', () => {
+      document.getElementById('new-request-modal').classList.add('hidden');
+    });
+
+    document.getElementById('cancel-request')?.addEventListener('click', () => {
+      document.getElementById('new-request-modal').classList.add('hidden');
+    });
+
+    // Form submission
+    document.getElementById('new-request-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.submitNewRequest(e.target);
+    });
+
+    // Filters
+    document.getElementById('apply-filters')?.addEventListener('click', () => {
+      this.applyFilters();
+    });
+  }
+
+  async loadMaintenanceRequests() {
+    try {
+      const params = new URLSearchParams({
+        page: this.currentPage,
+        ...this.filters
+      });
+
+      const response = await fetch(`/api/v1/maintenance_requests?${params}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        this.renderMaintenanceRequests(data.maintenance_requests);
+        this.renderPagination(data.meta);
+      } else {
+        throw new Error('Failed to load maintenance requests');
+      }
+    } catch (error) {
+      console.error('Error loading maintenance requests:', error);
+      this.showError('Failed to load maintenance requests');
+    }
+  }
+
+  async loadUserProperties() {
+    try {
+      const response = await fetch('/api/v1/properties', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        this.populatePropertySelect(data.properties);
+      }
+    } catch (error) {
+      console.error('Error loading properties:', error);
+    }
+  }
+
+  populatePropertySelect(properties) {
+    const select = document.getElementById('property-select');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Select a property...</option>';
+    properties.forEach(property => {
+      const option = document.createElement('option');
+      option.value = property.id;
+      option.textContent = `${property.title} - ${property.address}`;
+      select.appendChild(option);
+    });
+  }
+
+  renderMaintenanceRequests(requests) {
+    const container = document.getElementById('maintenance-requests-container');
+    if (!container) return;
+
+    if (requests.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-12">
+          <i class="fas fa-tools text-6xl text-gray-300 mb-4"></i>
+          <h3 class="text-xl font-semibold text-gray-600 mb-2">No maintenance requests found</h3>
+          <p class="text-gray-500">Create your first maintenance request to get started.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const requestsHTML = requests.map(request => this.renderRequestCard(request)).join('');
+    container.innerHTML = requestsHTML;
+  }
+
+  renderRequestCard(request) {
+    const priorityColors = {
+      emergency: 'bg-red-100 text-red-800',
+      high: 'bg-orange-100 text-orange-800',
+      medium: 'bg-yellow-100 text-yellow-800',
+      low: 'bg-green-100 text-green-800'
+    };
+
+    const statusColors = {
+      pending: 'bg-yellow-100 text-yellow-800',
+      in_progress: 'bg-blue-100 text-blue-800',
+      scheduled: 'bg-purple-100 text-purple-800',
+      completed: 'bg-green-100 text-green-800',
+      cancelled: 'bg-gray-100 text-gray-800'
+    };
+
+    return `
+      <div class="bg-white rounded-lg shadow-md p-6 mb-4 hover:shadow-lg transition duration-200">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">${request.title}</h3>
+            <p class="text-gray-600 mb-2">${request.description}</p>
+            <div class="flex items-center space-x-4 text-sm text-gray-500">
+              <span><i class="fas fa-map-marker-alt mr-1"></i>${request.property.address}</span>
+              <span><i class="fas fa-calendar mr-1"></i>${new Date(request.requested_at).toLocaleDateString()}</span>
+              ${request.days_since_requested > 0 ? `<span><i class="fas fa-clock mr-1"></i>${request.days_since_requested} days ago</span>` : ''}
+            </div>
+          </div>
+          <div class="flex flex-col space-y-2">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${priorityColors[request.priority] || 'bg-gray-100 text-gray-800'}">
+              ${request.priority.charAt(0).toUpperCase() + request.priority.slice(1)}
+            </span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[request.status] || 'bg-gray-100 text-gray-800'}">
+              ${request.status.replace('_', ' ').charAt(0).toUpperCase() + request.status.replace('_', ' ').slice(1)}
+            </span>
+            ${request.urgent ? '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Urgent</span>' : ''}
+          </div>
+        </div>
+        
+        ${request.photos.length > 0 ? `
+          <div class="mb-4">
+            <div class="flex space-x-2 overflow-x-auto">
+              ${request.photos.slice(0, 3).map(photo => `
+                <img src="${photo}" alt="Request photo" class="w-20 h-20 object-cover rounded-md">
+              `).join('')}
+              ${request.photos.length > 3 ? `<div class="w-20 h-20 bg-gray-100 rounded-md flex items-center justify-center text-gray-500 text-sm">+${request.photos.length - 3}</div>` : ''}
+            </div>
+          </div>
+        ` : ''}
+        
+        <div class="flex justify-between items-center">
+          <div class="text-sm text-gray-500">
+            <span class="capitalize">${request.category.replace('_', ' ')}</span>
+            ${request.estimated_cost ? ` • Estimated: $${request.estimated_cost}` : ''}
+          </div>
+          <button onclick="viewRequest('${request.id}')" class="text-blue-600 hover:text-blue-800 font-medium">
+            View Details
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  renderPagination(meta) {
+    const container = document.getElementById('pagination-container');
+    if (!container || meta.total_pages <= 1) {
+      container.innerHTML = '';
+      return;
+    }
+
+    let paginationHTML = '<div class="flex justify-center space-x-2">';
+    
+    // Previous button
+    if (meta.current_page > 1) {
+      paginationHTML += `<button onclick="maintenanceManager.changePage(${meta.current_page - 1})" class="px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Previous</button>`;
+    }
+    
+    // Page numbers
+    for (let i = Math.max(1, meta.current_page - 2); i <= Math.min(meta.total_pages, meta.current_page + 2); i++) {
+      const isActive = i === meta.current_page;
+      paginationHTML += `<button onclick="maintenanceManager.changePage(${i})" class="px-3 py-2 border ${isActive ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 hover:bg-gray-50'} rounded-md">${i}</button>`;
+    }
+    
+    // Next button
+    if (meta.current_page < meta.total_pages) {
+      paginationHTML += `<button onclick="maintenanceManager.changePage(${meta.current_page + 1})" class="px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Next</button>`;
+    }
+    
+    paginationHTML += '</div>';
+    container.innerHTML = paginationHTML;
+  }
+
+  changePage(page) {
+    this.currentPage = page;
+    this.loadMaintenanceRequests();
+  }
+
+  applyFilters() {
+    this.filters = {
+      status: document.getElementById('status-filter').value,
+      priority: document.getElementById('priority-filter').value,
+      category: document.getElementById('category-filter').value
+    };
+    
+    // Remove empty filters
+    Object.keys(this.filters).forEach(key => {
+      if (!this.filters[key]) delete this.filters[key];
+    });
+    
+    this.currentPage = 1;
+    this.loadMaintenanceRequests();
+  }
+
+  async submitNewRequest(form) {
+    try {
+      const formData = new FormData(form);
+      const propertyId = formData.get('property_id');
+      
+      if (!propertyId) {
+        this.showError('Please select a property');
+        return;
+      }
+
+      const response = await fetch(`/api/v1/properties/${propertyId}/maintenance_requests`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        document.getElementById('new-request-modal').classList.add('hidden');
+        form.reset();
+        this.loadMaintenanceRequests();
+        this.showSuccess('Maintenance request submitted successfully!');
+      } else {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to submit request');
+      }
+    } catch (error) {
+      console.error('Error submitting request:', error);
+      this.showError(error.message);
+    }
+  }
+
+  showError(message) {
+    // Simple error display - you can enhance this with a proper notification system
+    alert('Error: ' + message);
+  }
+
+  showSuccess(message) {
+    // Simple success display - you can enhance this with a proper notification system
+    alert('Success: ' + message);
+  }
+}
+
+// Global functions
+function viewRequest(requestId) {
+  // Navigate to request detail page or open modal
+  window.location.href = `/maintenance_requests/${requestId}`;
+}
+
+// Initialize when page loads
+let maintenanceManager;
+document.addEventListener('DOMContentLoaded', () => {
+  maintenanceManager = new MaintenanceRequestsManager();
+});
+</script>
+
+<style>
+/* Additional styles for better UX */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .grid-cols-1.md\:grid-cols-4 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .grid-cols-1.md\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+</style>

@@ -1,0 +1,287 @@
+<!-- Reviews Section for Property Show Page -->
+<div class="space-y-6">
+  <!-- Reviews Header -->
+  <div class="flex items-center justify-between">
+    <h3 class="text-2xl font-bold text-gray-900">Reviews</h3>
+    <% if user_signed_in? && current_user.tenant? && !current_user.property_reviews.exists?(property: property) %>
+      <button id="write-review-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Write a Review
+      </button>
+    <% end %>
+  </div>
+
+  <!-- Overall Rating Summary -->
+  <% if property.property_reviews.any? %>
+    <div class="bg-gray-50 rounded-lg p-6">
+      <div class="flex items-center space-x-6">
+        <!-- Average Rating -->
+        <div class="text-center">
+          <div class="text-4xl font-bold text-gray-900"><%= property.average_rating %></div>
+          <div class="flex items-center justify-center mt-1">
+            <% 5.times do |i| %>
+              <svg class="h-5 w-5 <%= i < property.average_rating.to_i ? 'text-yellow-400' : 'text-gray-300' %>" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+              </svg>
+            <% end %>
+          </div>
+          <p class="text-gray-600">Based on <%= pluralize(property.property_reviews.count, 'review') %></p>
+        </div>
+
+        <!-- Rating Distribution -->
+        <div class="flex-1">
+          <% 5.downto(1) do |rating| %>
+            <% count = property.property_reviews.where(rating: rating).count %>
+            <% percentage = property.property_reviews.count > 0 ? (count.to_f / property.property_reviews.count * 100).round : 0 %>
+            <div class="flex items-center space-x-2 mb-1">
+              <span class="text-sm text-gray-600 w-8"><%= rating %>★</span>
+              <div class="flex-1 bg-gray-200 rounded-full h-2">
+                <div class="bg-yellow-400 h-2 rounded-full" style="width: <%= percentage %>%"></div>
+              </div>
+              <span class="text-sm text-gray-600 w-8"><%= count %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Write Review Form (Hidden by default) -->
+  <% if user_signed_in? && current_user.tenant? && !current_user.property_reviews.exists?(property: property) %>
+    <div id="review-form" class="hidden bg-white border border-gray-200 rounded-lg p-6">
+      <%= form_with model: [property, PropertyReview.new], local: true, class: "space-y-4" do |form| %>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Rating</label>
+          <div class="flex items-center space-x-1">
+            <% 5.times do |i| %>
+              <button type="button" class="star-btn text-gray-300 hover:text-yellow-400 focus:outline-none" data-rating="<%= i + 1 %>">
+                <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+              </button>
+            <% end %>
+          </div>
+          <%= form.hidden_field :rating, id: "review-rating" %>
+        </div>
+
+        <div>
+          <%= form.label :title, class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :title, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500", placeholder: "Summarize your experience" %>
+        </div>
+
+        <div>
+          <%= form.label :content, "Review", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_area :content, rows: 4, class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500", placeholder: "Share your experience with this property..." %>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <button type="button" id="cancel-review-btn" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Cancel
+          </button>
+          <%= form.submit "Submit Review", class: "px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Reviews List -->
+  <div class="space-y-6">
+    <% if property.property_reviews.any? %>
+      <% property.property_reviews.includes(:user).recent.limit(5).each do |review| %>
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+          <!-- Review Header -->
+          <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center space-x-3">
+              <div class="flex-shrink-0">
+                <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                  <span class="text-sm font-medium text-gray-700">
+                    <%= (review.user.name&.first || review.user.email.first).upcase %>
+                  </span>
+                </div>
+              </div>
+              <div>
+                <h4 class="text-sm font-medium text-gray-900">
+                  <%= review.user.name || review.user.email.split('@').first %>
+                  <% if review.user.tenant? %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 ml-2">
+                      Verified Tenant
+                    </span>
+                  <% end %>
+                </h4>
+                <div class="flex items-center space-x-2">
+                  <div class="flex items-center">
+                    <% review.rating.times do %>
+                      <svg class="h-4 w-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                      </svg>
+                    <% end %>
+                    <% (5 - review.rating).times do %>
+                      <svg class="h-4 w-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                      </svg>
+                    <% end %>
+                  </div>
+                  <span class="text-sm text-gray-500"><%= time_ago_in_words(review.created_at) %> ago</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Review Actions -->
+            <% if user_signed_in? && current_user == review.user %>
+              <div class="flex items-center space-x-2">
+                <%= link_to "Edit", edit_property_review_path(review), class: "text-sm text-blue-600 hover:text-blue-800" %>
+                <%= link_to "Delete", property_review_path(review), method: :delete, 
+                    confirm: "Are you sure you want to delete this review?", 
+                    class: "text-sm text-red-600 hover:text-red-800" %>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Review Content -->
+          <div class="mb-4">
+            <% if review.title.present? %>
+              <h5 class="text-lg font-medium text-gray-900 mb-2"><%= review.title %></h5>
+            <% end %>
+            <p class="text-gray-700 leading-relaxed"><%= simple_format(review.content) %></p>
+          </div>
+
+          <!-- Review Footer -->
+          <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+            <div class="flex items-center space-x-4">
+              <!-- Helpful Button -->
+              <% if user_signed_in? && current_user != review.user %>
+                <%= form_with url: helpful_property_review_path(review), method: :patch, local: true, class: "inline" do |form| %>
+                  <%= form.submit "👍 Helpful (#{review.helpful_count})", 
+                      class: "text-sm text-gray-600 hover:text-gray-800 bg-transparent border-none cursor-pointer" %>
+                <% end %>
+              <% else %>
+                <span class="text-sm text-gray-600">👍 Helpful (<%= review.helpful_count %>)</span>
+              <% end %>
+            </div>
+            
+            <%= link_to "View Details", property_review_path(review), class: "text-sm text-blue-600 hover:text-blue-800" %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- View All Reviews Link -->
+      <% if property.property_reviews.count > 5 %>
+        <div class="text-center">
+          <%= link_to property_reviews_path(property),
+              class: "inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+            View All <%= property.property_reviews.count %> Reviews
+            <svg class="ml-2 -mr-1 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- No Reviews State -->
+      <div class="text-center py-12">
+        <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.681L3 21l2.319-5.094A7.96 7.96 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"></path>
+        </svg>
+        <h3 class="mt-4 text-lg font-medium text-gray-900">No reviews yet</h3>
+        <p class="mt-2 text-gray-600">Be the first to share your experience with this property.</p>
+        <% if user_signed_in? && current_user.tenant? && !current_user.property_reviews.exists?(property: property) %>
+          <button id="first-review-btn" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Write the First Review
+          </button>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- JavaScript for Review Form -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const writeReviewBtn = document.getElementById('write-review-btn');
+    const firstReviewBtn = document.getElementById('first-review-btn');
+    const reviewForm = document.getElementById('review-form');
+    const cancelReviewBtn = document.getElementById('cancel-review-btn');
+    const starBtns = document.querySelectorAll('.star-btn');
+    const ratingInput = document.getElementById('review-rating');
+
+    // Show review form
+    function showReviewForm() {
+      if (reviewForm) {
+        reviewForm.classList.remove('hidden');
+        reviewForm.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Hide review form
+    function hideReviewForm() {
+      if (reviewForm) {
+        reviewForm.classList.add('hidden');
+        // Reset form
+        reviewForm.querySelector('form').reset();
+        setRating(0);
+      }
+    }
+
+    // Set rating
+    function setRating(rating) {
+      if (ratingInput) {
+        ratingInput.value = rating;
+      }
+      starBtns.forEach((btn, index) => {
+        if (index < rating) {
+          btn.classList.remove('text-gray-300');
+          btn.classList.add('text-yellow-400');
+        } else {
+          btn.classList.remove('text-yellow-400');
+          btn.classList.add('text-gray-300');
+        }
+      });
+    }
+
+    // Event listeners
+    if (writeReviewBtn) {
+      writeReviewBtn.addEventListener('click', showReviewForm);
+    }
+
+    if (firstReviewBtn) {
+      firstReviewBtn.addEventListener('click', showReviewForm);
+    }
+
+    if (cancelReviewBtn) {
+      cancelReviewBtn.addEventListener('click', hideReviewForm);
+    }
+
+    // Star rating functionality
+    starBtns.forEach((btn, index) => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const rating = parseInt(this.dataset.rating);
+        setRating(rating);
+      });
+
+      btn.addEventListener('mouseenter', function() {
+        const rating = parseInt(this.dataset.rating);
+        starBtns.forEach((starBtn, starIndex) => {
+          if (starIndex < rating) {
+            starBtn.classList.remove('text-gray-300');
+            starBtn.classList.add('text-yellow-400');
+          } else {
+            starBtn.classList.remove('text-yellow-400');
+            starBtn.classList.add('text-gray-300');
+          }
+        });
+      });
+    });
+
+    // Reset stars on mouse leave
+    const starContainer = document.querySelector('.star-btn')?.parentElement;
+    if (starContainer) {
+      starContainer.addEventListener('mouseleave', function() {
+        const currentRating = parseInt(ratingInput?.value || 0);
+        setRating(currentRating);
+      });
+    }
+  });
+</script>

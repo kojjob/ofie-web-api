@@ -1,0 +1,481 @@
+<!-- Enhanced Tenant Dashboard -->
+<div class="space-y-8">
+  <!-- Enhanced Stats Overview -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-on-scroll">
+    <!-- Active Leases -->
+    <div class="group bg-white/80 backdrop-blur-xl overflow-hidden shadow-xl shadow-gray-200/50 rounded-3xl border border-white/20 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 transform hover:-translate-y-1">
+      <div class="p-8">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Active Leases</p>
+              <p class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent" data-stat="active_leases"><%= @stats[:active_leases] %></p>
+            </div>
+          </div>
+          <div class="text-blue-500 text-sm font-medium">
+            Current
+          </div>
+        </div>
+        <div class="mt-4 flex items-center">
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full" style="width: 100%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Applications Submitted -->
+    <div class="group bg-white/80 backdrop-blur-xl overflow-hidden shadow-xl shadow-gray-200/50 rounded-3xl border border-white/20 hover:shadow-2xl hover:shadow-green-500/10 transition-all duration-300 transform hover:-translate-y-1">
+      <div class="p-8">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Applications</p>
+              <p class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent" data-stat="applications_submitted"><%= @stats[:applications_submitted] %></p>
+            </div>
+          </div>
+          <div class="text-green-500 text-sm font-medium">
+            Submitted
+          </div>
+        </div>
+        <div class="mt-4 flex items-center">
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 h-2 rounded-full" style="width: 70%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Payments -->
+    <div class="group bg-white/80 backdrop-blur-xl overflow-hidden shadow-xl shadow-gray-200/50 rounded-3xl border border-white/20 hover:shadow-2xl hover:shadow-amber-500/10 transition-all duration-300 transform hover:-translate-y-1">
+      <div class="p-8">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/25 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Pending Payments</p>
+              <p class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent" data-stat="pending_payments"><%= @stats[:pending_payments] %></p>
+            </div>
+          </div>
+          <div class="text-amber-500 text-sm font-medium">
+            <%= @stats[:pending_payments] > 0 ? 'Due' : 'Paid' %>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center">
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gradient-to-r from-amber-500 to-orange-600 h-2 rounded-full" style="width: <%= @stats[:pending_payments] > 0 ? '50%' : '100%' %>"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Favorite Properties -->
+    <div class="group bg-white/80 backdrop-blur-xl overflow-hidden shadow-xl shadow-gray-200/50 rounded-3xl border border-white/20 hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-300 transform hover:-translate-y-1">
+      <div class="p-8">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-pink-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-pink-500/25 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Favorites</p>
+              <p class="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent" data-stat="favorite_properties"><%= @stats[:favorite_properties] %></p>
+            </div>
+          </div>
+          <div class="text-pink-500 text-sm font-medium">
+            Saved
+          </div>
+        </div>
+        <div class="mt-4 flex items-center">
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-gradient-to-r from-pink-500 to-red-600 h-2 rounded-full" style="width: 65%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Quick Actions -->
+  <div class="bg-white/80 backdrop-blur-xl shadow-xl shadow-gray-200/50 rounded-3xl border border-white/20 animate-on-scroll">
+    <div class="px-8 py-6 border-b border-gray-200/50">
+      <div class="flex items-center">
+        <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl mr-3 flex items-center justify-center">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900">Quick Actions</h3>
+      </div>
+    </div>
+    <div class="p-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <%= link_to properties_path, class: "group flex items-center p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg border border-blue-100 hover:border-blue-200" do %>
+          <div class="flex-shrink-0 mr-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <p class="text-lg font-bold text-blue-900 group-hover:text-blue-800">Browse Properties</p>
+            <p class="text-sm text-blue-700 group-hover:text-blue-600">Find your next home</p>
+          </div>
+        <% end %>
+
+        <%= link_to "#", class: "group flex items-center p-6 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl hover:from-emerald-100 hover:to-teal-100 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg border border-emerald-100 hover:border-emerald-200" do %>
+          <div class="flex-shrink-0 mr-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/25 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <p class="text-lg font-bold text-emerald-900 group-hover:text-emerald-800">Make Payment</p>
+            <p class="text-sm text-emerald-700 group-hover:text-emerald-600">Pay rent online</p>
+          </div>
+        <% end %>
+
+        <%= link_to "#", class: "group flex items-center p-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl hover:from-amber-100 hover:to-orange-100 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg border border-amber-100 hover:border-amber-200" do %>
+          <div class="flex-shrink-0 mr-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/25 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <p class="text-lg font-bold text-amber-900 group-hover:text-amber-800">My Applications</p>
+            <p class="text-sm text-amber-700 group-hover:text-amber-600">Track applications</p>
+          </div>
+        <% end %>
+
+        <%= link_to conversations_path, class: "group flex items-center p-6 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl hover:from-purple-100 hover:to-indigo-100 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg border border-purple-100 hover:border-purple-200" do %>
+          <div class="flex-shrink-0 mr-4">
+            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/25 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <p class="text-lg font-bold text-purple-900 group-hover:text-purple-800">Messages</p>
+            <p class="text-sm text-purple-700 group-hover:text-purple-600">Chat with landlords</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Current Lease & Upcoming Payments -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-on-scroll">
+    <!-- Current Lease -->
+    <div class="bg-white/80 backdrop-blur-xl shadow-xl shadow-gray-200/50 rounded-3xl border border-white/20">
+      <div class="px-8 py-6 border-b border-gray-200/50">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl mr-3 flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Current Lease</h3>
+          </div>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            Active
+          </span>
+        </div>
+      </div>
+      <div class="p-8">
+        <% if @lease_agreements.where(status: 'active').any? %>
+          <% active_lease = @lease_agreements.where(status: 'active').first %>
+          <div class="space-y-6">
+            <div class="flex items-center space-x-6">
+              <% if active_lease.property.photos.attached? %>
+                <div class="relative">
+                  <%= image_tag active_lease.property.photos.first, class: "w-20 h-20 object-cover rounded-2xl shadow-lg" %>
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+                </div>
+              <% else %>
+                <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-2xl flex items-center justify-center shadow-lg">
+                  <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                  </svg>
+                </div>
+              <% end %>
+              <div class="flex-1">
+                <h4 class="text-xl font-bold text-gray-900 mb-1"><%= active_lease.property.title %></h4>
+                <div class="flex items-center text-gray-600">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                  <span class="text-sm"><%= active_lease.property.address %>, <%= active_lease.property.city %></span>
+                </div>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+              <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-2xl border border-green-100">
+                <p class="text-sm font-semibold text-green-700 mb-1">Monthly Rent</p>
+                <p class="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">$<%= number_with_delimiter(active_lease.monthly_rent) %></p>
+              </div>
+              <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-2xl border border-blue-100">
+                <p class="text-sm font-semibold text-blue-700 mb-1">Lease End</p>
+                <p class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"><%= active_lease.end_date.strftime('%b %d') %></p>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-gray-200">
+              <%= link_to property_path(active_lease.property), class: "inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200" do %>
+                View Property Details
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              <% end %>
+            </div>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <div class="w-16 h-16 bg-gradient-to-r from-blue-100 to-indigo-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">No active lease</h3>
+            <p class="text-gray-600 mb-6">Start browsing properties to find your next home.</p>
+            <%= link_to properties_path, class: "inline-flex items-center px-6 py-3 border border-transparent shadow-lg text-sm font-semibold rounded-2xl text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              Browse Properties
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Upcoming Payments -->
+    <div class="bg-white/80 backdrop-blur-xl shadow-xl shadow-gray-200/50 rounded-3xl border border-white/20">
+      <div class="px-8 py-6 border-b border-gray-200/50">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl mr-3 flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Upcoming Payments</h3>
+          </div>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+            This Month
+          </span>
+        </div>
+      </div>
+      <div class="divide-y divide-gray-100 max-h-96 overflow-y-auto">
+        <% if @upcoming_payments.any? %>
+          <% @upcoming_payments.each do |payment| %>
+            <div class="p-6 hover:bg-gray-50/50 transition-colors duration-200">
+              <div class="flex items-center justify-between mb-4">
+                <div class="space-y-1">
+                  <p class="text-lg font-semibold text-gray-900"><%= payment.payment_type.humanize %></p>
+                  <p class="text-sm text-gray-600"><%= payment.lease_agreement.property.title %></p>
+                </div>
+                <div class="text-right space-y-1">
+                  <p class="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">$<%= number_with_delimiter(payment.amount) %></p>
+                  <p class="text-sm text-gray-500">Due <%= payment.due_date.strftime('%b %d') %></p>
+                  <% if payment.due_date <= Date.current %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r from-red-100 to-pink-100 text-red-800">
+                      Overdue
+                    </span>
+                  <% elsif payment.due_date <= 3.days.from_now %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800">
+                      Due Soon
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+              <button class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-2xl text-sm font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl">
+                Pay Now
+              </button>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="p-12 text-center">
+            <div class="w-16 h-16 bg-gradient-to-r from-green-100 to-emerald-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">All caught up!</h3>
+            <p class="text-gray-600">No upcoming payments at this time.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enhanced Recent Applications & Favorite Properties -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-on-scroll">
+    <!-- Recent Applications -->
+    <div class="bg-white/80 backdrop-blur-xl shadow-xl shadow-gray-200/50 rounded-3xl border border-white/20">
+      <div class="px-8 py-6 border-b border-gray-200/50">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl mr-3 flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Recent Applications</h3>
+          </div>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <%= @recent_applications.count %> Total
+          </span>
+        </div>
+      </div>
+      <div class="divide-y divide-gray-100 max-h-96 overflow-y-auto">
+        <% if @recent_applications.any? %>
+          <% @recent_applications.each do |application| %>
+            <div class="p-6 hover:bg-gray-50/50 transition-colors duration-200">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                  <% if application.property.photos.attached? %>
+                    <div class="relative">
+                      <%= image_tag application.property.photos.first, class: "w-14 h-14 object-cover rounded-xl shadow-lg" %>
+                      <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+                    </div>
+                  <% else %>
+                    <div class="w-14 h-14 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center shadow-lg">
+                      <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                      </svg>
+                    </div>
+                  <% end %>
+                  <div>
+                    <p class="text-lg font-semibold text-gray-900"><%= application.property.title %></p>
+                    <p class="text-sm text-gray-600 flex items-center">
+                      <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      </svg>
+                      <%= application.property.address %>
+                    </p>
+                  </div>
+                </div>
+                <div class="text-right space-y-2">
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+                    <%= case application.status
+                        when 'pending' then 'bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-800'
+                        when 'approved' then 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800'
+                        when 'rejected' then 'bg-gradient-to-r from-red-100 to-pink-100 text-red-800'
+                        else 'bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800'
+                        end %>">
+                    <%= application.status.capitalize %>
+                  </span>
+                  <p class="text-xs text-gray-500"><%= time_ago_in_words(application.created_at) %> ago</p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="p-12 text-center">
+            <div class="w-16 h-16 bg-gradient-to-r from-blue-100 to-indigo-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">No applications yet</h3>
+            <p class="text-gray-600">Start applying to properties you're interested in.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Favorite Properties -->
+    <div class="bg-white/80 backdrop-blur-xl shadow-xl shadow-gray-200/50 rounded-3xl border border-white/20">
+      <div class="px-8 py-6 border-b border-gray-200/50">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-pink-500 to-red-600 rounded-xl mr-3 flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Favorite Properties</h3>
+          </div>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-pink-100 text-pink-800">
+            <%= @favorite_properties.count %> Saved
+          </span>
+        </div>
+      </div>
+      <div class="p-8">
+        <% if @favorite_properties.any? %>
+          <div class="grid grid-cols-1 gap-6">
+            <% @favorite_properties.each do |favorite| %>
+              <div class="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-lg hover:shadow-gray-200/50 transition-all duration-300 transform hover:-translate-y-1">
+                <div class="flex items-center space-x-4 p-4">
+                  <div class="relative overflow-hidden rounded-xl">
+                    <% if favorite.property.photos.attached? %>
+                      <%= image_tag favorite.property.photos.first, class: "w-16 h-16 object-cover group-hover:scale-110 transition-transform duration-300" %>
+                    <% else %>
+                      <div class="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200"><%= favorite.property.title %></h4>
+                    <p class="text-sm text-gray-600 flex items-center">
+                      <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      </svg>
+                      <%= favorite.property.address %>
+                    </p>
+                    <div class="flex items-center justify-between mt-2">
+                      <span class="text-lg font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">$<%= number_with_delimiter(favorite.property.price) %></span>
+                      <%= link_to property_path(favorite.property), class: "p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200" do %>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <div class="w-16 h-16 bg-gradient-to-r from-pink-100 to-red-200 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">No favorites yet</h3>
+            <p class="text-gray-600">Save properties you're interested in to see them here.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

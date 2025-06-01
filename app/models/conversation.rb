@@ -13,6 +13,7 @@ class Conversation < ApplicationRecord
   scope :for_user, ->(user) { where("landlord_id = ? OR tenant_id = ?", user.id, user.id) }
 
   def other_participant(current_user)
+    return nil unless current_user.id == landlord_id || current_user.id == tenant_id
     current_user.id == landlord_id ? tenant : landlord
   end
 

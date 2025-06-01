@@ -17,7 +17,22 @@ class Notification < ApplicationRecord
     "booking",
     "property_update",
     "review",
-    "system"
+    "system",
+    "comment",
+    "comment_flagged",
+    "property",
+    "payment",
+    "maintenance_request_new",
+    "maintenance_request_status_change",
+    "maintenance_request_assigned",
+    "maintenance_request_completed",
+    "rental_application_new",
+    "rental_application_status_change",
+    "rental_application_updated",
+    "lease_agreement_created",
+    "lease_agreement_signed",
+    "lease_agreement_activated",
+    "lease_agreement_terminated"
   ].freeze
 
   validates :notification_type, inclusion: { in: TYPES }
@@ -85,6 +100,107 @@ class Notification < ApplicationRecord
         message: message,
         notification_type: "system",
         url: url
+      )
+    end
+
+    def create_maintenance_request_notification(user, maintenance_request, type, title, message)
+      create!(
+        user: user,
+        notifiable: maintenance_request,
+        title: title,
+        message: message,
+        notification_type: type,
+        url: "/maintenance_requests/#{maintenance_request.id}"
+      )
+    end
+
+    def create_rental_application_notification(landlord, rental_application)
+      create!(
+        user: landlord,
+        notifiable: rental_application,
+        title: "New Rental Application",
+        message: "#{rental_application.tenant.name || rental_application.tenant.email} applied for '#{rental_application.property.title}'",
+        notification_type: "rental_application_new",
+        url: "/rental_applications/#{rental_application.id}"
+      )
+    end
+
+    def create_application_status_notification(tenant, rental_application, status)
+      status_messages = {
+        "approved" => "Your application for '#{rental_application.property.title}' has been approved! 🎉",
+        "rejected" => "Your application for '#{rental_application.property.title}' was not approved.",
+        "under_review" => "Your application for '#{rental_application.property.title}' is now under review."
+      }
+
+      create!(
+        user: tenant,
+        notifiable: rental_application,
+        title: "Application #{status.humanize}",
+        message: status_messages[status] || "Your application status has been updated to #{status.humanize}",
+        notification_type: "rental_application_status_change",
+        url: "/rental_applications/#{rental_application.id}"
+      )
+    end
+
+    def create_application_updated_notification(landlord, rental_application)
+      create!(
+        user: landlord,
+        notifiable: rental_application,
+        title: "Application Updated",
+        message: "#{rental_application.tenant.name || rental_application.tenant.email} updated their application for '#{rental_application.property.title}'",
+        notification_type: "rental_application_updated",
+        url: "/rental_applications/#{rental_application.id}"
+      )
+    end
+
+    def create_lease_created_notification(tenant, lease_agreement)
+      create!(
+        user: tenant,
+        notifiable: lease_agreement,
+        title: "Lease Agreement Created",
+        message: "A lease agreement has been created for '#{lease_agreement.property.title}'. Please review and sign.",
+        notification_type: "lease_agreement_created",
+        url: "/lease_agreements/#{lease_agreement.id}"
+      )
+    end
+
+    def create_lease_signed_notification(recipient, lease_agreement, signer_type)
+      signer_name = signer_type == "tenant" ?
+        (lease_agreement.tenant.name || lease_agreement.tenant.email) :
+        (lease_agreement.landlord.name || lease_agreement.landlord.email)
+
+      create!(
+        user: recipient,
+        notifiable: lease_agreement,
+        title: "Lease Agreement Signed",
+        message: "#{signer_name} has signed the lease agreement for '#{lease_agreement.property.title}'",
+        notification_type: "lease_agreement_signed",
+        url: "/lease_agreements/#{lease_agreement.id}"
+      )
+    end
+
+    def create_lease_activated_notification(tenant, lease_agreement)
+      create!(
+        user: tenant,
+        notifiable: lease_agreement,
+        title: "Lease Agreement Activated",
+        message: "Your lease agreement for '#{lease_agreement.property.title}' is now active! 🎉",
+        notification_type: "lease_agreement_activated",
+        url: "/lease_agreements/#{lease_agreement.id}"
+      )
+    end
+
+    def create_lease_terminated_notification(recipient, lease_agreement, reason = nil)
+      message = "The lease agreement for '#{lease_agreement.property.title}' has been terminated"
+      message += " (#{reason})" if reason.present?
+
+      create!(
+        user: recipient,
+        notifiable: lease_agreement,
+        title: "Lease Agreement Terminated",
+        message: message,
+        notification_type: "lease_agreement_terminated",
+        url: "/lease_agreements/#{lease_agreement.id}"
       )
     end
   end

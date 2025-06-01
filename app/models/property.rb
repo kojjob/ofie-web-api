@@ -2,11 +2,18 @@ class Property < ApplicationRecord
   belongs_to :user
   has_many_attached :photos
 
+  # Lease associations
+  has_many :lease_agreements, dependent: :destroy
+  has_many :rental_applications, dependent: :destroy
+
   # New associations for property features
   has_many :property_favorites, dependent: :destroy
   has_many :favorited_by_users, through: :property_favorites, source: :user
   has_many :property_viewings, dependent: :destroy
   has_many :property_reviews, dependent: :destroy
+  has_many :property_comments, dependent: :destroy
+  has_many :maintenance_requests, dependent: :destroy
+  has_many :conversations, dependent: :destroy
 
   # Define property types as an enum for easy management and validation
   enum :property_type, {
@@ -87,6 +94,10 @@ class Property < ApplicationRecord
     property_reviews.count
   end
 
+  def available_for_applications?
+    available? && status_active?
+  end
+
   def verified_reviews
     property_reviews.verified
   end
@@ -109,5 +120,13 @@ class Property < ApplicationRecord
     amenities << "Heating" if heating?
     amenities << "Internet Included" if internet_included?
     amenities
+  end
+
+  def comments_count
+    property_comments.not_flagged.count
+  end
+
+  def recent_comments(limit = 5)
+    property_comments.not_flagged.includes(:user, :replies).top_level.recent.limit(limit)
   end
 end

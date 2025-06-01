@@ -1,108 +1,250 @@
 <% content_for :title, "Start Conversation" %>
 
-<div class="min-h-screen bg-gray-50 py-8">
-  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Start a Conversation</h1>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 bg-grid-slate-100/50 [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none"></div>
+  <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-r from-blue-300/20 to-purple-300/20 rounded-full blur-3xl"></div>
+  
+  <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Enhanced Header -->
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl mb-6 shadow-lg shadow-blue-500/25">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent mb-4">
+        Start a Conversation
+      </h1>
       <% if @property %>
-        <p class="text-gray-600">Send a message about: <span class="font-semibold"><%= @property.title %></span></p>
+        <p class="text-xl text-gray-600 font-medium">
+          Connect about <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-semibold"><%= @property.title %></span>
+        </p>
+      <% else %>
+        <p class="text-xl text-gray-600">Connect with property owners and tenants</p>
       <% end %>
     </div>
 
-    <!-- Property Info Card (if property is specified) -->
-    <% if @property %>
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-        <div class="flex items-start space-x-4">
-          <% if @property.photos.attached? && @property.photos.any? %>
-          <%= image_tag @property.photos.first, 
-                class: "w-20 h-20 rounded-lg object-cover",
-                alt: @property.title %>
-          <% else %>
-            <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-              <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m0 0h2M7 7h10M7 11h10M7 15h10"></path>
-              </svg>
+    <div class="grid lg:grid-cols-3 gap-8">
+      <!-- Property Info Card (Enhanced) -->
+      <% if @property %>
+        <div class="lg:col-span-1">
+          <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 sticky top-8">
+            <div class="text-center mb-6">
+              <div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl mb-4 shadow-lg shadow-emerald-500/25">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m0 0h2M7 7h10M7 11h10M7 15h10"></path>
+                </svg>
+              </div>
+              <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Property Details</h3>
+            </div>
+
+            <% if @property.photos.attached? && @property.photos.any? %>
+              <div class="relative mb-6 group">
+                <%= image_tag @property.photos.first, 
+                      class: "w-full h-48 rounded-2xl object-cover shadow-lg group-hover:shadow-xl transition-all duration-300",
+                      alt: @property.title %>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+              </div>
+            <% else %>
+              <div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+                <div class="text-center">
+                  <svg class="w-12 h-12 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m0 0h2M7 7h10M7 11h10M7 15h10"></path>
+                  </svg>
+                  <p class="text-sm text-gray-500">No image available</p>
+                </div>
+              </div>
+            <% end %>
+            
+            <div class="space-y-4">
+              <div>
+                <h4 class="text-lg font-bold text-gray-900 mb-1"><%= @property.title %></h4>
+                <div class="flex items-center text-gray-600 mb-3">
+                  <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                  <span class="text-sm"><%= @property.address %>, <%= @property.city %></span>
+                </div>
+                <div class="inline-flex items-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-xl font-bold text-lg shadow-lg shadow-blue-500/25">
+                  $<%= number_with_delimiter(@property.price) %><span class="text-sm font-medium ml-1">/month</span>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-200 pt-4">
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                  <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <div class="font-semibold text-gray-900">Type</div>
+                    <div class="text-gray-600 capitalize"><%= @property.property_type || 'N/A' %></div>
+                  </div>
+                  <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <div class="font-semibold text-gray-900">Status</div>
+                    <div class="text-gray-600 capitalize"><%= @property.status || 'Available' %></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Enhanced Conversation Form -->
+      <div class="<%= @property ? 'lg:col-span-2' : 'lg:col-span-3' %>">
+        <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 md:p-10">
+          <%= form_with model: @conversation, local: true, class: "space-y-8" do |form| %>
+            <% if @property %>
+              <%= hidden_field_tag :property_id, @property.id %>
+            <% end %>
+
+            <!-- Form Header -->
+            <div class="text-center pb-6 border-b border-gray-200">
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">Send Your Message</h2>
+              <p class="text-gray-600">Let's start the conversation</p>
+            </div>
+
+            <!-- Enhanced Subject Field -->
+            <div class="relative group">
+              <%= form.label :subject, class: "flex items-center text-sm font-semibold text-gray-700 mb-3" do %>
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                </svg>
+                Subject <span class="text-red-500 ml-1">*</span>
+              <% end %>
+              <%= form.text_field :subject, 
+                  class: "w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all duration-300 text-gray-900 placeholder-gray-500 group-hover:border-gray-300",
+                  placeholder: @property ? "Question about #{@property.title}" : "What would you like to discuss?",
+                  required: true %>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-6 pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 mt-8">
+                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Enhanced Message Field -->
+            <div class="relative group">
+              <%= form.label :initial_message, "Message", class: "flex items-center text-sm font-semibold text-gray-700 mb-3" do %>
+                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                </svg>
+                Message <span class="text-red-500 ml-1">*</span>
+              <% end %>
+              <%= text_area_tag :initial_message, "", 
+                  class: "w-full px-6 py-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all duration-300 text-gray-900 placeholder-gray-500 resize-none group-hover:border-gray-300",
+                  rows: 6,
+                  placeholder: @property ? "Hi! I'm interested in your property. Could you tell me more about..." : "Type your message here...",
+                  required: true %>
+              <div class="mt-3 flex items-center justify-between">
+                <p class="text-sm text-gray-500 flex items-center">
+                  <svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  Be specific about your questions or requirements
+                </p>
+                <div class="text-sm text-gray-400">
+                  <span id="char-count">0</span>/500
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 pt-6">
+              <%= form.submit "Send Message", 
+                  class: "group relative w-full sm:flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 px-8 rounded-2xl font-semibold text-lg shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:from-blue-700 hover:to-indigo-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:-translate-y-0.5" %>
+              
+              <% if @property %>
+                <%= link_to @property, 
+                    class: "group w-full sm:w-auto text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 px-8 rounded-2xl font-semibold text-lg border-2 border-gray-200 hover:border-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:-translate-y-0.5" do %>
+                  <svg class="w-5 h-5 inline mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                  </svg>
+                  Back to Property
+                <% end %>
+              <% else %>
+                <%= link_to conversations_path, 
+                    class: "group w-full sm:w-auto text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 px-8 rounded-2xl font-semibold text-lg border-2 border-gray-200 hover:border-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:-translate-y-0.5" do %>
+                  <svg class="w-5 h-5 inline mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                  Cancel
+                <% end %>
+              <% end %>
             </div>
           <% end %>
-          
-          <div class="flex-1">
-            <h3 class="text-lg font-semibold text-gray-900 mb-1"><%= @property.title %></h3>
-            <p class="text-gray-600 mb-2"><%= @property.address %>, <%= @property.city %></p>
-            <p class="text-2xl font-bold text-blue-600">$<%= number_with_delimiter(@property.price) %>/month</p>
+        </div>
+
+        <!-- Enhanced Tips Section -->
+        <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 backdrop-blur-xl rounded-3xl border border-blue-200/50 p-8">
+          <div class="flex items-center mb-6">
+            <div class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-amber-400 to-orange-500 rounded-xl mr-4 shadow-lg shadow-amber-500/25">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Pro Communication Tips</h3>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+              <div class="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+              <div>
+                <p class="font-medium text-gray-900 mb-1">Be Specific</p>
+                <p class="text-sm text-gray-600">Include details about your requirements and timeline</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+              <div class="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+              <div>
+                <p class="font-medium text-gray-900 mb-1">Viewing Times</p>
+                <p class="text-sm text-gray-600">Mention your preferred viewing schedule</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+              <div class="flex-shrink-0 w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+              <div>
+                <p class="font-medium text-gray-900 mb-1">Special Requirements</p>
+                <p class="text-sm text-gray-600">Share any special needs or concerns upfront</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+              <div class="flex-shrink-0 w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+              <div>
+                <p class="font-medium text-gray-900 mb-1">Stay Professional</p>
+                <p class="text-sm text-gray-600">Maintain respectful and courteous communication</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    <% end %>
-
-    <!-- Conversation Form -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <%= form_with model: @conversation, local: true, class: "space-y-6" do |form| %>
-        <% if @property %>
-          <%= hidden_field_tag :property_id, @property.id %>
-        <% end %>
-
-        <!-- Subject Field -->
-        <div>
-          <%= form.label :subject, class: "block text-sm font-medium text-gray-700 mb-2" do %>
-            Subject <span class="text-red-500">*</span>
-          <% end %>
-          <%= form.text_field :subject, 
-              class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200",
-              placeholder: @property ? "Question about #{@property.title}" : "What would you like to discuss?",
-              required: true %>
-        </div>
-
-        <!-- Message Field -->
-        <div>
-          <%= form.label :initial_message, "Message", class: "block text-sm font-medium text-gray-700 mb-2" do %>
-            Message <span class="text-red-500">*</span>
-          <% end %>
-          <%= text_area_tag :initial_message, "", 
-              class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 resize-none",
-              rows: 6,
-              placeholder: @property ? "Hi! I'm interested in your property. Could you tell me more about..." : "Type your message here...",
-              required: true %>
-          <p class="mt-2 text-sm text-gray-500">Be specific about your questions or requirements.</p>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 pt-4">
-          <%= form.submit "Send Message", 
-              class: "w-full sm:w-auto bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200" %>
-          
-          <% if @property %>
-            <%= link_to "Back to Property", @property, 
-                class: "w-full sm:w-auto text-center border border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200" %>
-          <% else %>
-            <%= link_to "Cancel", conversations_path, 
-                class: "w-full sm:w-auto text-center border border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-200" %>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-
-    <!-- Tips Section -->
-    <div class="mt-8 bg-blue-50 rounded-xl p-6">
-      <h3 class="text-lg font-semibold text-blue-900 mb-3">💡 Tips for effective communication</h3>
-      <ul class="space-y-2 text-blue-800">
-        <li class="flex items-start">
-          <span class="text-blue-600 mr-2">•</span>
-          Be specific about your questions and requirements
-        </li>
-        <li class="flex items-start">
-          <span class="text-blue-600 mr-2">•</span>
-          Include your preferred viewing times if interested
-        </li>
-        <li class="flex items-start">
-          <span class="text-blue-600 mr-2">•</span>
-          Mention any special requirements or concerns
-        </li>
-        <li class="flex items-start">
-          <span class="text-blue-600 mr-2">•</span>
-          Be respectful and professional in your communication
-        </li>
-      </ul>
     </div>
   </div>
 </div>
+
+<script>
+  // Character counter for message field
+  document.addEventListener('DOMContentLoaded', function() {
+    const messageField = document.getElementById('initial_message');
+    const charCount = document.getElementById('char-count');
+    
+    if (messageField && charCount) {
+      messageField.addEventListener('input', function() {
+        const count = this.value.length;
+        charCount.textContent = count;
+        
+        if (count > 450) {
+          charCount.classList.add('text-red-500');
+          charCount.classList.remove('text-gray-400');
+        } else {
+          charCount.classList.add('text-gray-400');
+          charCount.classList.remove('text-red-500');
+        }
+      });
+    }
+  });
+</script>
+
+<style>
+  .bg-grid-slate-100\/50 {
+    background-image: url("data:image/svg+xml,%3csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='%23f1f5f9' fill-opacity='0.5' fill-rule='evenodd'%3e%3cpath d='m0 40 40-40h-40v40zm40 0v-40h-40z'/%3e%3c/g%3e%3c/svg%3e");
+  }
+</style>

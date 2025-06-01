@@ -1,0 +1,558 @@
+<% content_for :title, "Submit Maintenance Request - Ofie" %>
+<% content_for :description, "Report maintenance issues and request repairs for your rental property with Ofie's streamlined maintenance system." %>
+
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 bg-grid-slate-100/50 [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none"></div>
+  <div class="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-300/20 to-purple-300/20 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-l from-emerald-300/20 to-teal-300/20 rounded-full blur-3xl"></div>
+
+  <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Enhanced Header -->
+    <div class="mb-12">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+        <div class="mb-6 lg:mb-0">
+          <div class="flex items-center mb-4">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-600 rounded-2xl mr-4 shadow-lg shadow-amber-500/25">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">
+                Submit Maintenance Request
+              </h1>
+              <p class="text-xl text-gray-600 font-medium mt-1">
+                Report any issues or request maintenance for your rental property
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <%= link_to maintenance_requests_path, class: "group inline-flex items-center px-6 py-3 border-2 border-gray-200 text-gray-700 bg-white/80 backdrop-blur-sm hover:bg-white hover:border-gray-300 rounded-2xl font-semibold transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg" do %>
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m0 7h18"></path>
+            </svg>
+            Back to Requests
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <%= form_with model: @maintenance_request, local: true, multipart: true, class: "space-y-8" do |form| %>
+      <% if @maintenance_request.errors.any? %>
+        <div class="bg-red-50/80 backdrop-blur-sm border-2 border-red-200 rounded-2xl p-6 mb-8">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-600 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              </svg>
+            </div>
+            <h4 class="text-lg font-bold text-red-800">
+              <%= pluralize(@maintenance_request.errors.count, "error") %> prohibited this request from being saved:
+            </h4>
+          </div>
+          <ul class="list-disc list-inside space-y-1 text-red-700">
+            <% @maintenance_request.errors.full_messages.each do |message| %>
+              <li class="font-medium"><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Form Section -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Request Information Card -->
+          <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8">
+            <div class="flex items-center space-x-3 mb-8">
+              <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900">Request Information</h3>
+            </div>
+
+            <div class="space-y-6">
+              <div class="space-y-2">
+                <%= form.label :property_id, class: "block text-sm font-bold text-gray-700" do %>
+                  <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                  </svg>
+                  Property *
+                <% end %>
+                <%= form.select :property_id,
+                    options_from_collection_for_select(@properties, :id, :title),
+                    { prompt: "Select a property" },
+                    { class: "w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 font-medium hover:border-gray-300", required: true } %>
+              </div>
+
+              <div class="space-y-2">
+                <%= form.label :title, class: "block text-sm font-bold text-gray-700" do %>
+                  <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                  </svg>
+                  Issue Title *
+                <% end %>
+                <%= form.text_field :title, class: "w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 font-medium placeholder-gray-400 hover:border-gray-300",
+                    placeholder: "Brief description of the issue", required: true %>
+              </div>
+
+              <div class="space-y-2">
+                <%= form.label :description, class: "block text-sm font-bold text-gray-700" do %>
+                  <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"></path>
+                  </svg>
+                  Detailed Description *
+                <% end %>
+                <%= form.text_area :description, rows: 5, class: "w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 font-medium placeholder-gray-400 hover:border-gray-300",
+                    placeholder: "Please provide a detailed description of the maintenance issue...",
+                    required: true %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <%= form.label :category, "Category *" %>
+              <%= form.select :category, 
+                  options_for_select([
+                    ['Plumbing', 'plumbing'],
+                    ['Electrical', 'electrical'],
+                    ['HVAC', 'hvac'],
+                    ['Appliances', 'appliances'],
+                    ['Structural', 'structural'],
+                    ['Pest Control', 'pest_control'],
+                    ['Landscaping', 'landscaping'],
+                    ['Security', 'security'],
+                    ['Other', 'other']
+                  ]), 
+                  { prompt: "Select category" }, 
+                  { class: "form-control", required: true } %>
+            </div>
+
+            <div class="form-group">
+              <%= form.label :priority, "Priority *" %>
+              <%= form.select :priority, 
+                  options_for_select([
+                    ['Low', 'low'],
+                    ['Medium', 'medium'],
+                    ['High', 'high']
+                  ]), 
+                  { prompt: "Select priority" }, 
+                  { class: "form-control", required: true } %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= form.label :location_details, "Specific Location" %>
+            <%= form.text_field :location_details, class: "form-control", 
+                placeholder: "e.g., Kitchen sink, Master bedroom, Front yard" %>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Additional Information</h3>
+          
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <%= form.check_box :urgent, class: "checkbox" %>
+              <span class="checkmark"></span>
+              This is an urgent issue that requires immediate attention
+            </label>
+          </div>
+
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <%= form.check_box :tenant_present_required, class: "checkbox" %>
+              <span class="checkmark"></span>
+              Tenant presence required during maintenance
+            </label>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Photos (Optional)</h3>
+          <p class="help-text">Upload photos to help illustrate the issue</p>
+          
+          <div class="file-upload">
+            <%= file_field_tag "photos[]", multiple: true, accept: "image/*", 
+                class: "file-input", id: "photo-upload" %>
+            <label for="photo-upload" class="file-label">
+              <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+              </svg>
+              <span>Click to upload photos or drag and drop</span>
+              <span class="file-types">PNG, JPG, GIF up to 10MB each</span>
+            </label>
+          </div>
+          
+          <div id="photo-preview" class="photo-preview"></div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="section help-section">
+          <h3>Need Help?</h3>
+          <div class="help-content">
+            <h4>Emergency Issues</h4>
+            <p>For emergencies like gas leaks, electrical hazards, or flooding, contact emergency services immediately and then notify your landlord.</p>
+            
+            <h4>Response Times</h4>
+            <ul>
+              <li><strong>Urgent:</strong> Within 24 hours</li>
+              <li><strong>High:</strong> Within 3 days</li>
+              <li><strong>Medium:</strong> Within 1 week</li>
+              <li><strong>Low:</strong> Within 2 weeks</li>
+            </ul>
+            
+            <h4>Tips for Better Service</h4>
+            <ul>
+              <li>Be specific about the location</li>
+              <li>Include photos when possible</li>
+              <li>Describe what you've already tried</li>
+              <li>Mention if the issue affects safety</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= form.submit "Submit Request", class: "btn btn-primary" %>
+      <%= link_to "Cancel", maintenance_requests_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+// Photo upload preview
+document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('photo-upload');
+  const preview = document.getElementById('photo-preview');
+  
+  fileInput.addEventListener('change', function(e) {
+    preview.innerHTML = '';
+    
+    Array.from(e.target.files).forEach(file => {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const div = document.createElement('div');
+          div.className = 'preview-item';
+          div.innerHTML = `
+            <img src="${e.target.result}" alt="Preview">
+            <span class="file-name">${file.name}</span>
+          `;
+          preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  });
+  
+  // Drag and drop functionality
+  const fileLabel = document.querySelector('.file-label');
+  
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    fileLabel.addEventListener(eventName, preventDefaults, false);
+  });
+  
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
+  ['dragenter', 'dragover'].forEach(eventName => {
+    fileLabel.addEventListener(eventName, highlight, false);
+  });
+  
+  ['dragleave', 'drop'].forEach(eventName => {
+    fileLabel.addEventListener(eventName, unhighlight, false);
+  });
+  
+  function highlight(e) {
+    fileLabel.classList.add('drag-over');
+  }
+  
+  function unhighlight(e) {
+    fileLabel.classList.remove('drag-over');
+  }
+  
+  fileLabel.addEventListener('drop', handleDrop, false);
+  
+  function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    fileInput.files = files;
+    fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+});
+</script>
+
+<style>
+.maintenance-request-form {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.header h1 {
+  margin: 0;
+  color: #1f2937;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-primary { background-color: #3b82f6; color: white; }
+.btn-secondary { background-color: #6b7280; color: white; }
+.btn-outline { background-color: transparent; color: #374151; border: 1px solid #d1d5db; }
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error-messages {
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.error-messages h4 {
+  color: #991b1b;
+  margin: 0 0 10px 0;
+}
+
+.error-messages ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.error-messages li {
+  color: #991b1b;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+}
+
+.section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.section h3 {
+  margin: 0 0 15px 0;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.checkbox-group {
+  margin-bottom: 15px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.checkbox {
+  margin-right: 10px;
+}
+
+.help-text {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 15px;
+}
+
+.file-upload {
+  position: relative;
+}
+
+.file-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.file-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-label:hover,
+.file-label.drag-over {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.file-label span {
+  color: #374151;
+  font-weight: 500;
+}
+
+.file-types {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 5px;
+}
+
+.photo-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.preview-item {
+  text-align: center;
+}
+
+.preview-item img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.file-name {
+  display: block;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 5px;
+  word-break: break-all;
+}
+
+.help-section {
+  background-color: #f8fafc;
+}
+
+.help-content h4 {
+  color: #1f2937;
+  margin: 0 0 8px 0;
+  font-size: 0.875rem;
+}
+
+.help-content p,
+.help-content li {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.help-content ul {
+  margin: 8px 0 16px 0;
+  padding-left: 16px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+}
+</style>

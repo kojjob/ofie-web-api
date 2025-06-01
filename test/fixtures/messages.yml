@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+message_one:
+  conversation: conversation_one
+  sender: tenant
+  content: "Hi, I'm interested in viewing this apartment. When would be a good time?"
+  message_type: text
+  read: false
+  created_at: <%= 2.hours.ago %>
+  updated_at: <%= 2.hours.ago %>
+
+message_two:
+  conversation: conversation_one
+  sender: landlord
+  content: "Hello! I'd be happy to show you the apartment. How about tomorrow at 2 PM?"
+  message_type: text
+  read: true
+  read_at: <%= 1.hour.ago %>
+  created_at: <%= 1.hour.ago %>
+  updated_at: <%= 1.hour.ago %>
+
+message_three:
+  conversation: conversation_two
+  sender: another_tenant
+  content: "Is the house still available for rent?"
+  message_type: text
+  read: false
+  created_at: <%= 3.hours.ago %>
+  updated_at: <%= 3.hours.ago %>

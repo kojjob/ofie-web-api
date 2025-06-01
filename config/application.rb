@@ -24,6 +24,9 @@ module OfieWebApi
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    # Add builds directory to asset paths for Tailwind CSS
+    config.assets.paths << Rails.root.join("app/assets/builds")
+
     # Enable asset pipeline for frontend functionality
     # We're adding web views alongside API endpoints
     # config.api_only = true

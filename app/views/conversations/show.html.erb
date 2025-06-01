@@ -1,0 +1,183 @@
+<% content_for :title, "#{@conversation.subject} - Messages" %>
+<% content_for :description, "Conversation about #{@conversation.property.title}" %>
+
+<div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50" data-controller="conversation" data-conversation-id-value="<%= @conversation.id %>" data-current-user-id="<%= current_user.id %>">
+  <!-- Header -->
+  <div class="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <%= link_to conversations_path, 
+                      class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Messages
+          <% end %>
+          
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900"><%= @conversation.subject %></h1>
+            <p class="text-gray-600">
+              Conversation with 
+              <span class="font-medium text-indigo-600">
+                <%= @conversation.other_participant(current_user).name || @conversation.other_participant(current_user).email %>
+              </span>
+              about 
+              <%= link_to @conversation.property.title, property_path(@conversation.property), class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
+            </p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <!-- Property Link -->
+          <%= link_to property_path(@conversation.property), 
+                      class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+            </svg>
+            View Property
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Property Info Card -->
+    <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-6 mb-8">
+      <div class="flex items-center space-x-4">
+        <% if @conversation.property.photos.attached? && @conversation.property.photos.any? %>
+          <div class="w-16 h-16 rounded-2xl overflow-hidden flex-shrink-0">
+            <%= image_tag @conversation.property.photos.first, 
+                          class: "w-full h-full object-cover",
+                          alt: @conversation.property.title %>
+          </div>
+        <% else %>
+          <div class="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+            </svg>
+          </div>
+        <% end %>
+        
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-gray-900"><%= @conversation.property.title %></h3>
+          <p class="text-gray-600"><%= @conversation.property.address %></p>
+          <p class="text-sm text-indigo-600 font-medium">
+            <%= number_to_currency(@conversation.property.price) %>/month
+          </p>
+        </div>
+        
+        <div class="text-right">
+          <p class="text-sm text-gray-500">Conversation started</p>
+          <p class="text-sm font-medium text-gray-900">
+            <%= @conversation.created_at.strftime("%B %d, %Y") %>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 overflow-hidden">
+      <!-- Messages List -->
+      <div class="h-96 overflow-y-auto p-6 space-y-4" data-conversation-target="messagesList" id="messages-container">
+        <% @conversation.messages.includes(:sender).order(:created_at).each do |message| %>
+          <div class="flex <%= message.sender == current_user ? 'justify-end' : 'justify-start' %>">
+            <div class="max-w-xs lg:max-w-md">
+              <!-- Message Bubble -->
+              <div class="<%= message.sender == current_user ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' : 'bg-gray-100 text-gray-900' %> rounded-2xl px-4 py-3 shadow-lg">
+                <p class="text-sm leading-relaxed"><%= simple_format(message.content) %></p>
+              </div>
+              
+              <!-- Message Info -->
+              <div class="flex items-center <%= message.sender == current_user ? 'justify-end' : 'justify-start' %> mt-1 space-x-2">
+                <p class="text-xs text-gray-500">
+                  <%= message.sender.name || message.sender.email.split('@').first.capitalize %>
+                </p>
+                <span class="text-xs text-gray-400">•</span>
+                <p class="text-xs text-gray-500">
+                  <%= time_ago_in_words(message.created_at) %> ago
+                </p>
+                <% if message.sender != current_user && !message.read? %>
+                  <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+        
+        <% if @conversation.messages.empty? %>
+          <div class="text-center py-12">
+            <div class="w-16 h-16 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-3xl flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-600 mb-2">Start the conversation</h3>
+            <p class="text-gray-500">Send your first message below to begin chatting.</p>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Message Input -->
+      <div class="border-t border-gray-200/50 p-6 bg-gradient-to-r from-gray-50 to-white">
+        <%= form_with model: [@conversation, Message.new], 
+                      url: conversation_messages_path(@conversation),
+                      local: false,
+                      class: "space-y-4",
+                      data: { action: "submit->conversation#sendMessage" } do |form| %>
+          
+          <div class="flex items-end space-x-4">
+            <!-- User Avatar -->
+            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+              <%= (current_user.name || current_user.email).first.upcase %>
+            </div>
+            
+            <!-- Message Input -->
+            <div class="flex-1">
+              <%= form.text_area :content, 
+                                 placeholder: "Type your message...",
+                                 rows: 3,
+                                 class: "w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-500",
+                                 maxlength: 2000,
+                                 required: true %>
+              <%= form.hidden_field :message_type, value: "text" %>
+            </div>
+            
+            <!-- Send Button -->
+            <div class="flex-shrink-0">
+              <%= form.submit "Send", 
+                              class: "px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed",
+                              data: { conversation_target: "sendButton" } %>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between text-sm text-gray-500">
+            <p>Press Enter to send, Shift+Enter for new line</p>
+            <p><span data-conversation-target="characterCount">0</span>/2000 characters</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Auto-scroll to bottom of messages
+document.addEventListener('DOMContentLoaded', function() {
+  const messagesContainer = document.getElementById('messages-container');
+  if (messagesContainer) {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+});
+
+// Mark messages as read when viewing
+fetch('<%= conversation_messages_path(@conversation) %>/mark_all_read', {
+  method: 'PATCH',
+  headers: {
+    'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+    'Accept': 'application/json'
+  }
+}).catch(error => console.log('Error marking messages as read:', error));
+</script>

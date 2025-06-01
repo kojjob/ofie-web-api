@@ -1,0 +1,270 @@
+<% content_for :title, "Reviews by #{@user.name || @user.email.split('@').first}" %>
+
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-6">
+        <!-- Breadcrumbs -->
+        <nav class="flex" aria-label="Breadcrumb">
+          <ol class="flex items-center space-x-4">
+            <li>
+              <%= link_to "Properties", properties_path, class: "text-gray-500 hover:text-gray-700" %>
+            </li>
+            <li>
+              <div class="flex items-center">
+                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                </svg>
+                <span class="ml-4 text-gray-900 font-medium">User Reviews</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
+
+        <!-- User Header -->
+        <div class="mt-6">
+          <div class="flex items-center space-x-6">
+            <div class="flex-shrink-0">
+              <div class="h-20 w-20 bg-gray-300 rounded-full flex items-center justify-center">
+                <span class="text-2xl font-medium text-gray-700">
+                  <%= @user.name&.first || @user.email.first.upcase %>
+                </span>
+              </div>
+            </div>
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">
+                <%= @user.name || @user.email.split('@').first %>
+                <% if @user.tenant? %>
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 ml-3">
+                    Tenant
+                  </span>
+                <% end %>
+              </h1>
+              <p class="mt-1 text-gray-600">Member since <%= @user.created_at.strftime("%B %Y") %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Reviews List -->
+      <div class="lg:col-span-3">
+        <!-- Reviews Header -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <h2 class="text-xl font-semibold text-gray-900">All Reviews</h2>
+          <p class="text-gray-600"><%= pluralize(@review_stats[:total_reviews], 'review') %> written</p>
+        </div>
+
+        <!-- Reviews List -->
+        <div class="space-y-6">
+          <% if @reviews.any? %>
+            <% @reviews.each do |review| %>
+              <div class="bg-white rounded-lg shadow-sm p-6">
+                <!-- Review Header -->
+                <div class="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 class="text-lg font-semibold text-gray-900">
+                      <%= link_to review.property.title, review.property, class: "hover:text-blue-600" %>
+                      <% if review.verified? %>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 ml-2">
+                          Verified
+                        </span>
+                      <% end %>
+                    </h3>
+                    <p class="text-gray-600 text-sm mt-1"><%= review.property.address %></p>
+                    <div class="flex items-center space-x-3 mt-2">
+                      <div class="flex items-center">
+                        <% (1..5).each do |i| %>
+                          <svg class="h-4 w-4 <%= i <= review.rating ? 'text-yellow-400' : 'text-gray-300' %>" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        <% end %>
+                        <span class="ml-2 text-sm font-medium text-gray-900"><%= review.rating %>/5</span>
+                      </div>
+                      <span class="text-gray-400">•</span>
+                      <span class="text-gray-600 text-sm"><%= review.created_at.strftime("%B %d, %Y") %></span>
+                    </div>
+                  </div>
+                  
+                  <!-- Review Actions -->
+                  <div class="flex items-center space-x-2">
+                    <% if user_signed_in? && current_user == review.user %>
+                      <%= link_to "Edit", edit_property_review_path(review), class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+                    <% end %>
+                    <%= link_to "View", property_review_path(review), class: "text-gray-600 hover:text-gray-800 text-sm font-medium" %>
+                  </div>
+                </div>
+
+                <!-- Property Info -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <span class="text-gray-500">Type:</span>
+                      <div class="font-medium"><%= review.property.property_type&.humanize || 'N/A' %></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500">Bedrooms:</span>
+                      <div class="font-medium"><%= review.property.bedrooms || 'N/A' %></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500">Bathrooms:</span>
+                      <div class="font-medium"><%= review.property.bathrooms || 'N/A' %></div>
+                    </div>
+                    <div>
+                      <span class="text-gray-500">Sq Ft:</span>
+                      <div class="font-medium"><%= number_with_delimiter(review.property.square_footage) if review.property.square_footage %></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Review Content -->
+                <div class="mb-4">
+                  <% if review.title.present? %>
+                    <h4 class="font-medium text-gray-900 mb-2"><%= review.title %></h4>
+                  <% end %>
+                  <p class="text-gray-700 leading-relaxed"><%= simple_format(review.content) %></p>
+                </div>
+
+                <!-- Review Footer -->
+                <div class="flex items-center justify-between pt-4 border-t">
+                  <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-1 text-gray-500">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+                      </svg>
+                      <span class="text-sm">Helpful (<%= review.helpful_count %>)</span>
+                    </div>
+                    <div class="flex items-center space-x-1 text-gray-500">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span class="text-sm"><%= time_ago_in_words(review.created_at) %> ago</span>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-center space-x-3">
+                    <%= link_to "View Property", review.property, class: "text-blue-600 hover:text-blue-800 text-sm font-medium" %>
+                    <%= link_to "All Property Reviews", property_reviews_path(review.property), class: "text-gray-600 hover:text-gray-800 text-sm font-medium" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Pagination -->
+            <div class="mt-8">
+              <%= paginate @reviews if respond_to?(:paginate) %>
+            </div>
+          <% else %>
+            <div class="bg-white rounded-lg shadow-sm p-12 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.456l-3.815 1.456A2 2 0 013.156 18.44l1.456-3.815A8.959 8.959 0 013 12a8 8 0 018-8 8 8 0 018 8z" />
+              </svg>
+              <h3 class="mt-4 text-lg font-medium text-gray-900">No reviews yet</h3>
+              <p class="mt-2 text-gray-500">
+                <% if user_signed_in? && current_user == @user %>
+                  You haven't written any reviews yet. Start by reviewing a property you've lived in.
+                <% else %>
+                  This user hasn't written any reviews yet.
+                <% end %>
+              </p>
+              <% if user_signed_in? && current_user == @user %>
+                <div class="mt-4">
+                  <%= link_to "Browse Properties", properties_path, class: "bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1">
+        <!-- User Stats -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Review Statistics</h3>
+          <div class="space-y-4">
+            <div class="text-center">
+              <div class="text-3xl font-bold text-gray-900"><%= @review_stats[:total_reviews] %></div>
+              <div class="text-sm text-gray-600">Total Reviews</div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 text-center">
+              <div>
+                <div class="text-xl font-semibold text-green-600"><%= @review_stats[:verified_reviews] %></div>
+                <div class="text-xs text-gray-600">Verified</div>
+              </div>
+              <div>
+                <div class="text-xl font-semibold text-blue-600"><%= @review_stats[:total_helpful_votes] %></div>
+                <div class="text-xs text-gray-600">Helpful Votes</div>
+              </div>
+            </div>
+            
+            <div class="pt-4 border-t">
+              <div class="flex items-center justify-center space-x-2">
+                <div class="flex items-center">
+                  <% (1..5).each do |i| %>
+                    <svg class="h-4 w-4 <%= i <= @review_stats[:average_rating] ? 'text-yellow-400' : 'text-gray-300' %>" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  <% end %>
+                </div>
+                <span class="text-sm font-medium text-gray-900"><%= @review_stats[:average_rating] %></span>
+              </div>
+              <div class="text-xs text-gray-600 text-center mt-1">Average Rating</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Info -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">About</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Role:</span>
+              <span class="font-medium capitalize"><%= @user.role %></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Member since:</span>
+              <span class="font-medium"><%= @user.created_at.strftime("%B %Y") %></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Last active:</span>
+              <span class="font-medium"><%= time_ago_in_words(@user.updated_at) %> ago</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <% if @reviews.any? %>
+          <div class="bg-white rounded-lg shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+            <div class="space-y-3">
+              <% @reviews.limit(3).each do |review| %>
+                <div class="border-l-2 border-blue-200 pl-3">
+                  <div class="text-sm font-medium text-gray-900">
+                    <%= link_to truncate(review.property.title, length: 30), review.property, class: "hover:text-blue-600" %>
+                  </div>
+                  <div class="flex items-center space-x-2 mt-1">
+                    <div class="flex items-center">
+                      <% (1..5).each do |i| %>
+                        <svg class="h-3 w-3 <%= i <= review.rating ? 'text-yellow-400' : 'text-gray-300' %>" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      <% end %>
+                    </div>
+                    <span class="text-xs text-gray-500"><%= time_ago_in_words(review.created_at) %> ago</span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

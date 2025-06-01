@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_155729) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_30_200002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_155729) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "comment_likes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "property_comment_id", null: false
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["property_comment_id"], name: "index_comment_likes_on_property_comment_id"
+    t.index ["user_id", "property_comment_id"], name: "index_comment_likes_on_user_id_and_property_comment_id", unique: true
+  end
+
   create_table "conversations", force: :cascade do |t|
     t.uuid "landlord_id", null: false
     t.uuid "tenant_id", null: false
@@ -59,6 +68,64 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_155729) do
     t.index ["tenant_id"], name: "index_conversations_on_tenant_id"
   end
 
+  create_table "lease_agreements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "rental_application_id", null: false
+    t.uuid "landlord_id", null: false
+    t.uuid "tenant_id", null: false
+    t.uuid "property_id", null: false
+    t.date "lease_start_date", null: false
+    t.date "lease_end_date", null: false
+    t.decimal "monthly_rent", precision: 10, scale: 2, null: false
+    t.decimal "security_deposit_amount", precision: 10, scale: 2
+    t.string "status", default: "draft"
+    t.text "terms_and_conditions"
+    t.datetime "signed_by_tenant_at"
+    t.datetime "signed_by_landlord_at"
+    t.string "document_url"
+    t.string "lease_number"
+    t.json "additional_terms"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["landlord_id"], name: "index_lease_agreements_on_landlord_id"
+    t.index ["lease_end_date"], name: "index_lease_agreements_on_lease_end_date"
+    t.index ["lease_number"], name: "index_lease_agreements_on_lease_number", unique: true
+    t.index ["lease_start_date"], name: "index_lease_agreements_on_lease_start_date"
+    t.index ["property_id"], name: "index_lease_agreements_on_property_id"
+    t.index ["rental_application_id"], name: "index_lease_agreements_on_rental_application_id", unique: true
+    t.index ["status"], name: "index_lease_agreements_on_status"
+    t.index ["tenant_id"], name: "index_lease_agreements_on_tenant_id"
+  end
+
+  create_table "maintenance_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "property_id", null: false
+    t.uuid "tenant_id", null: false
+    t.uuid "landlord_id", null: false
+    t.string "title", null: false
+    t.text "description", null: false
+    t.string "priority", default: "medium"
+    t.string "status", default: "pending"
+    t.string "category"
+    t.text "location_details"
+    t.decimal "estimated_cost", precision: 10, scale: 2
+    t.datetime "requested_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "scheduled_at"
+    t.datetime "completed_at"
+    t.uuid "assigned_to_id"
+    t.text "landlord_notes"
+    t.text "completion_notes"
+    t.boolean "urgent", default: false
+    t.boolean "tenant_present_required", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_maintenance_requests_on_category"
+    t.index ["landlord_id"], name: "index_maintenance_requests_on_landlord_id"
+    t.index ["priority"], name: "index_maintenance_requests_on_priority"
+    t.index ["property_id"], name: "index_maintenance_requests_on_property_id"
+    t.index ["requested_at"], name: "index_maintenance_requests_on_requested_at"
+    t.index ["status"], name: "index_maintenance_requests_on_status"
+    t.index ["tenant_id"], name: "index_maintenance_requests_on_tenant_id"
+  end
+
   create_table "messages", force: :cascade do |t|
     t.bigint "conversation_id", null: false
     t.uuid "sender_id", null: false
@@ -68,6 +135,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_155729) do
     t.string "attachment_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "read_at"
     t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["created_at"], name: "index_messages_on_created_at"
@@ -92,6 +160,75 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_155729) do
     t.index ["user_id", "created_at"], name: "index_notifications_on_user_id_and_created_at"
     t.index ["user_id", "read"], name: "index_notifications_on_user_id_and_read"
     t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "payment_methods", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "stripe_payment_method_id", null: false
+    t.string "payment_type", null: false
+    t.string "last_four"
+    t.string "brand"
+    t.integer "exp_month"
+    t.integer "exp_year"
+    t.boolean "is_default", default: false
+    t.string "billing_name"
+    t.json "billing_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["stripe_payment_method_id"], name: "index_payment_methods_on_stripe_payment_method_id", unique: true
+    t.index ["user_id", "is_default"], name: "index_payment_methods_on_user_id_and_is_default"
+    t.index ["user_id"], name: "index_payment_methods_on_user_id"
+  end
+
+  create_table "payment_schedules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lease_agreement_id", null: false
+    t.string "payment_type", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.string "frequency", null: false
+    t.date "start_date", null: false
+    t.date "end_date"
+    t.date "next_payment_date", null: false
+    t.boolean "is_active", default: true
+    t.boolean "auto_pay", default: false
+    t.integer "day_of_month"
+    t.text "description"
+    t.json "metadata"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["auto_pay"], name: "index_payment_schedules_on_auto_pay"
+    t.index ["is_active"], name: "index_payment_schedules_on_is_active"
+    t.index ["lease_agreement_id", "payment_type"], name: "index_payment_schedules_on_lease_agreement_id_and_payment_type"
+    t.index ["lease_agreement_id"], name: "index_payment_schedules_on_lease_agreement_id"
+    t.index ["next_payment_date"], name: "index_payment_schedules_on_next_payment_date"
+    t.index ["payment_type"], name: "index_payment_schedules_on_payment_type"
+  end
+
+  create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lease_agreement_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "payment_method_id"
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.string "payment_type", null: false
+    t.string "status", default: "pending"
+    t.string "stripe_payment_intent_id"
+    t.string "stripe_charge_id"
+    t.string "description"
+    t.date "due_date"
+    t.datetime "paid_at"
+    t.string "failure_reason"
+    t.json "metadata"
+    t.string "payment_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["due_date"], name: "index_payments_on_due_date"
+    t.index ["lease_agreement_id"], name: "index_payments_on_lease_agreement_id"
+    t.index ["paid_at"], name: "index_payments_on_paid_at"
+    t.index ["payment_method_id"], name: "index_payments_on_payment_method_id"
+    t.index ["payment_number"], name: "index_payments_on_payment_number", unique: true
+    t.index ["payment_type"], name: "index_payments_on_payment_type"
+    t.index ["status"], name: "index_payments_on_status"
+    t.index ["stripe_payment_intent_id"], name: "index_payments_on_stripe_payment_intent_id", unique: true
+    t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
   create_table "properties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -127,6 +264,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_155729) do
     t.index ["price"], name: "index_properties_on_price"
     t.index ["property_type"], name: "index_properties_on_property_type"
     t.index ["user_id"], name: "index_properties_on_user_id"
+  end
+
+  create_table "property_comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "property_id", null: false
+    t.uuid "parent_id"
+    t.text "content", null: false
+    t.boolean "edited", default: false
+    t.datetime "edited_at", precision: nil
+    t.integer "likes_count", default: 0
+    t.boolean "flagged", default: false
+    t.string "flagged_reason"
+    t.datetime "flagged_at", precision: nil
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["flagged"], name: "index_property_comments_on_flagged"
+    t.index ["parent_id"], name: "index_property_comments_on_parent_id"
+    t.index ["property_id", "created_at"], name: "index_property_comments_on_property_id_and_created_at"
+    t.index ["user_id", "created_at"], name: "index_property_comments_on_user_id_and_created_at"
+    t.check_constraint "length(content) >= 1 AND length(content) <= 2000", name: "content_length_check"
   end
 
   create_table "property_favorites", force: :cascade do |t|
@@ -175,6 +332,51 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_155729) do
     t.index ["user_id"], name: "index_property_viewings_on_user_id"
   end
 
+  create_table "rental_applications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "property_id", null: false
+    t.uuid "tenant_id", null: false
+    t.string "status", default: "pending"
+    t.datetime "application_date", default: -> { "CURRENT_TIMESTAMP" }
+    t.date "move_in_date"
+    t.decimal "monthly_income", precision: 10, scale: 2
+    t.string "employment_status"
+    t.text "previous_address"
+    t.text "references_contact"
+    t.text "additional_notes"
+    t.boolean "documents_verified", default: false
+    t.integer "credit_score"
+    t.datetime "reviewed_at"
+    t.uuid "reviewed_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["application_date"], name: "index_rental_applications_on_application_date"
+    t.index ["property_id"], name: "index_rental_applications_on_property_id"
+    t.index ["status"], name: "index_rental_applications_on_status"
+    t.index ["tenant_id"], name: "index_rental_applications_on_tenant_id"
+  end
+
+  create_table "security_deposits", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "lease_agreement_id", null: false
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.string "status", default: "pending"
+    t.datetime "collected_at"
+    t.datetime "refunded_at"
+    t.decimal "refund_amount", precision: 10, scale: 2
+    t.json "deductions"
+    t.string "stripe_payment_intent_id"
+    t.string "stripe_refund_id"
+    t.text "refund_reason"
+    t.text "collection_notes"
+    t.json "inspection_report"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collected_at"], name: "index_security_deposits_on_collected_at"
+    t.index ["lease_agreement_id"], name: "index_security_deposits_on_lease_agreement_id", unique: true
+    t.index ["refunded_at"], name: "index_security_deposits_on_refunded_at"
+    t.index ["status"], name: "index_security_deposits_on_status"
+    t.index ["stripe_payment_intent_id"], name: "index_security_deposits_on_stripe_payment_intent_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", null: false
     t.string "password_digest", null: false
@@ -191,26 +393,55 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_155729) do
     t.string "refresh_token"
     t.datetime "refresh_token_expires_at"
     t.string "name"
+    t.string "stripe_customer_id"
+    t.text "bio"
+    t.string "phone"
+    t.string "language"
+    t.string "timezone"
+    t.string "avatar"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["email_verification_token"], name: "index_users_on_email_verification_token", unique: true
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true
+    t.index ["stripe_customer_id"], name: "index_users_on_stripe_customer_id", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comment_likes", "property_comments", name: "comment_likes_property_comment_id_fkey"
+  add_foreign_key "comment_likes", "users", name: "comment_likes_user_id_fkey"
   add_foreign_key "conversations", "properties"
   add_foreign_key "conversations", "users", column: "landlord_id"
   add_foreign_key "conversations", "users", column: "tenant_id"
+  add_foreign_key "lease_agreements", "properties"
+  add_foreign_key "lease_agreements", "rental_applications"
+  add_foreign_key "lease_agreements", "users", column: "landlord_id"
+  add_foreign_key "lease_agreements", "users", column: "tenant_id"
+  add_foreign_key "maintenance_requests", "properties"
+  add_foreign_key "maintenance_requests", "users", column: "assigned_to_id"
+  add_foreign_key "maintenance_requests", "users", column: "landlord_id"
+  add_foreign_key "maintenance_requests", "users", column: "tenant_id"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "notifications", "users"
+  add_foreign_key "payment_methods", "users"
+  add_foreign_key "payment_schedules", "lease_agreements"
+  add_foreign_key "payments", "lease_agreements"
+  add_foreign_key "payments", "payment_methods"
+  add_foreign_key "payments", "users"
   add_foreign_key "properties", "users"
+  add_foreign_key "property_comments", "properties", name: "property_comments_property_id_fkey"
+  add_foreign_key "property_comments", "property_comments", column: "parent_id", name: "property_comments_parent_id_fkey"
+  add_foreign_key "property_comments", "users", name: "property_comments_user_id_fkey"
   add_foreign_key "property_favorites", "properties"
   add_foreign_key "property_favorites", "users"
   add_foreign_key "property_reviews", "properties"
   add_foreign_key "property_reviews", "users"
   add_foreign_key "property_viewings", "properties"
   add_foreign_key "property_viewings", "users"
+  add_foreign_key "rental_applications", "properties"
+  add_foreign_key "rental_applications", "users", column: "reviewed_by_id"
+  add_foreign_key "rental_applications", "users", column: "tenant_id"
+  add_foreign_key "security_deposits", "lease_agreements"
 end

@@ -1,0 +1,69 @@
+<div class="relative" data-controller="dropdown">
+  <!-- Notification Bell Button -->
+  <button type="button" 
+          class="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-full"
+          data-action="click->dropdown#toggle"
+          aria-expanded="false"
+          aria-haspopup="true">
+    <span class="sr-only">View notifications</span>
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM9 7H4l5-5v5zM12 12h.01M21 21l-2-2m-2-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    
+    <!-- Notification Count Badge -->
+    <% if current_user.notifications.unread.count > 0 %>
+      <span id="notification-count" 
+            class="absolute -top-1 -right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+        <%= current_user.notifications.unread.count %>
+      </span>
+    <% else %>
+      <span id="notification-count" class="hidden"></span>
+    <% end %>
+  </button>
+
+  <!-- Dropdown Panel -->
+  <div class="absolute right-0 z-50 mt-2 w-96 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 hidden"
+       data-dropdown-target="menu"
+       data-turbo-permanent>
+    
+    <!-- Header -->
+    <div class="px-4 py-3 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-medium text-gray-900">Notifications</h3>
+        <% if current_user.notifications.unread.count > 0 %>
+          <%= button_to "Mark all read", mark_all_read_notifications_path,
+              method: :patch,
+              class: "text-xs text-blue-600 hover:text-blue-800 font-medium bg-transparent border-none p-0",
+              data: { turbo_method: :patch, turbo_stream: true } %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Notifications List -->
+    <div id="notifications-list" class="max-h-96 overflow-y-auto">
+      <% if current_user.notifications.recent.limit(10).any? %>
+        <% current_user.notifications.recent.limit(10).each do |notification| %>
+          <%= render 'notifications/notification', notification: notification %>
+        <% end %>
+      <% else %>
+        <div class="px-4 py-8 text-center">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM9 7H4l5-5v5zM12 12h.01"></path>
+          </svg>
+          <p class="mt-2 text-sm text-gray-500">No notifications yet</p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Footer -->
+    <% if current_user.notifications.count > 10 %>
+      <div class="px-4 py-3 border-t border-gray-200">
+        <%= link_to "View all notifications", notifications_path,
+            class: "block text-center text-sm text-blue-600 hover:text-blue-800 font-medium" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Turbo Stream Connection for Real-time Updates -->
+<%= turbo_stream_from "notifications_#{current_user.id}" %>

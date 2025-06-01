@@ -1,0 +1,66 @@
+# Property Comments Fixtures
+
+one:
+  id: <%= SecureRandom.uuid %>
+  user: one
+  property: one
+  content: "This property looks amazing! I'm very interested in scheduling a viewing. The location seems perfect for my needs."
+  likes_count: 3
+  flagged: false
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+two:
+  id: <%= SecureRandom.uuid %>
+  user: two
+  property: one
+  content: "I lived in this neighborhood before and it's really quiet and safe. Great choice for families!"
+  likes_count: 1
+  flagged: false
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+three:
+  id: <%= SecureRandom.uuid %>
+  user: one
+  property: two
+  content: "What's the parking situation like? Is there street parking available?"
+  likes_count: 0
+  flagged: false
+  created_at: <%= 6.hours.ago %>
+  updated_at: <%= 6.hours.ago %>
+
+reply_one:
+  id: <%= SecureRandom.uuid %>
+  user: two
+  property: one
+  parent: one
+  content: "Thanks for your interest! The property manager is very responsive. You should definitely schedule a viewing."
+  likes_count: 1
+  flagged: false
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+flagged_comment:
+  id: <%= SecureRandom.uuid %>
+  user: two
+  property: one
+  content: "This comment has been flagged for inappropriate content."
+  likes_count: 0
+  flagged: true
+  flagged_reason: "Inappropriate language"
+  flagged_at: <%= 1.hour.ago %>
+  created_at: <%= 2.hours.ago %>
+  updated_at: <%= 1.hour.ago %>
+
+edited_comment:
+  id: <%= SecureRandom.uuid %>
+  user: one
+  property: two
+  content: "This is an edited comment with updated information about the property."
+  likes_count: 2
+  flagged: false
+  edited: true
+  edited_at: <%= 30.minutes.ago %>
+  created_at: <%= 1.hour.ago %>
+  updated_at: <%= 30.minutes.ago %>

@@ -1,0 +1,160 @@
+<!-- Notifications Page -->
+<div class="min-h-screen bg-gradient-to-br from-amber-50 via-white to-orange-50">
+  <!-- Header -->
+  <div class="bg-white/80 backdrop-blur-xl border-b border-gray-200/50 sticky top-0 z-10">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <%= link_to dashboard_path, 
+                      class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Dashboard
+          <% end %>
+          
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">Notifications</h1>
+            <p class="text-gray-600">Stay updated with your property activities</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <div class="text-sm text-gray-600 bg-white/60 px-4 py-2 rounded-xl border border-gray-200">
+            <% if @unread_count > 0 %>
+              <span class="font-bold text-amber-600"><%= @unread_count %></span> unread
+            <% else %>
+              All caught up!
+            <% end %>
+          </div>
+          
+          <% if @unread_count > 0 %>
+            <%= link_to mark_all_read_notifications_path, 
+                        method: :patch,
+                        class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Mark All Read
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <% if @notifications.any? %>
+      <div class="space-y-4" id="notifications-list">
+        <% @notifications.each do |notification| %>
+          <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 overflow-hidden hover:shadow-2xl transition-all duration-300 <%= 'ring-2 ring-amber-200 bg-amber-50/50' unless notification.read? %>">
+            <%= link_to notification.url || '#', class: "block p-6 hover:bg-gray-50/50 transition-colors duration-200" do %>
+              <div class="flex items-start space-x-4">
+                <!-- Notification Icon -->
+                <div class="flex-shrink-0">
+                  <div class="w-12 h-12 <%= notification_icon_color(notification.notification_type) %> rounded-2xl flex items-center justify-center shadow-lg">
+                    <%= notification_icon(notification.notification_type).html_safe %>
+                  </div>
+                </div>
+                
+                <!-- Notification Content -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-lg font-bold text-gray-900 truncate">
+                      <%= notification.title %>
+                    </h3>
+                    <div class="flex items-center space-x-2">
+                      <span class="text-sm text-gray-500">
+                        <%= notification.time_ago %>
+                      </span>
+                      <% unless notification.read? %>
+                        <div class="w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
+                      <% end %>
+                    </div>
+                  </div>
+                  
+                  <p class="text-gray-700 leading-relaxed mb-3">
+                    <%= notification.message %>
+                  </p>
+                  
+                  <div class="flex items-center justify-between">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold <%= notification_type_badge_class(notification.notification_type) %>">
+                      <%= notification.notification_type.humanize %>
+                    </span>
+                    
+                    <% unless notification.read? %>
+                      <%= link_to mark_read_notification_path(notification), 
+                                  method: :patch,
+                                  class: "text-sm text-amber-600 hover:text-amber-800 font-medium transition-colors",
+                                  onclick: "event.stopPropagation()" do %>
+                        Mark as read
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Load More (if needed) -->
+      <% if @notifications.count >= 50 %>
+        <div class="text-center mt-8">
+          <div class="bg-white/60 backdrop-blur-xl rounded-2xl p-6 border border-white/20">
+            <p class="text-gray-600 mb-4">Showing latest 50 notifications</p>
+            <button class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              Load Older Notifications
+            </button>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-16">
+        <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-12">
+          <div class="w-24 h-24 bg-gradient-to-r from-amber-200 to-orange-300 rounded-3xl flex items-center justify-center mx-auto mb-8">
+            <svg class="w-12 h-12 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-600 mb-4">No notifications yet</h3>
+          <p class="text-gray-500 text-lg mb-8">You'll see notifications here when there's activity on your properties or account.</p>
+          
+          <%= link_to properties_path, class: "inline-flex items-center px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            Browse Properties
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% content_for :javascript do %>
+<script>
+// Auto-refresh notifications every 30 seconds
+setInterval(function() {
+  // Only refresh if user is on the notifications page
+  if (window.location.pathname === '/notifications') {
+    fetch('/notifications/unread_count')
+      .then(response => response.json())
+      .then(data => {
+        // Update page title with unread count
+        if (data.count > 0) {
+          document.title = `(${data.count}) Notifications - Ofie`;
+        } else {
+          document.title = 'Notifications - Ofie';
+        }
+      })
+      .catch(error => console.log('Error checking notifications:', error));
+  }
+}, 30000);
+</script>
+<% end %>

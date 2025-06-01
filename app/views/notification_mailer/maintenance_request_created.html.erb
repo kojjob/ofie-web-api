@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New Maintenance Request</title>
+    <style>
+      body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+      .header { background-color: #3b82f6; color: white; padding: 20px; text-align: center; }
+      .content { padding: 20px; background-color: #f9fafb; }
+      .priority-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+      .priority-emergency { background-color: #fee2e2; color: #dc2626; }
+      .priority-high { background-color: #fed7aa; color: #ea580c; }
+      .priority-medium { background-color: #fef3c7; color: #d97706; }
+      .priority-low { background-color: #dcfce7; color: #16a34a; }
+      .button { display: inline-block; padding: 12px 24px; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 6px; margin: 10px 0; }
+      .details { background-color: white; padding: 15px; border-radius: 6px; margin: 15px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>New Maintenance Request</h1>
+      </div>
+      
+      <div class="content">
+        <p>Hello <%= @user.name || @user.email %>,</p>
+        
+        <p>You have received a new maintenance request for your property <strong><%= @property.title %></strong>.</p>
+        
+        <div class="details">
+          <h3><%= @maintenance_request.title %></h3>
+          <p><strong>Priority:</strong> 
+            <span class="priority-badge priority-<%= @maintenance_request.priority %>">
+              <%= @maintenance_request.priority.humanize %>
+            </span>
+          </p>
+          <p><strong>Category:</strong> <%= @maintenance_request.category.humanize %></p>
+          <p><strong>Submitted by:</strong> <%= @tenant.name || @tenant.email %></p>
+          <p><strong>Requested on:</strong> <%= @maintenance_request.requested_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+          
+          <% if @maintenance_request.location_details.present? %>
+            <p><strong>Location:</strong> <%= @maintenance_request.location_details %></p>
+          <% end %>
+          
+          <p><strong>Description:</strong></p>
+          <p><%= simple_format(@maintenance_request.description) %></p>
+        </div>
+        
+        <p>
+          <a href="<%= Rails.application.routes.url_helpers.maintenance_request_url(@maintenance_request, host: Rails.application.config.action_mailer.default_url_options[:host]) %>" class="button">
+            View Request Details
+          </a>
+        </p>
+        
+        <% if @maintenance_request.priority == 'emergency' %>
+          <div style="background-color: #fee2e2; border: 1px solid #fecaca; padding: 15px; border-radius: 6px; margin: 15px 0;">
+            <p style="color: #dc2626; font-weight: bold; margin: 0;">
+              ⚠️ This is an EMERGENCY request and requires immediate attention.
+            </p>
+          </div>
+        <% end %>
+        
+        <p>Please log in to your dashboard to review and respond to this request.</p>
+        
+        <p>Best regards,<br>The Ofie Team</p>
+      </div>
+    </div>
+  </body>
+</html>

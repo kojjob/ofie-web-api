@@ -337,6 +337,35 @@
   filter: brightness(1.1) contrast(1.05);
 }
 
+/* Thumbnail Clarity Enhancement - Force Clear Images */
+.thumbnail-clear {
+  filter: none !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: none;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.thumbnail-clear:hover {
+  transform: scale(1.02);
+}
+
+/* Ensure thumbnail buttons don't apply any blur effects */
+[data-gallery-target="thumbnail"] {
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+[data-gallery-target="thumbnail"] img {
+  filter: none !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 /* Amenities Enhancement */
 .amenity-item {
   transition: all 0.3s ease;

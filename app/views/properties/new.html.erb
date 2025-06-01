@@ -1,21 +1,187 @@
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <!-- Header -->
-  <div class="mb-8">
-    <div class="flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900">Add New Property</h1>
-        <p class="mt-2 text-gray-600">List your property for rent and reach potential tenants.</p>
+<% content_for :title, "Add New Property - Ofie" %>
+<% content_for :description, "List your property for rent and reach potential tenants with Ofie's advanced property management platform." %>
+
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+  <!-- Background Pattern -->
+  <div class="absolute inset-0 bg-grid-slate-100/50 [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none"></div>
+  <div class="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-300/20 to-purple-300/20 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-l from-emerald-300/20 to-teal-300/20 rounded-full blur-3xl"></div>
+  
+  <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Enhanced Header -->
+    <div class="mb-12">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+        <div class="mb-6 lg:mb-0">
+          <div class="flex items-center mb-4">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl mr-4 shadow-lg shadow-blue-500/25">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">
+                Add New Property
+              </h1>
+              <p class="text-xl text-gray-600 font-medium mt-1">
+                List your property for rent and reach potential tenants
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4 text-sm text-gray-500">
+            <div class="flex items-center">
+              <svg class="w-4 h-4 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Complete all sections for best results
+            </div>
+            <span class="h-4 w-px bg-gray-300"></span>
+            <div class="flex items-center">
+              <div class="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></div>
+              Auto-save enabled
+            </div>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-4">
+          <%= link_to properties_path, class: "group inline-flex items-center px-6 py-3 border-2 border-gray-200 text-gray-700 bg-white/80 backdrop-blur-sm hover:bg-white hover:border-gray-300 rounded-2xl font-semibold transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg" do %>
+            <svg class="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m0 7h18"></path>
+            </svg>
+            Back to Properties
+          <% end %>
+          
+          <!-- Save Draft Button -->
+          <button class="group inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-2xl font-semibold hover:from-purple-600 hover:to-indigo-700 transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30">
+            <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path>
+            </svg>
+            Save Draft
+          </button>
+        </div>
       </div>
-      
-      <%= link_to properties_path, class: "inline-flex items-center text-blue-600 hover:text-blue-800" do %>
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-        </svg>
-        Back to Properties
-      <% end %>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="mb-8">
+      <div class="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl shadow-gray-200/50 border border-white/20">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Listing Progress</h3>
+          <span class="text-sm font-medium text-gray-600">
+            <span id="progress-percentage">0</span>% Complete
+          </span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-3">
+          <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+        <div class="flex justify-between mt-4 text-xs text-gray-500">
+          <span>Photos</span>
+          <span>Basic Info</span>
+          <span>Location</span>
+          <span>Details</span>
+          <span>Availability</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Form -->
+    <%= render 'form', property: @property %>
+
+    <!-- Tips Section -->
+    <div class="mt-12 bg-gradient-to-r from-blue-50 to-indigo-50 backdrop-blur-xl rounded-3xl border border-blue-200/50 p-8">
+      <div class="flex items-center mb-6">
+        <div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-amber-400 to-orange-500 rounded-xl mr-4 shadow-lg shadow-amber-500/25">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900">Pro Listing Tips</h3>
+      </div>
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="space-y-4">
+          <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+            <div class="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+            <div>
+              <p class="font-semibold text-gray-900 mb-1">High-Quality Photos</p>
+              <p class="text-sm text-gray-600">Upload 5-10 bright, well-lit photos from different angles</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+            <div class="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+            <div>
+              <p class="font-semibold text-gray-900 mb-1">Detailed Description</p>
+              <p class="text-sm text-gray-600">Highlight unique features, amenities, and neighborhood perks</p>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+            <div class="flex-shrink-0 w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+            <div>
+              <p class="font-semibold text-gray-900 mb-1">Competitive Pricing</p>
+              <p class="text-sm text-gray-600">Research similar properties in your area for optimal pricing</p>
+            </div>
+          </div>
+          <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+            <div class="flex-shrink-0 w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
+            <div>
+              <p class="font-semibold text-gray-900 mb-1">Complete Information</p>
+              <p class="text-sm text-gray-600">Fill out all fields to improve search visibility</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- Form -->
-  <%= render 'form', property: @property %>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Form progress tracking
+    function updateProgress() {
+      const requiredFields = document.querySelectorAll('input[required], select[required], textarea[required]');
+      const filledFields = Array.from(requiredFields).filter(field => {
+        if (field.type === 'file') {
+          return field.files.length > 0;
+        }
+        return field.value.trim() !== '';
+      });
+      
+      const percentage = Math.round((filledFields.length / requiredFields.length) * 100);
+      const progressBar = document.getElementById('progress-bar');
+      const progressPercentage = document.getElementById('progress-percentage');
+      
+      if (progressBar && progressPercentage) {
+        progressBar.style.width = percentage + '%';
+        progressPercentage.textContent = percentage;
+      }
+    }
+
+    // Add event listeners to form fields
+    const formFields = document.querySelectorAll('input, select, textarea');
+    formFields.forEach(field => {
+      field.addEventListener('input', updateProgress);
+      field.addEventListener('change', updateProgress);
+    });
+
+    // Initial progress check
+    updateProgress();
+
+    // Auto-save functionality (placeholder)
+    let autoSaveTimeout;
+    formFields.forEach(field => {
+      field.addEventListener('input', function() {
+        clearTimeout(autoSaveTimeout);
+        autoSaveTimeout = setTimeout(() => {
+          // Auto-save logic here
+          console.log('Auto-saving draft...');
+        }, 2000);
+      });
+    });
+  });
+</script>
+
+<style>
+  .bg-grid-slate-100\/50 {
+    background-image: url("data:image/svg+xml,%3csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='%23f1f5f9' fill-opacity='0.3' fill-rule='evenodd'%3e%3cpath d='m0 40 40-40h-40v40zm40 0v-40h-40z'/%3e%3c/g%3e%3c/svg%3e");
+  }
+</style>
