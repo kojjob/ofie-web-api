@@ -37,5 +37,10 @@
 
     <!-- Footer -->
     <%= render "shared/footer" %>
+
+    <!-- Bot Chat Widget - Only show on specific pages -->
+    <% if show_bot_widget? %>
+      <%= render "shared/bot_chat_widget" %>
+    <% end %>
   </body>
 </html>

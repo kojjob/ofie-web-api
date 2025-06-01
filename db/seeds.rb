@@ -8,6 +8,9 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+# Load bot seeds
+load Rails.root.join('db', 'seeds', 'bot_seeds.rb')
+
 # Clear existing data in development
 if Rails.env.development?
   Property.destroy_all
@@ -19,6 +22,7 @@ puts "Creating sample users..."
 
 # Create landlords
 lanlord1 = User.create!(
+  name: 'John Landlord',
   email: 'landlord1@example.com',
   password: 'password123',
   password_confirmation: 'password123',
@@ -26,6 +30,7 @@ lanlord1 = User.create!(
 )
 
 lanlord2 = User.create!(
+  name: 'Jane Property Owner',
   email: 'landlord2@example.com',
   password: 'password123',
   password_confirmation: 'password123',
@@ -34,6 +39,7 @@ lanlord2 = User.create!(
 
 # Create tenants
 tenant1 = User.create!(
+  name: 'Alice Tenant',
   email: 'tenant1@example.com',
   password: 'password123',
   password_confirmation: 'password123',
@@ -41,6 +47,7 @@ tenant1 = User.create!(
 )
 
 tenant2 = User.create!(
+  name: 'Bob Renter',
   email: 'tenant2@example.com',
   password: 'password123',
   password_confirmation: 'password123',
@@ -56,10 +63,8 @@ properties_data = [
   {
     title: 'Modern Downtown Apartment',
     description: 'Beautiful 2-bedroom apartment in the heart of downtown with stunning city views. Features include hardwood floors, stainless steel appliances, and in-unit laundry.',
-    address: '123 Main Street, Apt 4B',
+    address: '123 Main Street, Apt 4B, San Francisco, CA 94102',
     city: 'San Francisco',
-    state: 'CA',
-    zip_code: '94102',
     price: 3500.00,
     bedrooms: 2,
     bathrooms: 2.0,
@@ -71,10 +76,8 @@ properties_data = [
   {
     title: 'Cozy Studio Near University',
     description: 'Perfect for students! This cozy studio is just a 5-minute walk from the university campus. Includes all utilities and high-speed internet.',
-    address: '456 College Avenue',
+    address: '456 College Avenue, Berkeley, CA 94704',
     city: 'Berkeley',
-    state: 'CA',
-    zip_code: '94704',
     price: 1800.00,
     bedrooms: 0,
     bathrooms: 1.0,
@@ -86,10 +89,8 @@ properties_data = [
   {
     title: 'Spacious Family House',
     description: 'Large 4-bedroom house perfect for families. Features a big backyard, 2-car garage, and updated kitchen. Located in a quiet neighborhood with great schools.',
-    address: '789 Oak Street',
+    address: '789 Oak Street, Palo Alto, CA 94301',
     city: 'Palo Alto',
-    state: 'CA',
-    zip_code: '94301',
     price: 6500.00,
     bedrooms: 4,
     bathrooms: 3.5,
@@ -101,10 +102,8 @@ properties_data = [
   {
     title: 'Luxury Condo with Bay Views',
     description: 'Stunning 3-bedroom condo with panoramic bay views. Premium finishes throughout, including marble countertops and floor-to-ceiling windows.',
-    address: '321 Bay Street, Unit 15A',
+    address: '321 Bay Street, Unit 15A, San Francisco, CA 94133',
     city: 'San Francisco',
-    state: 'CA',
-    zip_code: '94133',
     price: 5200.00,
     bedrooms: 3,
     bathrooms: 2.5,
@@ -116,10 +115,8 @@ properties_data = [
   {
     title: 'Charming Townhouse',
     description: 'Beautiful 3-bedroom townhouse with private patio and attached garage. Recently renovated with modern amenities while maintaining classic charm.',
-    address: '654 Elm Street',
+    address: '654 Elm Street, San Jose, CA 95110',
     city: 'San Jose',
-    state: 'CA',
-    zip_code: '95110',
     price: 4200.00,
     bedrooms: 3,
     bathrooms: 2.5,

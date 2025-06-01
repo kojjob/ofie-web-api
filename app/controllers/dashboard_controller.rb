@@ -1,5 +1,5 @@
 class DashboardController < ApplicationController
-  layout 'dashboard'
+  layout "dashboard"
   before_action :authenticate_request
   before_action :load_sidebar_data
 
@@ -82,6 +82,24 @@ class DashboardController < ApplicationController
     end
   end
 
+  def properties
+    # Properties management page for landlords
+    authorize_landlord!
+
+    @properties = current_user.properties.with_attached_photos.order(created_at: :desc)
+    @stats = {
+      total_properties: @properties.count,
+      available_properties: @properties.where(availability_status: "available").count,
+      rented_properties: @properties.where(availability_status: "rented").count,
+      maintenance_properties: @properties.where(availability_status: "maintenance").count
+    }
+
+    respond_to do |format|
+      format.html
+      format.json { render json: { properties: @properties.map { |p| property_json(p) }, stats: @stats } }
+    end
+  end
+
   private
 
   def load_sidebar_data
@@ -92,37 +110,37 @@ class DashboardController < ApplicationController
                                         RentalApplication.joins(:property)
                                                        .where(properties: { user_id: current_user.id }, status: "pending")
                                                        .count
-                                      else
+        else
                                         0
-                                      end
+        end
         @active_leases_count = if defined?(LeaseAgreement)
                                  LeaseAgreement.joins(:property)
                                               .where(properties: { user_id: current_user.id }, status: "active")
                                               .count
-                               else
+        else
                                  0
-                               end
+        end
       else
         @favorites_count = if current_user.respond_to?(:property_favorites)
                              current_user.property_favorites.count
-                           else
+        else
                              0
-                           end
+        end
         @overdue_payments_count = if current_user.respond_to?(:payments) && defined?(Payment)
                                     current_user.payments
                                                .where("due_date < ? AND status IN (?)", Date.current, %w[pending failed])
                                                .count
-                                  else
+        else
                                     0
-                                  end
+        end
       end
 
       # Common counts for both user types
       @unread_messages_count = if current_user.respond_to?(:received_messages)
                                  current_user.received_messages.where(read: false).count
-                               else
+      else
                                  0
-                               end
+      end
 
       @pending_maintenance_count = if defined?(MaintenanceRequest)
                                      if current_user.landlord?
@@ -132,15 +150,15 @@ class DashboardController < ApplicationController
                                      else
                                        MaintenanceRequest.where(tenant_id: current_user.id, status: "pending").count
                                      end
-                                   else
+      else
                                      0
-                                   end
+      end
 
       @unread_notifications_count = if current_user.respond_to?(:notifications)
                                       current_user.notifications.where(read: false).count
-                                    else
+      else
                                       0
-                                    end
+      end
     rescue => e
       # Log error and set safe defaults
       Rails.logger.error "Error loading sidebar data: #{e.message}"

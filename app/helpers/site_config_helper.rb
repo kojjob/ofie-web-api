@@ -1,24 +1,24 @@
 module SiteConfigHelper
   # Load and cache site configuration
   def site_config
-    @site_config ||= YAML.load_file(Rails.root.join('config', 'site_config.yml')).with_indifferent_access
+    @site_config ||= YAML.load_file(Rails.root.join("config", "site_config.yml")).with_indifferent_access
   end
 
   # Company information helpers
   def company_name
-    site_config.dig(:company, :name) || 'Ofie'
+    site_config.dig(:company, :name) || "Ofie"
   end
 
   def company_tagline
-    site_config.dig(:company, :tagline) || 'Your Dream Home Awaits'
+    site_config.dig(:company, :tagline) || "Your Dream Home Awaits"
   end
 
   def company_description
-    site_config.dig(:company, :description) || 'Premium Real Estate Platform'
+    site_config.dig(:company, :description) || "Premium Real Estate Platform"
   end
 
   def company_full_description
-    site_config.dig(:company, :full_description) || 'Discover luxury homes and properties with our premium platform.'
+    site_config.dig(:company, :full_description) || "Discover luxury homes and properties with our premium platform."
   end
 
   # Statistics helpers with dynamic data
@@ -39,11 +39,11 @@ module SiteConfigHelper
   end
 
   def growth_rate_text
-    site_config.dig(:statistics, :growth_rate) || '+18% this quarter'
+    site_config.dig(:statistics, :growth_rate) || "+18% this quarter"
   end
 
   def search_time_text
-    site_config.dig(:statistics, :search_time) || '< 3 seconds'
+    site_config.dig(:statistics, :search_time) || "< 3 seconds"
   end
 
   # Dynamic statistics with fallbacks
@@ -66,20 +66,20 @@ module SiteConfigHelper
   # Search form helpers
   def property_type_options
     options = site_config.dig(:search, :property_types) || []
-    options.map { |option| [option[:label], option[:value]] }
+    options.map { |option| [ option[:label], option[:value] ] }
   end
 
   def bedroom_options
     options = site_config.dig(:search, :bedroom_options) || []
-    options.map { |option| [option[:label], option[:value]] }
+    options.map { |option| [ option[:label], option[:value] ] }
   end
 
   def min_price_placeholder
-    site_config.dig(:search, :price_placeholders, :min) || '$300,000'
+    site_config.dig(:search, :price_placeholders, :min) || "$300,000"
   end
 
   def max_price_placeholder
-    site_config.dig(:search, :price_placeholders, :max) || '$800,000'
+    site_config.dig(:search, :price_placeholders, :max) || "$800,000"
   end
 
   # Trust indicators
@@ -89,11 +89,11 @@ module SiteConfigHelper
 
   # Features section
   def features_section_title
-    site_config.dig(:features, :section_title) || 'Experience the Difference'
+    site_config.dig(:features, :section_title) || "Experience the Difference"
   end
 
   def features_section_description
-    site_config.dig(:features, :section_description) || 'We redefine the real estate experience with cutting-edge technology.'
+    site_config.dig(:features, :section_description) || "We redefine the real estate experience with cutting-edge technology."
   end
 
   def feature_items
@@ -102,36 +102,36 @@ module SiteConfigHelper
 
   # Hero section
   def hero_title_line_1
-    site_config.dig(:hero, :title_line_1) || 'Find Your'
+    site_config.dig(:hero, :title_line_1) || "Find Your"
   end
 
   def hero_title_line_2
-    site_config.dig(:hero, :title_line_2) || 'Perfect Home'
+    site_config.dig(:hero, :title_line_2) || "Perfect Home"
   end
 
   def hero_subtitle
-    site_config.dig(:hero, :subtitle) || 'Where luxury meets simplicity'
+    site_config.dig(:hero, :subtitle) || "Where luxury meets simplicity"
   end
 
   def hero_description
-    site_config.dig(:hero, :description) || 'Discover curated properties with our intelligent search platform.'
+    site_config.dig(:hero, :description) || "Discover curated properties with our intelligent search platform."
   end
 
   def hero_features
-    site_config.dig(:hero, :features) || ['Premium listings', 'Instant matches', 'Verified quality']
+    site_config.dig(:hero, :features) || [ "Premium listings", "Instant matches", "Verified quality" ]
   end
 
   # CTA section
   def cta_title_line_1
-    site_config.dig(:cta, :title_line_1) || 'Your Dream Home'
+    site_config.dig(:cta, :title_line_1) || "Your Dream Home"
   end
 
   def cta_title_line_2
-    site_config.dig(:cta, :title_line_2) || 'Awaits You'
+    site_config.dig(:cta, :title_line_2) || "Awaits You"
   end
 
   def cta_description
-    site_config.dig(:cta, :description) || 'Join thousands of satisfied homeowners.'
+    site_config.dig(:cta, :description) || "Join thousands of satisfied homeowners."
   end
 
   def cta_highlights
@@ -144,39 +144,39 @@ module SiteConfigHelper
 
   # Marketing messages
   def search_benefits
-    site_config.dig(:marketing, :search_benefits) || ['✓ Free to use', '✓ Instant results', '✓ No registration']
+    site_config.dig(:marketing, :search_benefits) || [ "✓ Free to use", "✓ Instant results", "✓ No registration" ]
   end
 
   def property_section_badge
-    site_config.dig(:marketing, :property_section, :badge) || 'Premium Collection'
+    site_config.dig(:marketing, :property_section, :badge) || "Premium Collection"
   end
 
   def property_section_title_line_1
-    site_config.dig(:marketing, :property_section, :title_line_1) || 'Featured'
+    site_config.dig(:marketing, :property_section, :title_line_1) || "Featured"
   end
 
   def property_section_title_line_2
-    site_config.dig(:marketing, :property_section, :title_line_2) || 'Properties'
+    site_config.dig(:marketing, :property_section, :title_line_2) || "Properties"
   end
 
   def property_section_description
-    site_config.dig(:marketing, :property_section, :description) || 'Handpicked luxury homes'
+    site_config.dig(:marketing, :property_section, :description) || "Handpicked luxury homes"
   end
 
   def property_section_live_update
-    site_config.dig(:marketing, :property_section, :live_update) || 'New properties added daily'
+    site_config.dig(:marketing, :property_section, :live_update) || "New properties added daily"
   end
 
   def no_properties_title
-    site_config.dig(:marketing, :property_section, :no_properties, :title) || 'New Properties Coming Soon!'
+    site_config.dig(:marketing, :property_section, :no_properties, :title) || "New Properties Coming Soon!"
   end
 
   def no_properties_description
-    site_config.dig(:marketing, :property_section, :no_properties, :description) || 'We\'re curating the best properties just for you.'
+    site_config.dig(:marketing, :property_section, :no_properties, :description) || "We're curating the best properties just for you."
   end
 
   def no_properties_button_text
-    site_config.dig(:marketing, :property_section, :no_properties, :button_text) || 'Notify Me'
+    site_config.dig(:marketing, :property_section, :no_properties, :button_text) || "Notify Me"
   end
 
   # SEO helpers
@@ -189,7 +189,7 @@ module SiteConfigHelper
   end
 
   def seo_keywords
-    site_config.dig(:seo, :keywords) || 'real estate, homes for sale, apartments, luxury properties'
+    site_config.dig(:seo, :keywords) || "real estate, homes for sale, apartments, luxury properties"
   end
 
   # Utility methods

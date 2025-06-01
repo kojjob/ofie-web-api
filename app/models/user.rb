@@ -31,7 +31,7 @@ class User < ApplicationRecord
   has_many :assigned_maintenance_requests, class_name: "MaintenanceRequest", foreign_key: "assigned_to_id", dependent: :nullify
 
   # Define roles as an enum for easy management and validation
-  enum :role, { tenant: "tenant", landlord: "landlord" }
+  enum :role, { tenant: "tenant", landlord: "landlord", bot: "bot" }
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, presence: true, length: { minimum: 6 }, on: :create, unless: :oauth_user?

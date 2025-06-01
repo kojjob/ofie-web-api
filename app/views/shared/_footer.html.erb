@@ -1,80 +1,202 @@
-<footer class="bg-gray-800 text-white" role="contentinfo" aria-label="Site footer">
+<!-- Enhanced Professional Footer -->
+<footer class="relative bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white overflow-hidden" role="contentinfo" aria-label="Site footer">
+  <!-- Background Effects -->
+  <div class="absolute inset-0">
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-indigo-900/80 to-slate-900/90"></div>
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/30 to-pink-600/20"></div>
+      <div class="absolute inset-0" style="background: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(147, 51, 234, 0.1) 0%, transparent 40%);"></div>
+    </div>
+  </div>
+  
+  <!-- Floating Glass Elements -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 left-1/6 w-72 h-72 bg-gradient-to-br from-blue-400/5 to-cyan-400/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-br from-purple-400/5 to-pink-400/5 rounded-full blur-3xl"></div>
+  </div>
+
   <!-- Main Footer Content -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Top Section with Newsletter -->
+    <div class="mb-16">
+      <div class="bg-white/[0.08] backdrop-blur-xl rounded-3xl p-8 lg:p-12 border border-white/10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <!-- Newsletter Content -->
+          <div>
+            <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md rounded-full px-4 py-2 mb-6 border border-white/20">
+              <svg class="w-5 h-5 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+              </svg>
+              <span class="text-sm font-medium text-white/90">Stay Connected</span>
+            </div>
+            <h3 class="text-3xl lg:text-4xl font-light text-white mb-4 tracking-tight">
+              Get the 
+              <span class="font-medium text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-300">
+                Latest Updates
+              </span>
+            </h3>
+            <p class="text-white/70 text-lg font-light leading-relaxed mb-6">
+              Exclusive property listings, market insights, and platform updates delivered directly to your inbox.
+            </p>
+            <div class="flex items-center space-x-4 text-sm text-white/60">
+              <div class="flex items-center space-x-2">
+                <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Weekly market insights</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <span>Exclusive early access</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Newsletter Form -->
+          <div>
+            <%= form_with url: newsletter_signup_path, method: :post, local: true, class: "space-y-4", data: { controller: "newsletter" } do |form| %>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex-1">
+                  <%= form.label :email, "Email Address", class: "sr-only" %>
+                  <%= form.email_field :email, 
+                      placeholder: "Enter your email address",
+                      required: true,
+                      class: "w-full px-6 py-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all duration-300 hover:bg-white/20" %>
+                </div>
+                <%= form.submit "Subscribe Now", 
+                    class: "bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 hover:from-cyan-600 hover:via-blue-600 hover:to-indigo-600 text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] shadow-xl hover:shadow-cyan-500/25 whitespace-nowrap" %>
+              </div>
+              <div class="flex items-center space-x-3">
+                <%= form.check_box :marketing_consent, class: "h-4 w-4 text-cyan-500 focus:ring-cyan-400 border-white/30 rounded bg-white/10" %>
+                <%= form.label :marketing_consent, class: "text-sm text-white/70" do %>
+                  I agree to receive marketing communications and understand I can unsubscribe at any time.
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Footer Links -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
       
       <!-- Company Info -->
-      <div class="lg:col-span-1">
-        <div class="flex items-center space-x-2 mb-4">
-          <div class="h-8 w-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-sm">
-            <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+      <div class="lg:col-span-2">
+        <!-- Logo and Brand -->
+        <div class="flex items-center space-x-3 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-xl shadow-cyan-500/25">
+            <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
             </svg>
           </div>
-          <span class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Ofie</span>
+          <div>
+            <span class="text-3xl font-bold bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-300 bg-clip-text text-transparent">Ofie</span>
+            <div class="text-xs text-white/60 mt-1">Premium Real Estate Platform</div>
+          </div>
         </div>
-        <p class="text-gray-300 text-sm leading-relaxed mb-4">
-          Discover your perfect home with Ofie. We connect renters and landlords with seamless property management and booking solutions.
+        
+        <p class="text-white/70 text-lg font-light leading-relaxed mb-8 max-w-md">
+          Revolutionizing real estate through technology and trust. Connect with your perfect property through our AI-powered platform.
         </p>
+        
+        <!-- Trust Indicators -->
+        <div class="grid grid-cols-2 gap-4 mb-8">
+          <div class="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+            <div class="text-2xl font-bold text-white mb-1">100K+</div>
+            <div class="text-xs text-white/60">Happy Families</div>
+          </div>
+          <div class="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+            <div class="text-2xl font-bold text-white mb-1">4.9★</div>
+            <div class="text-xs text-white/60">User Rating</div>
+          </div>
+        </div>
         
         <!-- Social Media Links -->
         <div class="flex space-x-4">
-          <%= link_to "#", class: "text-gray-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 rounded-lg p-2", 
+          <%= link_to "https://facebook.com/ofie", target: "_blank", rel: "noopener noreferrer",
+              class: "group w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 hover:bg-white/20 hover:border-cyan-400/50 transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:shadow-cyan-400/25", 
               'aria-label': "Follow us on Facebook" do %>
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg class="w-5 h-5 text-white/70 group-hover:text-cyan-400 transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
               <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
             </svg>
           <% end %>
           
-          <%= link_to "#", class: "text-gray-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 rounded-lg p-2", 
+          <%= link_to "https://twitter.com/ofie", target: "_blank", rel: "noopener noreferrer",
+              class: "group w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 hover:bg-white/20 hover:border-cyan-400/50 transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:shadow-cyan-400/25", 
               'aria-label': "Follow us on Twitter" do %>
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg class="w-5 h-5 text-white/70 group-hover:text-cyan-400 transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
             </svg>
           <% end %>
           
-          <%= link_to "#", class: "text-gray-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 rounded-lg p-2", 
+          <%= link_to "https://linkedin.com/company/ofie", target: "_blank", rel: "noopener noreferrer",
+              class: "group w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 hover:bg-white/20 hover:border-cyan-400/50 transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:shadow-cyan-400/25", 
               'aria-label': "Connect with us on LinkedIn" do %>
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <svg class="w-5 h-5 text-white/70 group-hover:text-cyan-400 transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
               <path fill-rule="evenodd" d="M19 0H5a5 5 0 00-5 5v14a5 5 0 005 5h14a5 5 0 005-5V5a5 5 0 00-5-5zM8 19H5V8h3v11zM6.5 6.732c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zM20 19h-3v-5.604c0-3.368-4-3.113-4 0V19h-3V8h3v1.765c1.396-2.586 7-2.777 7 2.476V19z" clip-rule="evenodd"></path>
             </svg>
           <% end %>
           
-          <%= link_to "#", class: "text-gray-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 rounded-lg p-2", 
+          <%= link_to "https://instagram.com/ofie", target: "_blank", rel: "noopener noreferrer",
+              class: "group w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 hover:bg-white/20 hover:border-cyan-400/50 transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:shadow-cyan-400/25", 
               'aria-label': "Follow us on Instagram" do %>
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill-rule="evenodd" d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987s11.987-5.367 11.987-11.987C24.004 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.32-1.297C4.198 14.81 3.708 13.659 3.708 12.362s.49-2.448 1.297-3.32c.872-.807 2.023-1.297 3.32-1.297s2.448.49 3.32 1.297c.807.872 1.297 2.023 1.297 3.32s-.49 2.448-1.297 3.32c-.872.807-2.023 1.297-3.32 1.297zm7.718-8.897h-2.156c-.163-.653-.392-1.224-.686-1.714-.294-.49-.653-.914-1.076-1.273-.424-.359-.914-.653-1.469-.882-.555-.229-1.158-.343-1.809-.343-.651 0-1.254.114-1.809.343-.555.229-1.045.523-1.469.882-.424.359-.782.783-1.076 1.273-.294.49-.523 1.061-.686 1.714H2.971c-.229 0-.424.163-.424.392v1.714c0 .229.195.392.424.392h2.156c.163.653.392 1.224.686 1.714.294.49.653.914 1.076 1.273.424.359.914.653 1.469.882.555.229 1.158.343 1.809.343.651 0 1.254-.114 1.809-.343.555-.229 1.045-.523 1.469-.882.424-.359.782-.783 1.076-1.273.294-.49.523-1.061.686-1.714h2.156c.229 0 .424-.163.424-.392v-1.714c0-.229-.195-.392-.424-.392z" clip-rule="evenodd"></path>
+            <svg class="w-5 h-5 text-white/70 group-hover:text-cyan-400 transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987s11.987-5.367 11.987-11.987C24.004 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.348-.49-3.22-1.297C4.298 14.81 3.808 13.659 3.808 12.362s.49-2.348 1.297-3.22c.872-.807 2.023-1.297 3.32-1.297s2.348.49 3.22 1.297c.807.872 1.297 2.023 1.297 3.32s-.49 2.348-1.297 3.22c-.872.807-2.023 1.297-3.32 1.297z" clip-rule="evenodd"></path>
             </svg>
           <% end %>
         </div>
       </div>
 
       <!-- For Renters -->
-      <div class="lg:col-span-1">
-        <h3 class="text-lg font-semibold mb-4 text-white">For Renters</h3>
-        <ul class="space-y-3">
+      <div>
+        <h3 class="text-lg font-semibold mb-6 text-white flex items-center">
+          <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          For Renters
+        </h3>
+        <ul class="space-y-4">
           <li>
-            <%= link_to properties_path, class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to properties_path, class: "group flex items-center text-white/70 hover:text-cyan-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Browse Properties
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to properties_path(category: 'apartment'), class: "group flex items-center text-white/70 hover:text-cyan-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Search by Location
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to calculators_path, class: "group flex items-center text-white/70 hover:text-cyan-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Rental Calculator
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to neighborhoods_path, class: "group flex items-center text-white/70 hover:text-cyan-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Neighborhood Guides
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to resources_renters_path, class: "group flex items-center text-white/70 hover:text-cyan-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Renter Resources
             <% end %>
           </li>
@@ -82,31 +204,60 @@
       </div>
 
       <!-- For Landlords -->
-      <div class="lg:col-span-1">
-        <h3 class="text-lg font-semibold mb-4 text-white">For Landlords</h3>
-        <ul class="space-y-3">
+      <div>
+        <h3 class="text-lg font-semibold mb-6 text-white flex items-center">
+          <svg class="w-5 h-5 mr-2 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+          </svg>
+          For Landlords
+        </h3>
+        <ul class="space-y-4">
           <li>
-            <%= link_to new_property_path, class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
-              List Your Property
+            <% if defined?(new_property_path) %>
+              <%= link_to new_property_path, class: "group flex items-center text-white/70 hover:text-emerald-400 transition-all duration-300 text-sm font-medium" do %>
+                <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+                List Your Property
+              <% end %>
+            <% else %>
+              <%= link_to properties_new_path, class: "group flex items-center text-white/70 hover:text-emerald-400 transition-all duration-300 text-sm font-medium" do %>
+                <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+                List Your Property
+              <% end %>
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to dashboard_properties_path, class: "group flex items-center text-white/70 hover:text-emerald-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Property Management
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to tenant_screening_path, class: "group flex items-center text-white/70 hover:text-emerald-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Tenant Screening
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to market_analysis_path, class: "group flex items-center text-white/70 hover:text-emerald-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Market Analysis
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to landlord_tools_path, class: "group flex items-center text-white/70 hover:text-emerald-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Landlord Tools
             <% end %>
           </li>
@@ -114,31 +265,51 @@
       </div>
 
       <!-- Company & Support -->
-      <div class="lg:col-span-1">
-        <h3 class="text-lg font-semibold mb-4 text-white">Company</h3>
-        <ul class="space-y-3">
+      <div>
+        <h3 class="text-lg font-semibold mb-6 text-white flex items-center">
+          <svg class="w-5 h-5 mr-2 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+          </svg>
+          Company
+        </h3>
+        <ul class="space-y-4">
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to about_path, class: "group flex items-center text-white/70 hover:text-purple-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               About Us
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to contact_path, class: "group flex items-center text-white/70 hover:text-purple-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Contact Support
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to help_path, class: "group flex items-center text-white/70 hover:text-purple-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Help Center
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to careers_path, class: "group flex items-center text-white/70 hover:text-purple-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Careers
             <% end %>
           </li>
           <li>
-            <%= link_to "#", class: "text-gray-300 hover:text-blue-400 transition-colors duration-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
+            <%= link_to press_path, class: "group flex items-center text-white/70 hover:text-purple-400 transition-all duration-300 text-sm font-medium" do %>
+              <svg class="w-4 h-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
               Press & Media
             <% end %>
           </li>
@@ -146,67 +317,166 @@
       </div>
     </div>
 
-    <!-- Newsletter Signup -->
-    <div class="mt-12 pt-8 border-t border-gray-700">
-      <div class="max-w-md mx-auto text-center lg:max-w-none lg:text-left">
-        <h3 class="text-lg font-semibold mb-4 text-white">Stay Updated</h3>
-        <p class="text-gray-300 text-sm mb-4">Get the latest property listings and rental market insights delivered to your inbox.</p>
+    <!-- Bottom Section -->
+    <div class="border-t border-white/10 pt-12">
+      <div class="flex flex-col lg:flex-row justify-between items-center space-y-8 lg:space-y-0">
         
-        <form class="flex flex-col sm:flex-row gap-3 max-w-md lg:max-w-lg">
-          <div class="flex-1">
-            <label for="email-newsletter" class="sr-only">Email address</label>
-            <input type="email" 
-                   id="email-newsletter"
-                   name="email" 
-                   placeholder="Enter your email address"
-                   required
-                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+        <!-- Copyright and Legal Links -->
+        <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-8">
+          <div class="text-white/60 text-sm">
+            <p>&copy; <%= Date.current.year %> Ofie Technologies, Inc. All rights reserved.</p>
           </div>
-          <button type="submit" 
-                  class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-200 whitespace-nowrap">
-            Subscribe
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
 
-  <!-- Bottom Bar -->
-  <div class="border-t border-gray-700 bg-gray-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-        
-        <!-- Copyright -->
-        <div class="text-gray-400 text-sm">
-          <p>&copy; <%= Date.current.year %> Ofie. All rights reserved.</p>
-        </div>
-
-        <!-- Legal Links -->
-        <div class="flex flex-wrap justify-center space-x-6 text-sm">
-          <%= link_to "#", class: "text-gray-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
-            Privacy Policy
-          <% end %>
-          <%= link_to "#", class: "text-gray-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
-            Terms of Service
-          <% end %>
-          <%= link_to "#", class: "text-gray-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
-            Cookie Policy
-          <% end %>
-          <%= link_to "#", class: "text-gray-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded" do %>
-            Accessibility
-          <% end %>
+          <div class="flex flex-wrap justify-center space-x-6 text-sm">
+            <%= link_to privacy_policy_path, class: "text-white/60 hover:text-cyan-400 transition-colors duration-300 hover:underline" do %>
+              Privacy Policy
+            <% end %>
+            <%= link_to terms_of_service_path, class: "text-white/60 hover:text-cyan-400 transition-colors duration-300 hover:underline" do %>
+              Terms of Service
+            <% end %>
+            <%= link_to cookie_policy_path, class: "text-white/60 hover:text-cyan-400 transition-colors duration-300 hover:underline" do %>
+              Cookie Policy
+            <% end %>
+            <%= link_to accessibility_path, class: "text-white/60 hover:text-cyan-400 transition-colors duration-300 hover:underline" do %>
+              Accessibility
+            <% end %>
+          </div>
         </div>
 
         <!-- Back to Top Button -->
         <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
-                class="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 rounded-lg px-3 py-2"
+                class="group flex items-center space-x-3 bg-white/10 backdrop-blur-md rounded-2xl px-6 py-3 border border-white/20 hover:bg-white/20 hover:border-cyan-400/50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-400/25"
                 aria-label="Back to top">
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg class="w-5 h-5 text-white/70 group-hover:text-cyan-400 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
           </svg>
-          <span class="text-sm hidden sm:inline">Back to top</span>
+          <span class="text-sm font-medium text-white/70 group-hover:text-cyan-400 transition-colors duration-300">Back to top</span>
         </button>
+      </div>
+
+      <!-- Trust and Security Badges -->
+      <div class="mt-12 pt-8 border-t border-white/10">
+        <div class="flex flex-wrap justify-center items-center gap-8 text-white/50">
+          <div class="flex items-center space-x-2">
+            <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-sm font-medium">SSL Secured</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-sm font-medium">GDPR Compliant</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-sm font-medium">SOC 2 Certified</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+            </svg>
+            <span class="text-sm font-medium">99.9% Uptime</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </footer>
+
+<!-- Newsletter Controller -->
+<script>
+class NewsletterController extends Controller {
+  static targets = ["email", "submit"]
+  
+  connect() {
+    this.setupForm()
+  }
+  
+  setupForm() {
+    const form = this.element.querySelector('form')
+    if (form) {
+      form.addEventListener('submit', this.handleSubmit.bind(this))
+    }
+  }
+  
+  handleSubmit(event) {
+    event.preventDefault()
+    const submitButton = event.target.querySelector('input[type="submit"]')
+    const originalText = submitButton.value
+    
+    // Show loading state
+    submitButton.disabled = true
+    submitButton.value = 'Subscribing...'
+    
+    // Simulate API call
+    setTimeout(() => {
+      submitButton.value = 'Subscribed!'
+      
+      // Reset after success
+      setTimeout(() => {
+        submitButton.disabled = false
+        submitButton.value = originalText
+        event.target.reset()
+      }, 2000)
+    }, 1500)
+  }
+}
+</script>
+
+<!-- Enhanced CSS for Footer Animations -->
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(1deg); }
+  }
+  
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  /* Smooth scrolling for back to top */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Enhanced hover effects */
+  footer a {
+    position: relative;
+  }
+  
+  footer a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background: linear-gradient(90deg, #06b6d4, #3b82f6, #8b5cf6);
+    transition: width 0.3s ease;
+  }
+  
+  footer a:hover::after {
+    width: 100%;
+  }
+  
+  /* Backdrop blur fallback */
+  @supports not (backdrop-filter: blur()) {
+    .backdrop-blur-xl, .backdrop-blur-md, .backdrop-blur-sm {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+  
+  /* Newsletter form enhancements */
+  .newsletter-form {
+    position: relative;
+  }
+  
+  .newsletter-form input:focus {
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+  }
+</style>
