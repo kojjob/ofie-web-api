@@ -1,0 +1,165 @@
+# Site Configuration for Ofie Real Estate Platform
+# This file contains all configurable values for the landing page and site-wide settings
+
+# Company Information
+company:
+  name: "Ofie"
+  tagline: "Your Dream Home Awaits"
+  description: "Premium Real Estate Platform"
+  full_description: "Discover luxury homes, apartments, and properties with Ofie. Advanced search, verified listings, and expert guidance to find your perfect home. Start your journey today!"
+
+# Hero Section
+hero:
+  title_line_1: "Find Your"
+  title_line_2: "Perfect Home"
+  subtitle: "Where luxury meets simplicity"
+  description: "Discover curated properties with our intelligent search platform."
+  features:
+    - "Premium listings"
+    - "Instant matches"
+    - "Verified quality"
+
+# Statistics (Dynamic values with fallbacks)
+statistics:
+  total_families: 25000
+  rating: 4.9
+  monthly_joiners: 12000
+  verified_properties: 50000
+  growth_rate: "+18% this quarter"
+  search_time: "< 3 seconds"
+  
+  # Fallback values when database is empty
+  fallbacks:
+    total_properties: 50000
+    available_properties: 12500
+    total_users: 25000
+    cities_count: 150
+
+# Search Form Configuration
+search:
+  property_types:
+    - label: "Any Type"
+      value: ""
+    - label: "House"
+      value: "house"
+    - label: "Apartment"
+      value: "apartment"
+    - label: "Condo"
+      value: "condo"
+    - label: "Townhouse"
+      value: "townhouse"
+  
+  bedroom_options:
+    - label: "Any"
+      value: ""
+    - label: "1+"
+      value: "1"
+    - label: "2+"
+      value: "2"
+    - label: "3+"
+      value: "3"
+    - label: "4+"
+      value: "4"
+  
+  price_placeholders:
+    min: "$300,000"
+    max: "$800,000"
+
+# Trust Indicators
+trust:
+  badges:
+    - icon: "award"
+      text: "Award Winner 2024"
+      color: "amber"
+    - icon: "shield"
+      text: "Bank-Level Security"
+      color: "green"
+    - icon: "check"
+      text: "Verified Listings"
+      color: "blue"
+    - icon: "phone"
+      text: "24/7 Support"
+      color: "purple"
+
+# Features Section
+features:
+  section_title: "Experience the Difference"
+  section_description: "We redefine the real estate experience with cutting-edge technology, personalized service, and unmatched expertise"
+  
+  items:
+    - title: "Trusted Excellence"
+      description: "Over 25,000 successful transactions and a 4.9-star rating from satisfied clients who found their perfect home through our platform."
+      icon: "shield-check"
+      color: "emerald"
+      stats:
+        - "Join thousands of happy families"
+    
+    - title: "Lightning Fast"
+      description: "AI-powered search delivers instant results. Smart matching algorithms connect you with perfect properties in seconds, not days."
+      icon: "clock"
+      color: "blue"
+      stats:
+        - label: "Average search time"
+          value: "< 3 seconds"
+    
+    - title: "Premium Quality"
+      description: "Every property undergoes rigorous verification. Professional photography, detailed inspections, and quality guarantees ensure premium standards."
+      icon: "star"
+      color: "purple"
+      checklist:
+        - "Verified listings"
+        - "Professional photography"
+        - "Quality inspections"
+
+# Call to Action Section
+cta:
+  title_line_1: "Your Dream Home"
+  title_line_2: "Awaits You"
+  description: "Join over 25,000 satisfied homeowners who discovered their perfect property with our premium platform. Start your journey today and experience the future of real estate."
+  
+  highlights:
+    - emoji: "⚡"
+      title: "Instant Results"
+      description: "AI-powered matching finds your ideal home in seconds"
+    - emoji: "🛡️"
+      title: "Verified Quality"
+      description: "Every property verified and quality-guaranteed"
+    - emoji: "🎯"
+      title: "Expert Support"
+      description: "Dedicated team guides you every step of the way"
+  
+  trust_indicators:
+    - "No hidden fees"
+    - "Free to use"
+    - "24/7 support"
+    - "Satisfaction guaranteed"
+
+# Marketing Messages
+marketing:
+  search_benefits:
+    - "✓ Free to use"
+    - "✓ Instant results"
+    - "✓ No registration"
+  
+  property_section:
+    badge: "Premium Collection"
+    title_line_1: "Featured"
+    title_line_2: "Properties"
+    description: "🌟 Handpicked luxury homes • 💎 Exclusive listings • 🔥 Limited time offers"
+    live_update: "⚡ New properties added daily • 🎯 Personalized matches"
+    
+    no_properties:
+      title: "🚀 New Properties Coming Soon!"
+      description: "We're curating the best properties just for you. Be the first to know when they're available!"
+      button_text: "🔔 Notify Me"
+
+# SEO Configuration
+seo:
+  title: "Ofie - Your Dream Home Awaits | Premium Real Estate Platform"
+  description: "Discover luxury homes, apartments, and properties with Ofie. Advanced search, verified listings, and expert guidance to find your perfect home. Start your journey today!"
+  keywords: "real estate, homes for sale, apartments, luxury properties, property search, dream home, real estate platform"
+
+# Contact Information
+contact:
+  support_available: "24/7"
+  expert_consultation: true

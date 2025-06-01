@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  include SiteConfigHelper
+
   skip_before_action :authenticate_request, only: [ :index ]
 
   def index
@@ -8,10 +10,13 @@ class HomeController < ApplicationController
                                   .limit(6)
                                   .order(created_at: :desc)
 
-    # Statistics for the hero section
+    # Dynamic statistics for the hero section
     @total_properties = Property.count
     @available_properties = Property.where(availability_status: "available").count
     @total_users = User.count
     @cities_count = Property.distinct.count(:city)
+
+    # Load site configuration for view
+    @site_config = site_config
   end
 end
