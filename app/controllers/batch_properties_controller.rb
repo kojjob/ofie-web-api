@@ -189,33 +189,9 @@ class BatchPropertiesController < ApplicationController
   end
 
   def generate_csv_template
-    # Try to load CSV library
-    begin
-      require "csv"
-    rescue LoadError
-      Rails.logger.warn "CSV library not available, using manual CSV generation"
-      return generate_manual_csv_template
-    end
-
-    # Check if CSV constant is available
-    unless defined?(CSV)
-      Rails.logger.warn "CSV constant not available, using manual CSV generation"
-      return generate_manual_csv_template
-    end
-
-    begin
-      CSV.generate(headers: true) do |csv|
-        # Get property fields dynamically from the model
-        headers = get_property_csv_headers
-        csv << headers
-
-        # Add a comment row explaining the format (optional)
-        csv << generate_example_values(headers)
-      end
-    rescue => e
-      Rails.logger.error "CSV generation failed: #{e.message}"
-      generate_manual_csv_template
-    end
+    # Always use manual CSV generation for reliability
+    Rails.logger.info "Using manual CSV generation for template"
+    generate_manual_csv_template
   end
 
   def generate_manual_csv_template
@@ -279,22 +255,8 @@ class BatchPropertiesController < ApplicationController
   end
 
   def parse_csv_data(csv_data)
-    # Try to use CSV library first
-    if defined?(CSV)
-      begin
-        properties = []
-        CSV.parse(csv_data, headers: true, header_converters: :symbol) do |row|
-          properties << row.to_hash
-        end
-        return properties
-      rescue => e
-        Rails.logger.error "CSV parsing failed: #{e.message}"
-        # Fall back to manual parsing
-      end
-    end
-
-    # Fallback to manual CSV parsing
-    Rails.logger.info "Using manual CSV parsing as fallback"
+    # Always use manual CSV parsing for reliability
+    Rails.logger.info "Using manual CSV parsing for batch property upload"
     parse_csv_manually(csv_data)
   end
 
@@ -413,6 +375,12 @@ class BatchPropertiesController < ApplicationController
         sanitized[field] = sanitized[field].to_f if field == :price || field == :square_feet
         sanitized[field] = sanitized[field].to_i if field == :bedrooms || field == :bathrooms
       end
+    end
+
+    # Convert availability_status from integer to enum key
+    if sanitized[:availability_status].present?
+      status_mapping = { '0' => 'available', '1' => 'rented', '2' => 'pending', '3' => 'maintenance' }
+      sanitized[:availability_status] = status_mapping[sanitized[:availability_status].to_s] || 'available'
     end
 
     # Remove photo_filenames from property params (handled separately)
