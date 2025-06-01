@@ -324,7 +324,11 @@ Rails.application.routes.draw do
   get "/home", to: "home#index", as: "home"
   get "/about", to: "home#about", as: "about"
   get "/help", to: "home#help", as: "help"
-  get "/contact_support", to: "home#contact_support", as: "contact_support"
+  get "/contact", to: "home#contact", as: "contact"
+  get "/terms_of_service", to: "home#terms_of_service", as: "terms_of_service"
+  get "/privacy_policy", to: "home#privacy_policy", as: "privacy_policy"
+  get "/cookie_policy", to: "home#cookie_policy", as: "cookie_policy"
+  get "tenant_screening", to: "home#tenant_screening", as: "tenant_screening"
 
   # Defines the root path route ("/")
   root "home#index"
