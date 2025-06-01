@@ -1,0 +1,681 @@
+<% content_for :title, "Tenant Screening - Comprehensive Background Checks | Ofie" %>
+<% content_for :description, "Professional tenant screening services with credit checks, background verification, and rental history analysis. Make informed decisions with Ofie's comprehensive screening tools." %>
+
+<!-- Hero Section -->
+<div class="relative min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 overflow-hidden">
+  <!-- Background Effects -->
+  <div class="absolute inset-0 bg-gradient-to-br from-black/30 via-transparent to-black/20"></div>
+  <div class="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-indigo-400/20 to-purple-500/20 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-l from-violet-400/20 to-indigo-500/20 rounded-full blur-3xl"></div>
+  
+  <!-- Floating Elements -->
+  <div class="absolute top-20 right-10 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-pulse"></div>
+  <div class="absolute bottom-40 left-20 w-48 h-48 bg-indigo-400/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+  
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+    <div class="text-center text-white mb-16">
+      <div class="mb-8">
+        <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl mb-8 shadow-2xl shadow-indigo-500/25">
+          <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+        </div>
+        <h1 class="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+          Professional <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-violet-400 bg-clip-text text-transparent">Tenant</span> Screening
+        </h1>
+        <p class="text-2xl md:text-3xl text-indigo-100 mb-8 max-w-4xl mx-auto leading-relaxed">
+          Make informed decisions with comprehensive background checks and verification services
+        </p>
+      </div>
+      
+      <!-- Key Benefits -->
+      <div class="flex flex-wrap items-center justify-center gap-8 text-indigo-200 mb-12">
+        <div class="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-3 border border-white/20">
+          <div class="w-10 h-10 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center">
+            <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <span class="font-bold text-lg">99.9% Accurate</span>
+        </div>
+        <div class="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-3 border border-white/20">
+          <div class="w-10 h-10 bg-gradient-to-r from-amber-400 to-orange-500 rounded-xl flex items-center justify-center">
+            <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <span class="font-bold text-lg">24-48hr Reports</span>
+        </div>
+        <div class="flex items-center space-x-3 bg-white/10 backdrop-blur-sm rounded-2xl px-6 py-3 border border-white/20">
+          <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-indigo-500 rounded-xl flex items-center justify-center">
+            <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+          </div>
+          <span class="font-bold text-lg">FCRA Compliant</span>
+        </div>
+      </div>
+      
+      <!-- CTA -->
+      <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+        <button class="group bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg shadow-indigo-500/25 hover:shadow-xl transform hover:-translate-y-0.5"
+                data-action="click->screening#startScreening">
+          <svg class="h-5 w-5 inline mr-2 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          Start Screening Process
+        </button>
+        <button class="border-2 border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-4 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-0.5"
+                data-action="click->demo#requestDemo">
+          Request Demo
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 relative">
+  <div class="absolute inset-0 bg-grid-slate-100/50 [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none"></div>
+  
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    
+    <!-- Screening Process -->
+    <div class="mb-20">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6">
+          Comprehensive Screening Process
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Our multi-step verification process ensures you get complete, accurate information about every applicant
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-16">
+        <!-- Step 1 -->
+        <div class="relative">
+          <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 text-center">
+            <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/25">
+              <span class="text-2xl font-bold text-white">1</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Application Submission</h3>
+            <p class="text-gray-600">
+              Tenant submits complete application with personal information and consent for screening
+            </p>
+          </div>
+          <!-- Connector -->
+          <div class="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
+            <svg class="w-8 h-8 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="relative">
+          <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 text-center">
+            <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/25">
+              <span class="text-2xl font-bold text-white">2</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Multi-Source Verification</h3>
+            <p class="text-gray-600">
+              We verify information across credit bureaus, databases, and references
+            </p>
+          </div>
+          <!-- Connector -->
+          <div class="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
+            <svg class="w-8 h-8 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="relative">
+          <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 text-center">
+            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/25">
+              <span class="text-2xl font-bold text-white">3</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Report Generation</h3>
+            <p class="text-gray-600">
+              Comprehensive report compiled with risk assessment and recommendations
+            </p>
+          </div>
+          <!-- Connector -->
+          <div class="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
+            <svg class="w-8 h-8 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 text-center">
+          <div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-orange-500/25">
+            <span class="text-2xl font-bold text-white">4</span>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Decision Support</h3>
+          <p class="text-gray-600">
+            Receive detailed insights and recommendations to make informed decisions
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screening Services -->
+    <div class="mb-20">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6">
+          Comprehensive Screening Services
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          All the tools you need to thoroughly evaluate potential tenants and protect your investment
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Credit Check -->
+        <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+          <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-blue-500/25 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Credit Report & Score</h3>
+          <p class="text-gray-600 mb-4 leading-relaxed">
+            Comprehensive credit history from all three major bureaus with detailed payment history and debt analysis.
+          </p>
+          <ul class="space-y-2 text-sm text-gray-600">
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              FICO Score Analysis
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Payment History (24 months)
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Debt-to-Income Ratio
+            </li>
+          </ul>
+        </div>
+
+        <!-- Background Check -->
+        <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+          <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/25 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Criminal Background</h3>
+          <p class="text-gray-600 mb-4 leading-relaxed">
+            Nationwide criminal history search including felonies, misdemeanors, and sex offender registry.
+          </p>
+          <ul class="space-y-2 text-sm text-gray-600">
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              National Criminal Database
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Sex Offender Registry
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Terrorist Watch List
+            </li>
+          </ul>
+        </div>
+
+        <!-- Income Verification -->
+        <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+          <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-purple-500/25 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Income Verification</h3>
+          <p class="text-gray-600 mb-4 leading-relaxed">
+            Verify employment status and income through multiple sources to ensure financial stability.
+          </p>
+          <ul class="space-y-2 text-sm text-gray-600">
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Employment Verification
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Salary Confirmation
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Bank Statement Analysis
+            </li>
+          </ul>
+        </div>
+
+        <!-- Rental History -->
+        <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+          <div class="w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-500/25 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Rental History</h3>
+          <p class="text-gray-600 mb-4 leading-relaxed">
+            Complete rental history verification including previous landlord references and payment records.
+          </p>
+          <ul class="space-y-2 text-sm text-gray-600">
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Previous Landlord Contact
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Eviction History
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Rental Payment History
+            </li>
+          </ul>
+        </div>
+
+        <!-- Identity Verification -->
+        <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+          <div class="w-16 h-16 bg-gradient-to-r from-rose-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-rose-500/25 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V4a2 2 0 114 0v2m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Identity Verification</h3>
+          <p class="text-gray-600 mb-4 leading-relaxed">
+            Multi-layer identity verification to prevent fraud and ensure applicant authenticity.
+          </p>
+          <ul class="space-y-2 text-sm text-gray-600">
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Government ID Verification
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              SSN Validation
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Address Verification
+            </li>
+          </ul>
+        </div>
+
+        <!-- References Check -->
+        <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+          <div class="w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-teal-500/25 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Personal References</h3>
+          <p class="text-gray-600 mb-4 leading-relaxed">
+            Professional verification of personal and professional references to assess character.
+          </p>
+          <ul class="space-y-2 text-sm text-gray-600">
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Professional References
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Character Assessment
+            </li>
+            <li class="flex items-center">
+              <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Reliability Verification
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pricing Plans -->
+    <div class="mb-20">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6">
+          Transparent Pricing Plans
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Choose the screening package that fits your needs. No hidden fees, no long-term contracts.
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Basic Plan -->
+        <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8">
+          <div class="text-center mb-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic Screening</h3>
+            <div class="text-4xl font-bold text-gray-900 mb-2">$29</div>
+            <p class="text-gray-600">per applicant</p>
+          </div>
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Credit report & score
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Basic identity verification
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Eviction history check
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              24-48 hour delivery
+            </li>
+          </ul>
+          <button class="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+            Choose Basic
+          </button>
+        </div>
+
+        <!-- Premium Plan -->
+        <div class="relative bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border-2 border-indigo-300 p-8">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+            <span class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-xl text-sm font-bold">MOST POPULAR</span>
+          </div>
+          <div class="text-center mb-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Premium Screening</h3>
+            <div class="text-4xl font-bold text-gray-900 mb-2">$49</div>
+            <p class="text-gray-600">per applicant</p>
+          </div>
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Everything in Basic
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Criminal background check
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Income verification
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Previous landlord contact
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Risk assessment report
+            </li>
+          </ul>
+          <button class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+            Choose Premium
+          </button>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8">
+          <div class="text-center mb-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Enterprise</h3>
+            <div class="text-4xl font-bold text-gray-900 mb-2">$79</div>
+            <p class="text-gray-600">per applicant</p>
+          </div>
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Everything in Premium
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Professional references
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Bank statement analysis
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Advanced fraud detection
+            </li>
+            <li class="flex items-center">
+              <svg class="w-5 h-5 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Priority 24hr delivery
+            </li>
+          </ul>
+          <button class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-4 px-6 rounded-2xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+            Choose Enterprise
+          </button>
+        </div>
+      </div>
+      
+      <div class="text-center mt-12">
+        <p class="text-gray-600 mb-4">Need custom screening for large portfolios?</p>
+        <a href="#" class="text-indigo-600 hover:text-indigo-700 font-semibold">Contact us for enterprise pricing →</a>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="mb-20">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6">
+          Screening FAQ
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Common questions about our tenant screening process and services
+        </p>
+      </div>
+      
+      <div class="max-w-4xl mx-auto space-y-6" data-controller="faq">
+        <!-- FAQ Item 1 -->
+        <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 border border-white/20 overflow-hidden">
+          <button class="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-50/50 transition-colors duration-200"
+                  data-action="click->faq#toggle"
+                  data-faq-target="button">
+            <h3 class="text-xl font-bold text-gray-900">How long does the screening process take?</h3>
+            <svg class="w-6 h-6 text-gray-400 transform transition-transform duration-200" data-faq-target="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div class="hidden px-8 pb-6" data-faq-target="content">
+            <p class="text-gray-600 leading-relaxed">
+              Most screening reports are completed within 24-48 hours. Enterprise packages include priority processing 
+              with 24-hour guaranteed delivery. Complex cases involving international credit or extensive background 
+              verification may take up to 72 hours.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 border border-white/20 overflow-hidden">
+          <button class="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-50/50 transition-colors duration-200"
+                  data-action="click->faq#toggle"
+                  data-faq-target="button">
+            <h3 class="text-xl font-bold text-gray-900">Is the screening process FCRA compliant?</h3>
+            <svg class="w-6 h-6 text-gray-400 transform transition-transform duration-200" data-faq-target="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div class="hidden px-8 pb-6" data-faq-target="content">
+            <p class="text-gray-600 leading-relaxed">
+              Yes, all our screening processes are fully compliant with the Fair Credit Reporting Act (FCRA) and 
+              other applicable federal and state laws. We ensure proper consent is obtained, adverse action procedures 
+              are followed, and all data is handled securely according to legal requirements.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 border border-white/20 overflow-hidden">
+          <button class="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-50/50 transition-colors duration-200"
+                  data-action="click->faq#toggle"
+                  data-faq-target="button">
+            <h3 class="text-xl font-bold text-gray-900">Who pays for the screening - landlord or tenant?</h3>
+            <svg class="w-6 h-6 text-gray-400 transform transition-transform duration-200" data-faq-target="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div class="hidden px-8 pb-6" data-faq-target="content">
+            <p class="text-gray-600 leading-relaxed">
+              Payment responsibility can be configured based on your preference. You can have tenants pay directly 
+              during application, charge it as an application fee, or pay for screenings yourself. Most landlords 
+              prefer having tenants pay as it demonstrates serious intent and reduces frivolous applications.
+            </p>
+          </div>
+        </div>
+
+        <!-- FAQ Item 4 -->
+        <div class="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg shadow-gray-200/50 border border-white/20 overflow-hidden">
+          <button class="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gray-50/50 transition-colors duration-200"
+                  data-action="click->faq#toggle"
+                  data-faq-target="button">
+            <h3 class="text-xl font-bold text-gray-900">What if an applicant disputes the screening results?</h3>
+            <svg class="w-6 h-6 text-gray-400 transform transition-transform duration-200" data-faq-target="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div class="hidden px-8 pb-6" data-faq-target="content">
+            <p class="text-gray-600 leading-relaxed">
+              Applicants have the right to dispute any information in their screening report. We provide clear 
+              instructions for the dispute process, work directly with applicants to resolve issues, and can 
+              re-run screenings when necessary. Our support team guides both landlords and tenants through any disputes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center">
+      <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl shadow-2xl shadow-indigo-500/25 p-12 text-white">
+        <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+        <h2 class="text-4xl font-bold mb-6">Start Screening Today</h2>
+        <p class="text-xl text-indigo-100 mb-8 max-w-3xl mx-auto">
+          Make informed decisions with comprehensive tenant screening. Protect your investment and find quality tenants.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+          <button class="bg-white text-indigo-600 hover:bg-indigo-50 px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                  data-action="click->screening#startScreening">
+            Start Screening Process
+          </button>
+          <%= link_to "View Sample Report", "#", 
+                      class: "border-2 border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-4 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-0.5" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stimulus Controllers -->
+<script>
+// Screening Controller
+class ScreeningController extends Controller {
+  startScreening() {
+    // Open screening modal or redirect to screening form
+    window.location.href = '/tenant-screening/new'
+  }
+}
+
+// Demo Controller
+class DemoController extends Controller {
+  requestDemo() {
+    // Open demo request modal
+    console.log('Requesting demo...')
+  }
+}
+
+// FAQ Controller (reused from previous pages)
+class FaqController extends Controller {
+  static targets = ["button", "content", "icon"]
+  
+  toggle(event) {
+    const content = event.currentTarget.nextElementSibling
+    const icon = event.currentTarget.querySelector('[data-faq-target="icon"]')
+    
+    if (content.classList.contains('hidden')) {
+      content.classList.remove('hidden')
+      icon.style.transform = 'rotate(180deg)'
+    } else {
+      content.classList.add('hidden')
+      icon.style.transform = 'rotate(0deg)'
+    }
+  }
+}
+</script>
+
+<style>
+  .bg-grid-slate-100\/50 {
+    background-image: url("data:image/svg+xml,%3csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='%23f1f5f9' fill-opacity='0.3' fill-rule='evenodd'%3e%3cpath d='m0 40 40-40h-40v40zm40 0v-40h-40z'/%3e%3c/g%3e%3c/svg%3e");
+  }
+</style>

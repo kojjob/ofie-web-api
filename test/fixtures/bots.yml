@@ -1,0 +1,34 @@
+# AI-generated code: Test fixtures for Bot model
+
+primary_bot:
+  id: <%= SecureRandom.uuid %>
+  name: "Ofie Assistant"
+  email: "bot@ofie.com"
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: "bot"
+  email_verified: true
+  active: true
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.day.ago %>
+
+secondary_bot:
+  id: <%= SecureRandom.uuid %>
+  name: "Support Bot"
+  email: "support@ofie.com"
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: "bot"
+  email_verified: true
+  active: true
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 1.day.ago %>
+
+inactive_bot:
+  id: <%= SecureRandom.uuid %>
+  name: "Inactive Bot"
+  email: "inactive@ofie.com"
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  role: "bot"
+  email_verified: true
+  active: false
+  created_at: <%= 2.weeks.ago %>
+  updated_at: <%= 1.week.ago %>

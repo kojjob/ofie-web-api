@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_200002) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,53 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200002) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "bot_context_stores", force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.bigint "conversation_id"
+    t.string "session_id", null: false
+    t.json "context_data", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id"], name: "index_bot_context_stores_on_conversation_id"
+    t.index ["session_id"], name: "index_bot_context_stores_on_session_id"
+    t.index ["updated_at"], name: "index_bot_context_stores_on_updated_at"
+    t.index ["user_id", "conversation_id"], name: "index_bot_context_on_user_and_conversation", unique: true
+    t.index ["user_id"], name: "index_bot_context_stores_on_user_id"
+  end
+
+  create_table "bot_feedbacks", force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.bigint "message_id", null: false
+    t.string "feedback_type", null: false
+    t.text "details"
+    t.json "context"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_bot_feedbacks_on_created_at"
+    t.index ["feedback_type", "created_at"], name: "index_bot_feedbacks_on_feedback_type_and_created_at"
+    t.index ["feedback_type"], name: "index_bot_feedbacks_on_feedback_type"
+    t.index ["message_id"], name: "index_bot_feedbacks_on_message_id"
+    t.index ["user_id"], name: "index_bot_feedbacks_on_user_id"
+  end
+
+  create_table "bot_learning_data", force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.text "message", null: false
+    t.string "intent", null: false
+    t.decimal "confidence", precision: 5, scale: 4, null: false
+    t.json "entities"
+    t.json "context"
+    t.string "session_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_bot_learning_data_on_created_at"
+    t.index ["intent", "confidence"], name: "index_bot_learning_data_on_intent_and_confidence"
+    t.index ["intent"], name: "index_bot_learning_data_on_intent"
+    t.index ["session_id"], name: "index_bot_learning_data_on_session_id"
+    t.index ["user_id", "created_at"], name: "index_bot_learning_data_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_bot_learning_data_on_user_id"
+  end
+
   create_table "comment_likes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "property_comment_id", null: false
@@ -60,6 +107,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200002) do
     t.datetime "last_message_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.json "metadata"
     t.index ["landlord_id", "tenant_id", "property_id"], name: "index_conversations_on_participants_and_property", unique: true
     t.index ["landlord_id"], name: "index_conversations_on_landlord_id"
     t.index ["last_message_at"], name: "index_conversations_on_last_message_at"
@@ -136,6 +184,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200002) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "read_at"
+    t.json "metadata"
     t.index ["conversation_id", "created_at"], name: "index_messages_on_conversation_id_and_created_at"
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["created_at"], name: "index_messages_on_created_at"
@@ -259,10 +308,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200002) do
     t.integer "status"
     t.decimal "latitude"
     t.decimal "longitude"
+    t.decimal "score", precision: 8, scale: 2, default: "0.0"
+    t.integer "views_count", default: 0
+    t.integer "applications_count", default: 0
+    t.integer "favorites_count", default: 0
     t.index ["availability_status"], name: "index_properties_on_availability_status"
+    t.index ["city", "property_type"], name: "index_properties_on_city_and_property_type"
     t.index ["city"], name: "index_properties_on_city"
+    t.index ["price", "bedrooms", "bathrooms"], name: "index_properties_on_price_and_bedrooms_and_bathrooms"
     t.index ["price"], name: "index_properties_on_price"
     t.index ["property_type"], name: "index_properties_on_property_type"
+    t.index ["score", "created_at"], name: "index_properties_on_score_and_created_at"
+    t.index ["score"], name: "index_properties_on_score"
     t.index ["user_id"], name: "index_properties_on_user_id"
   end
 
@@ -399,8 +456,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200002) do
     t.string "language"
     t.string "timezone"
     t.string "avatar"
+    t.json "preferences"
+    t.datetime "last_seen_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["email_verification_token"], name: "index_users_on_email_verification_token", unique: true
+    t.index ["last_seen_at"], name: "index_users_on_last_seen_at"
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true
@@ -409,6 +469,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200002) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "bot_context_stores", "conversations"
+  add_foreign_key "bot_context_stores", "users"
+  add_foreign_key "bot_feedbacks", "messages"
+  add_foreign_key "bot_feedbacks", "users"
+  add_foreign_key "bot_learning_data", "users"
   add_foreign_key "comment_likes", "property_comments", name: "comment_likes_property_comment_id_fkey"
   add_foreign_key "comment_likes", "users", name: "comment_likes_user_id_fkey"
   add_foreign_key "conversations", "properties"

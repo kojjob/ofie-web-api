@@ -1,79 +1,139 @@
-<% content_for :title, "Dashboard - Ofie" %>
-<% content_for :description, "Manage your properties, payments, and rental activities with Ofie's comprehensive dashboard." %>
+<% content_for :page_title, "Dashboard" %>
 
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
-  <!-- Background Pattern -->
-  <div class="absolute inset-0 bg-grid-slate-100/50 [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none"></div>
-  <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-l from-purple-300/20 to-pink-300/20 rounded-full blur-3xl"></div>
-  <div class="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl"></div>
+<!-- Enhanced Professional Dashboard -->
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/30 relative overflow-hidden">
+  <!-- Advanced Background Effects -->
+  <div class="absolute inset-0">
+    <!-- Primary gradient overlay -->
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-50/90 via-blue-50/80 to-indigo-50/90"></div>
+    <!-- Dynamic mesh patterns -->
+    <div class="absolute inset-0 opacity-30">
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-100/20 via-purple-100/30 to-indigo-100/20"></div>
+      <div class="absolute inset-0" style="background: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(147, 51, 234, 0.08) 0%, transparent 40%), radial-gradient(circle at 40% 80%, rgba(236, 72, 153, 0.06) 0%, transparent 40%);"></div>
+    </div>
+    <!-- Sophisticated noise texture -->
+    <div class="absolute inset-0 opacity-[0.015]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=\"0 0 256 256\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cfilter id=\"noiseFilter\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.9\" numOctaves=\"1\" stitchTiles=\"stitch\"/%3E%3C/filter%3E%3Crect width=\"100%25\" height=\"100%25\" filter=\"url(%23noiseFilter)\" opacity=\"0.1\"/%3E%3C/svg%3E');"></div>
+  </div>
+  
+  <!-- Floating Glass Elements -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 left-1/6 w-96 h-96 bg-gradient-to-br from-blue-400/6 to-cyan-400/6 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-1/3 right-1/6 w-80 h-80 bg-gradient-to-br from-purple-400/6 to-pink-400/6 rounded-full blur-3xl animate-float-delayed"></div>
+  </div>
   
   <!-- Enhanced Dashboard Header -->
-  <div class="relative z-10 bg-white/80 backdrop-blur-xl shadow-xl shadow-gray-200/20 border-b border-white/20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="py-8">
+  <div class="relative z-10 bg-white/80 backdrop-blur-2xl shadow-2xl shadow-gray-200/20 border-b border-white/30">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+      <div class="py-12">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-          <div class="mb-6 lg:mb-0">
-            <div class="flex items-center mb-4">
-              <div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl mr-4 shadow-lg shadow-blue-500/25">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5v6m8-6v6m-8-2h8"></path>
-                </svg>
+          <!-- Enhanced User Welcome Section -->
+          <div class="mb-8 lg:mb-0">
+            <div class="flex items-start mb-6">
+              <!-- Dynamic User Avatar with Enhanced Design -->
+              <div class="relative mr-6">
+                <% if current_user.avatar.attached? %>
+                  <div class="relative">
+                    <%= image_tag current_user.avatar, class: "h-20 w-20 rounded-3xl object-cover border-4 border-white shadow-2xl", alt: "#{current_user.name} avatar" %>
+                    <div class="absolute -bottom-2 -right-2 w-7 h-7 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
+                      <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    </div>
+                  </div>
+                <% else %>
+                  <div class="relative h-20 w-20 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/25">
+                    <span class="text-white font-bold text-2xl"><%= current_user.name&.first&.upcase || current_user.email.first.upcase %></span>
+                    <div class="absolute -bottom-2 -right-2 w-7 h-7 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
+                      <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    </div>
+                  </div>
+                <% end %>
+                <!-- Status indicator with enhanced animation -->
+                <div class="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full border-3 border-white animate-pulse shadow-lg"></div>
               </div>
-              <div>
-                <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">
-                  Welcome back, <%= current_user.name || current_user.email.split('@').first.capitalize %>!
-                </h1>
-                <p class="mt-2 text-lg text-gray-600 font-medium">
+              
+              <!-- Welcome Content -->
+              <div class="flex-1">
+                <div class="flex items-center space-x-3 mb-2">
+                  <h1 class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 via-slate-800 to-gray-700 bg-clip-text text-transparent">
+                    Welcome back, <%= current_user.name || current_user.email.split('@').first.capitalize %>!
+                  </h1>
+                  <div class="hidden md:flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="text-sm font-medium text-green-600">Online</span>
+                  </div>
+                </div>
+                <p class="text-xl text-slate-600 mb-4 font-light leading-relaxed max-w-3xl">
                   <% if current_user.landlord? %>
-                    Manage your properties and track your rental business
+                    Manage your properties and track your rental business performance with advanced analytics and insights
                   <% else %>
-                    Track your applications, payments, and favorite properties
+                    Track your applications, payments, and discover your perfect property with our intelligent platform
                   <% end %>
                 </p>
-              </div>
-            </div>
-            <div class="flex items-center space-x-4 text-sm text-gray-500">
-              <div class="flex items-center">
-                <svg class="w-4 h-4 mr-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Last updated: <%= Time.current.strftime('%B %d, %Y at %I:%M %p') %>
-              </div>
-              <span class="h-4 w-px bg-gray-300"></span>
-              <div class="flex items-center">
-                <div class="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse"></div>
-                Real-time sync enabled
+                <!-- Enhanced Status Indicators -->
+                <div class="flex flex-wrap items-center gap-6 text-sm">
+                  <div class="flex items-center space-x-2 bg-gradient-to-r from-emerald-50 to-green-50 rounded-full px-4 py-2 border border-emerald-200">
+                    <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="font-semibold text-emerald-700">Last sync: <%= Time.current.strftime('%I:%M %p') %></span>
+                  </div>
+                  <div class="flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full px-4 py-2 border border-blue-200">
+                    <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    <span class="font-semibold text-blue-700">Real-time sync enabled</span>
+                  </div>
+                  <div class="flex items-center space-x-2 bg-gradient-to-r from-amber-50 to-orange-50 rounded-full px-4 py-2 border border-amber-200">
+                    <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                    </svg>
+                    <span class="font-semibold text-amber-700">Premium account</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+          <!-- Enhanced Action Buttons -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
             <% if current_user.landlord? %>
-              <%= link_to new_property_path, class: "group inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-semibold rounded-2xl shadow-lg text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-500/25" do %>
-                <svg class="-ml-1 mr-2 h-5 w-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                Add Property
+              <%= link_to new_property_path, class: "group inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-semibold rounded-2xl shadow-xl text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/25" do %>
+                <div class="flex items-center space-x-3">
+                  <div class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                  </div>
+                  <span>Add Property</span>
+                </div>
               <% end %>
-              <%= link_to dashboard_analytics_path, class: "group inline-flex items-center justify-center px-6 py-3 border-2 border-gray-200 text-sm font-semibold rounded-2xl text-gray-700 bg-white/80 backdrop-blur-sm hover:bg-white hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg" do %>
-                <svg class="-ml-1 mr-2 h-5 w-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                </svg>
-                Analytics
+              <%= link_to analytics_path, class: "group inline-flex items-center justify-center px-8 py-4 border-2 border-slate-200 text-base font-semibold rounded-2xl text-slate-700 bg-white/90 backdrop-blur-sm hover:bg-white hover:border-slate-300 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-300 transform hover:scale-[1.02]" do %>
+                <div class="flex items-center space-x-3">
+                  <div class="w-6 h-6 bg-slate-100 rounded-lg flex items-center justify-center group-hover:bg-slate-200 transition-colors duration-200">
+                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                  </div>
+                  <span>Analytics</span>
+                </div>
               <% end %>
             <% else %>
-              <%= link_to properties_path, class: "group inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-semibold rounded-2xl shadow-lg text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl hover:shadow-blue-500/25" do %>
-                <svg class="-ml-1 mr-2 h-5 w-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-                Browse Properties
+              <%= link_to properties_path, class: "group inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-semibold rounded-2xl shadow-xl text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/25" do %>
+                <div class="flex items-center space-x-3">
+                  <div class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                  </div>
+                  <span>Browse Properties</span>
+                </div>
               <% end %>
-              <%= link_to conversations_path, class: "group inline-flex items-center justify-center px-6 py-3 border-2 border-gray-200 text-sm font-semibold rounded-2xl text-gray-700 bg-white/80 backdrop-blur-sm hover:bg-white hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg" do %>
-                <svg class="-ml-1 mr-2 h-5 w-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                </svg>
-                Messages
+              <%= link_to conversations_path, class: "group inline-flex items-center justify-center px-8 py-4 border-2 border-slate-200 text-base font-semibold rounded-2xl text-slate-700 bg-white/90 backdrop-blur-sm hover:bg-white hover:border-slate-300 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-300 transform hover:scale-[1.02]" do %>
+                <div class="flex items-center space-x-3">
+                  <div class="w-6 h-6 bg-slate-100 rounded-lg flex items-center justify-center group-hover:bg-slate-200 transition-colors duration-200">
+                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                    </svg>
+                  </div>
+                  <span>Messages</span>
+                </div>
               <% end %>
             <% end %>
           </div>
@@ -83,7 +143,7 @@
   </div>
 
   <!-- Enhanced Dashboard Content -->
-  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
     <% if current_user.landlord? %>
       <%= render 'landlord_dashboard' %>
     <% else %>
@@ -95,64 +155,137 @@
 <!-- Enhanced Dashboard JavaScript -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Animate stats counters
+    // Enhanced stats counter animation
     function animateCounters() {
       const counters = document.querySelectorAll('[data-stat]');
       counters.forEach(counter => {
         const target = parseInt(counter.textContent.replace(/[,$]/g, ''));
         if (target > 0) {
           let count = 0;
-          const increment = target / 50;
+          const increment = target / 60; // Smoother animation
           const timer = setInterval(() => {
             count += increment;
             if (count >= target) {
               counter.textContent = target.toLocaleString();
               clearInterval(timer);
+              // Add completion effect
+              counter.style.transform = 'scale(1.05)';
+              setTimeout(() => {
+                counter.style.transform = 'scale(1)';
+              }, 200);
             } else {
               counter.textContent = Math.ceil(count).toLocaleString();
             }
-          }, 20);
+          }, 16); // 60fps animation
         }
       });
     }
 
-    // Auto-refresh dashboard data every 5 minutes
-    setInterval(function() {
-      if (document.visibilityState === 'visible') {
-        fetch(window.location.href + '.json')
-          .then(response => response.json())
-          .then(data => {
-            updateDashboardStats(data.stats);
+    // Enhanced auto-refresh with better error handling
+    let refreshInterval;
+    function startAutoRefresh() {
+      refreshInterval = setInterval(function() {
+        if (document.visibilityState === 'visible') {
+          fetch(window.location.href + '.json', {
+            headers: {
+              'Accept': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            }
           })
-          .catch(error => console.log('Dashboard refresh failed:', error));
-      }
-    }, 300000); // 5 minutes
+          .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+          })
+          .then(data => {
+            if (data.stats) {
+              updateDashboardStats(data.stats);
+              showUpdateNotification();
+            }
+          })
+          .catch(error => {
+            console.log('Dashboard refresh failed:', error);
+            // Optionally show user-friendly notification
+          });
+        }
+      }, 300000); // 5 minutes
+    }
 
     function updateDashboardStats(stats) {
       Object.keys(stats).forEach(key => {
         const element = document.querySelector(`[data-stat="${key}"]`);
         if (element) {
-          element.textContent = stats[key];
+          const oldValue = element.textContent;
+          const newValue = stats[key].toLocaleString();
+          if (oldValue !== newValue) {
+            element.style.transition = 'all 0.3s ease';
+            element.style.transform = 'scale(1.1)';
+            element.style.color = '#10b981'; // Green flash
+            element.textContent = newValue;
+            setTimeout(() => {
+              element.style.transform = 'scale(1)';
+              element.style.color = '';
+            }, 300);
+          }
         }
       });
     }
 
-    // Add loading states to action buttons
+    function showUpdateNotification() {
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-4 right-4 bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-x-full';
+      notification.innerHTML = `
+        <div class="flex items-center space-x-2">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="text-sm font-medium">Dashboard updated</span>
+        </div>
+      `;
+      document.body.appendChild(notification);
+      
+      // Animate in
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 100);
+      
+      // Animate out
+      setTimeout(() => {
+        notification.style.transform = 'translateX(full)';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+
+    // Enhanced loading states for buttons
     const actionButtons = document.querySelectorAll('a[href^="/"], button');
     actionButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        if (!this.dataset.noLoading) {
-          this.style.opacity = '0.7';
+      button.addEventListener('click', function(e) {
+        if (!this.dataset.noLoading && !e.defaultPrevented) {
+          // Create loading effect
+          const originalContent = this.innerHTML;
+          const loadingSpinner = `
+            <svg class="animate-spin h-4 w-4 text-current" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          `;
+          
+          this.style.opacity = '0.8';
           this.style.pointerEvents = 'none';
+          this.innerHTML = loadingSpinner;
+          
+          // Reset after navigation or timeout
           setTimeout(() => {
             this.style.opacity = '1';
             this.style.pointerEvents = 'auto';
-          }, 2000);
+            this.innerHTML = originalContent;
+          }, 3000);
         }
       });
     });
 
-    // Animate on scroll
+    // Enhanced intersection observer for animations
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -163,33 +296,129 @@
         if (entry.isIntersecting) {
           entry.target.style.opacity = '1';
           entry.target.style.transform = 'translateY(0)';
+          
+          // Stagger animations for multiple elements
+          const delay = Array.from(entry.target.parentElement.children).indexOf(entry.target) * 100;
+          entry.target.style.transitionDelay = `${delay}ms`;
         }
       });
     }, observerOptions);
 
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+    // Apply animations to cards and stats
+    document.querySelectorAll('.animate-on-scroll, [data-animate="card"]').forEach(el => {
       el.style.opacity = '0';
-      el.style.transform = 'translateY(20px)';
-      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
       observer.observe(el);
     });
 
-    // Run counter animation after a short delay
-    setTimeout(animateCounters, 500);
+    // Initialize features
+    setTimeout(animateCounters, 600); // Delay for better UX
+    startAutoRefresh();
+
+    // Enhanced scroll-to-top functionality
+    let scrollTopButton;
+    function createScrollTopButton() {
+      scrollTopButton = document.createElement('button');
+      scrollTopButton.className = 'fixed bottom-8 right-8 w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full shadow-xl opacity-0 pointer-events-none transition-all duration-300 z-50 hover:scale-110';
+      scrollTopButton.innerHTML = `
+        <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+      `;
+      scrollTopButton.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      document.body.appendChild(scrollTopButton);
+    }
+
+    // Show/hide scroll-to-top button
+    function handleScroll() {
+      if (!scrollTopButton) createScrollTopButton();
+      
+      if (window.pageYOffset > 400) {
+        scrollTopButton.style.opacity = '1';
+        scrollTopButton.style.pointerEvents = 'auto';
+      } else {
+        scrollTopButton.style.opacity = '0';
+        scrollTopButton.style.pointerEvents = 'none';
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll);
   });
 </script>
 
+<!-- Enhanced CSS Animations -->
 <style>
-  .bg-grid-slate-100\/50 {
-    background-image: url("data:image/svg+xml,%3csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='%23f1f5f9' fill-opacity='0.3' fill-rule='evenodd'%3e%3cpath d='m0 40 40-40h-40v40zm40 0v-40h-40z'/%3e%3c/g%3e%3c/svg%3e");
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(180deg); }
   }
   
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+  @keyframes float-delayed {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(-180deg); }
+  }
+  
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.4); }
+    50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
   }
   
   .animate-float {
-    animation: float 3s ease-in-out infinite;
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: float-delayed 10s ease-in-out infinite;
+  }
+  
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 4s ease infinite;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  /* Enhanced hover effects */
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  /* Loading spinner */
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Sophisticated backdrop blur fallback */
+  @supports not (backdrop-filter: blur()) {
+    .backdrop-blur-2xl, .backdrop-blur-xl, .backdrop-blur-sm {
+      background-color: rgba(255, 255, 255, 0.85);
+    }
+  }
+  
+  /* Enhanced glass morphism */
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Professional grid pattern */
+  .bg-grid-pattern {
+    background-image: url("data:image/svg+xml,%3csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='%23f1f5f9' fill-opacity='0.05' fill-rule='evenodd'%3e%3cpath d='m0 40 40-40h-40v40zm40 0v-40h-40z'/%3e%3c/g%3e%3c/svg%3e");
   }
 </style>

@@ -150,6 +150,15 @@ Rails.application.routes.draw do
           end
         end
       end
+
+      # Bot routes
+      namespace :bot do
+        post :chat
+        post :start_conversation
+        get :suggestions
+        get :faqs
+        post :feedback
+      end
     end
   end
 
@@ -322,6 +331,27 @@ Rails.application.routes.draw do
 
   # Home page
   get "/home", to: "home#index", as: "home"
+  get "/about", to: "home#about", as: "about"
+  get "/help", to: "home#help", as: "help"
+  get "/contact", to: "home#contact", as: "contact"
+  get "/terms_of_service", to: "home#terms_of_service", as: "terms_of_service"
+  get "/privacy_policy", to: "home#privacy_policy", as: "privacy_policy"
+  get "/cookie_policy", to: "home#cookie_policy", as: "cookie_policy"
+  get "/accessibility", to: "home#accessibility", as: "accessibility"
+  get "tenant_screening", to: "home#tenant_screening", as: "tenant_screening"
+
+  # Newsletter and additional routes
+  post "/newsletter/signup", to: "newsletter#create", as: "newsletter_signup"
+
+  # Additional footer routes
+  get "/calculators", to: "tools#calculators", as: "calculators"
+  get "/neighborhoods", to: "home#neighborhoods", as: "neighborhoods"
+  get "/resources/renters", to: "home#renter_resources", as: "resources_renters"
+  get "/dashboard/properties", to: "dashboard#properties", as: "dashboard_properties"
+  get "/market-analysis", to: "tools#market_analysis", as: "market_analysis"
+  get "/landlord-tools", to: "tools#landlord_tools", as: "landlord_tools"
+  get "/careers", to: "home#careers", as: "careers"
+  get "/press", to: "home#press", as: "press"
 
   # Defines the root path route ("/")
   root "home#index"
