@@ -106,9 +106,9 @@ class BatchPropertiesController < ApplicationController
   end
 
   # POST /batch_properties/:id/process
-  def process
+  def process_batch
     @batch_upload = current_user.batch_property_uploads.find(params[:id])
-    
+
     unless @batch_upload.validated?
       render json: { error: "Batch upload must be validated before processing" }, status: :unprocessable_entity
       return
@@ -116,9 +116,9 @@ class BatchPropertiesController < ApplicationController
 
     # Process in background job
     BatchPropertyProcessorJob.perform_later(@batch_upload.id)
-    
+
     @batch_upload.update!(status: 'processing')
-    
+
     render json: {
       message: "Batch processing started",
       batch_upload: batch_upload_json(@batch_upload)

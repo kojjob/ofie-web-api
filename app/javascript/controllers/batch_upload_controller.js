@@ -261,7 +261,7 @@ export default class extends Controller {
 
   async processProperties(batchUploadId) {
     try {
-      const response = await fetch(`/batch_properties/${batchUploadId}/process`, {
+      const response = await fetch(`/batch_properties/${batchUploadId}/process_batch`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
