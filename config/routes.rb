@@ -161,7 +161,7 @@ Rails.application.routes.draw do
       end
 
       # Rental Applications API routes
-      get 'rental_applications/approved', to: 'rental_applications#approved_for_lease'
+      get "rental_applications/approved", to: "rental_applications#approved_for_lease"
     end
   end
 
@@ -264,7 +264,7 @@ Rails.application.routes.draw do
   end
 
   # Batch Properties routes (Web)
-  resources :batch_properties, only: [:index, :new, :show, :destroy] do
+  resources :batch_properties, only: [ :index, :new, :show, :destroy ] do
     collection do
       get :template
       post :upload

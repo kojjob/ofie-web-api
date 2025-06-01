@@ -9,14 +9,14 @@ class BatchPropertiesControllerTest < ActionDispatch::IntegrationTest
   test "should download CSV template for authenticated landlord" do
     # Simulate landlord login
     post login_path, params: { email: @landlord.email, password: "password123" }
-    
+
     # Request CSV template
     get template_batch_properties_path(format: :csv)
-    
+
     assert_response :success
     assert_equal "text/csv", response.content_type
     assert_match /property_listing_template_\d{8}\.csv/, response.headers["Content-Disposition"]
-    
+
     # Verify CSV content has headers
     csv_content = response.body
     assert_includes csv_content, "title,description,address,city,price"
@@ -26,10 +26,10 @@ class BatchPropertiesControllerTest < ActionDispatch::IntegrationTest
   test "should redirect tenant trying to download template" do
     # Simulate tenant login
     post login_path, params: { email: @tenant.email, password: "password123" }
-    
+
     # Request CSV template
     get template_batch_properties_path(format: :csv)
-    
+
     assert_redirected_to properties_path
     assert_match /landlord/, flash[:alert]
   end
@@ -37,7 +37,7 @@ class BatchPropertiesControllerTest < ActionDispatch::IntegrationTest
   test "should redirect unauthenticated user trying to download template" do
     # Request CSV template without login
     get template_batch_properties_path(format: :csv)
-    
+
     assert_redirected_to login_path
     assert_match /sign in/, flash[:alert]
   end
@@ -45,9 +45,9 @@ class BatchPropertiesControllerTest < ActionDispatch::IntegrationTest
   test "should access batch properties index for landlord" do
     # Simulate landlord login
     post login_path, params: { email: @landlord.email, password: "password123" }
-    
+
     get batch_properties_path
-    
+
     assert_response :success
     assert_select "h1", "Batch Property Listing"
   end
@@ -55,9 +55,9 @@ class BatchPropertiesControllerTest < ActionDispatch::IntegrationTest
   test "should redirect tenant from batch properties index" do
     # Simulate tenant login
     post login_path, params: { email: @tenant.email, password: "password123" }
-    
+
     get batch_properties_path
-    
+
     assert_redirected_to properties_path
     assert_match /landlord/, flash[:alert]
   end

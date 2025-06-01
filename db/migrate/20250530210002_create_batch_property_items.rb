@@ -9,14 +9,14 @@ class CreateBatchPropertyItems < ActiveRecord::Migration[8.0]
       t.text :error_message
       t.datetime :started_at
       t.datetime :completed_at
-      
+
       t.timestamps
     end
-    
+
     # Add indexes for better query performance
     add_index :batch_property_items, :status
     add_index :batch_property_items, :row_number
-    add_index :batch_property_items, [:batch_property_upload_id, :status]
-    add_index :batch_property_items, [:batch_property_upload_id, :row_number]
+    add_index :batch_property_items, [ :batch_property_upload_id, :status ]
+    add_index :batch_property_items, [ :batch_property_upload_id, :row_number ]
   end
 end
