@@ -6,6 +6,7 @@ export default class extends Controller {
   static values = { batchUploadId: String }
 
   connect() {
+    this.currentItemId = null
     this.currentPropertyId = null
     this.currentPropertyData = null
     this.bindGlobalEvents()
@@ -50,10 +51,12 @@ export default class extends Controller {
     const itemId = button.dataset.itemId
     const title = button.dataset.title
     const status = button.dataset.status
+    const propertyId = button.dataset.propertyId
 
-    console.log('Opening modal with:', { itemId, title, status })
+    console.log('Opening modal with:', { itemId, title, status, propertyId })
 
-    this.currentPropertyId = itemId
+    this.currentItemId = itemId
+    this.currentPropertyId = propertyId
 
     // Update modal content
     this.updateModalTitle(title, status, itemId)
@@ -76,6 +79,7 @@ export default class extends Controller {
     // Reset modal state
     this.hideDetails()
     this.hideDebugData()
+    this.currentItemId = null
     this.currentPropertyId = null
     this.currentPropertyData = null
   }
@@ -149,8 +153,8 @@ export default class extends Controller {
   }
 
   async retryItem() {
-    if (!this.currentPropertyId) return
-    
+    if (!this.currentItemId) return
+
     const retryBtn = this.retryItemBtnTarget
     if (!retryBtn) return
 
@@ -158,9 +162,9 @@ export default class extends Controller {
     const originalContent = retryBtn.innerHTML
     retryBtn.innerHTML = this.getLoadingHTML()
     retryBtn.disabled = true
-    
+
     try {
-      const response = await fetch(`/batch_properties/${this.batchUploadIdValue}/retry_item/${this.currentPropertyId}`, {
+      const response = await fetch(`/batch_properties/${this.batchUploadIdValue}/retry_item/${this.currentItemId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -169,7 +173,7 @@ export default class extends Controller {
       })
 
       const data = await response.json()
-      
+
       if (data.success) {
         this.showSuccessMessage('Item retry initiated successfully!')
         window.location.reload()
@@ -220,7 +224,7 @@ export default class extends Controller {
   }
 
   async fetchPropertyDetails() {
-    const response = await fetch(`/batch_properties/${this.batchUploadIdValue}/item_details/${this.currentPropertyId}`)
+    const response = await fetch(`/batch_properties/${this.batchUploadIdValue}/item_details/${this.currentItemId}`)
     if (!response.ok) throw new Error('Failed to fetch details')
     return response.json()
   }
