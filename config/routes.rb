@@ -159,6 +159,9 @@ Rails.application.routes.draw do
         get :faqs
         post :feedback
       end
+
+      # Rental Applications API routes
+      get 'rental_applications/approved', to: 'rental_applications#approved_for_lease'
     end
   end
 
