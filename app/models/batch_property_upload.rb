@@ -79,6 +79,10 @@ class BatchPropertyUpload < ApplicationRecord
     failed? || (failed_items && failed_items > 0)
   end
 
+  def completed_with_errors?
+    completed? && failed_items && failed_items > 0
+  end
+
   def all_items_processed?
     return false if total_items.nil? || processed_items.nil?
 

@@ -8,7 +8,7 @@
     
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "design_system", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "z-index", "data-turbo-track": "reload" %>
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -27,8 +27,8 @@
 
     <%= render "shared/navbar" %>
     
-    <!-- Enhanced Flash Messages -->
-    <%= render "shared/flash_messages" %>
+    <!-- Unified Notification System -->
+    <%= render "shared/notification_system" %>
 
     <!-- Main Content -->
     <main class="min-h-screen min-w-screen">

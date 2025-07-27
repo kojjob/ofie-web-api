@@ -1,0 +1,5 @@
+title,description,address,city,state,postal_code,price,bedrooms,bathrooms,area,property_type,listing_type,features,virtual_tour_url
+"Modern Downtown Loft","Stunning loft with exposed brick and high ceilings","123 Market St","San Francisco","CA","94105",4500,2,2,1500,apartment,rent,"parking,gym,doorman,rooftop",https://example.com/tour/123
+"Charming Victorian House","Beautifully restored Victorian with original details","456 Haight St","San Francisco","CA","94117",1200000,3,2.5,2200,house,sale,"garage,garden,fireplace,updated_kitchen",https://example.com/tour/456
+"Cozy Studio Near Park","Perfect starter apartment near Golden Gate Park","789 Fulton Ave","San Francisco","CA","94118",2200,0,1,450,apartment,rent,"laundry,pet_friendly",
+"Luxury Penthouse","Top floor unit with panoramic city views","321 Nob Hill","San Francisco","CA","94108",8500,3,3,2800,condo,rent,"parking,gym,pool,concierge,wine_cellar",https://example.com/tour/321

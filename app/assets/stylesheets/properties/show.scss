@@ -1,0 +1,285 @@
+// Properties show page styles
+// Following flat design principles with minimal custom CSS
+
+.property-show {
+  // Ensure smooth scrolling for in-page navigation
+  scroll-behavior: smooth;
+  
+  // Section spacing consistency
+  .content-section {
+    @apply mb-6;
+  }
+  
+  // Icon consistency for section headers
+  .section-header {
+    @apply flex items-center mb-4;
+    
+    svg {
+      @apply w-5 h-5 text-gray-700 mr-2;
+    }
+    
+    h2, h3 {
+      @apply text-lg font-semibold text-gray-900;
+    }
+  }
+  
+  // Card hover effects (minimal for flat design)
+  .property-card {
+    @apply transition-shadow duration-200;
+    
+    &:hover {
+      @apply shadow-md;
+    }
+  }
+  
+  // Quick action buttons consistency
+  .action-button {
+    @apply w-full flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 bg-white rounded transition-colors duration-200;
+    
+    &:hover {
+      @apply bg-gray-50;
+    }
+    
+    svg {
+      @apply w-4 h-4 mr-2;
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .sticky-sidebar {
+      position: static !important;
+    }
+  }
+}
+
+// Focus states for accessibility
+*:focus {
+  @apply outline-2 outline-blue-500 outline-offset-2;
+}
+
+// Reduced motion preferences
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--space-xs) 0;
+        
+        &:not(:last-child) {
+          border-bottom: 1px solid var(--color-neutral-100);
+          padding-bottom: var(--space-xs);
+          margin-bottom: var(--space-xs);
+        }
+        
+        .info-label {
+          color: var(--color-neutral-600);
+          font-size: 0.875rem;
+        }
+        
+        .info-value {
+          color: var(--color-neutral-900);
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  
+  // Gallery Improvements
+  .gallery {
+    .gallery-main {
+      border-radius: 0;
+      overflow: hidden;
+      
+      .gallery-nav-btn {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: var(--radius-md);
+        backdrop-filter: blur(8px);
+        
+        &:hover {
+          background: white;
+          transform: translateY(-1px);
+        }
+      }
+    }
+    
+    .thumbnail-strip {
+      background: var(--color-neutral-50);
+      border-top: 1px solid var(--color-neutral-100);
+      
+      .thumbnail-btn {
+        border-radius: var(--radius-sm);
+        border-width: 2px;
+        transition: all 0.2s ease-in-out;
+        
+        &.active {
+          border-color: var(--color-primary-navy);
+        }
+        
+        &:hover:not(.active) {
+          border-color: var(--color-neutral-300);
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-sm);
+        }
+      }
+    }
+  }
+  
+  // Responsive Design - Mobile First
+  @media (max-width: 768px) {
+    .property-header {
+      .property-stats {
+        flex-direction: column;
+        gap: var(--space-sm);
+        align-items: flex-start;
+      }
+      
+      .property-price {
+        font-size: 2rem;
+      }
+    }
+    
+    .section-card {
+      .section-header,
+      .section-content {
+        padding: var(--space-sm);
+      }
+    }
+  }
+  
+  // Enhanced Focus States for Accessibility
+  *:focus {
+    outline: 2px solid var(--color-primary-navy);
+    outline-offset: 2px;
+  }
+  
+  // Smooth Animations
+  * {
+    transition: border-color 0.2s ease-in-out, 
+                box-shadow 0.2s ease-in-out,
+                transform 0.2s ease-in-out;
+  }
+  
+  // Print Styles
+  @media print {
+    .gallery,
+    .action-button,
+    .sidebar .booking-card {
+      display: none !important;
+    }
+    
+    .section-card {
+      border: 1px solid #ccc;
+      box-shadow: none;
+      page-break-inside: avoid;
+    }
+  }
+}
+
+// Professional Loading States
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Luxury Property Specific Styles
+.luxury-badge {
+  background: linear-gradient(135deg, var(--color-accent-gold), #b8860b);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+// Status Indicators
+.status-available {
+  color: #059669;
+  background: #d1fae5;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-unavailable {
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+// Modern Micro-interactions
+.interactive-element {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Professional Form Styling
+.form-group {
+  margin-bottom: var(--space-md);
+  
+  label {
+    display: block;
+    font-weight: 500;
+    color: var(--color-neutral-700);
+    margin-bottom: var(--space-xs);
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: var(--space-sm);
+    border: 1px solid var(--color-neutral-300);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: border-color 0.2s ease-in-out;
+    
+    &:focus {
+      border-color: var(--color-primary-navy);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+    }
+  }
+}
+
+// Responsive Grid Improvements
+.property-grid {
+  display: grid;
+  gap: var(--space-lg);
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+  
+  @media (min-width: 1280px) {
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-xl);
+  }
+}

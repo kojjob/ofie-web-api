@@ -18,7 +18,7 @@ class MessageMailer < ApplicationMailer
     @conversation = conversation
     @property = conversation.property
     @landlord = conversation.landlord
-    @tenant = conversation.tenant
+    @tenant   = conversation.tenant
 
     # Send to landlord
     mail(

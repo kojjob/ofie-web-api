@@ -148,19 +148,101 @@
             </tbody>
           </table>
         <% else %>
-          <div class="text-center py-12">
-            <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"></path>
-            </svg>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">No properties yet</h3>
-            <p class="text-gray-500 mb-6">Get started by adding your first property to the platform</p>
-            <%= link_to "Add Your First Property", new_property_path,
-                        class: "bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-2xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-300" %>
+          <!-- Premium 2025 Empty State Design -->
+          <div class="text-center py-20 px-6 sm:px-12">
+            <div class="max-w-lg mx-auto">
+              <!-- Sophisticated Icon with Layered Design -->
+              <div class="relative w-32 h-32 mx-auto mb-8">
+                <!-- Background Circle with Gradient -->
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-full"></div>
+                
+                <!-- Primary Property Icon -->
+                <div class="relative w-full h-full flex items-center justify-center">
+                  <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5"></path>
+                  </svg>
+                </div>
+                
+                <!-- Floating Plus Icon with Subtle Animation -->
+                <div class="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                  </svg>
+                </div>
+              </div>
+              
+              <!-- Premium Typography Hierarchy -->
+              <div class="space-y-4 mb-10">
+                <h3 class="text-2xl font-semibold text-gray-900 tracking-tight">Build Your Property Portfolio</h3>
+                <p class="text-gray-600 text-lg leading-relaxed max-w-md mx-auto">Transform your real estate investments with our comprehensive property management platform</p>
+              </div>
+              
+              <!-- Primary CTA with Premium Design -->
+              <%= link_to new_property_path, 
+                          class: "group relative inline-flex items-center justify-center px-10 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-semibold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 overflow-hidden" do %>
+                <!-- Hover Overlay Effect -->
+                <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+                
+                <!-- Icon with Animation -->
+                <svg class="w-5 h-5 mr-3 relative group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                
+                <!-- Button Text -->
+                <span class="relative font-medium">Add Your First Property</span>
+                
+                <!-- Shimmer Effect -->
+                <div class="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+              <% end %>
+              
+              <!-- Secondary Actions with Luxury Spacing -->
+              <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+                <%= link_to batch_properties_path, 
+                            class: "text-indigo-600 hover:text-indigo-800 font-medium inline-flex items-center transition-colors duration-300 group" do %>
+                  <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                  </svg>
+                  Bulk Import Properties
+                <% end %>
+                
+                <div class="hidden sm:block w-px h-5 bg-gray-300"></div>
+                
+                <a href="#" class="text-gray-600 hover:text-gray-800 font-medium inline-flex items-center transition-colors duration-300 group">
+                  <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  Learn More
+                </a>
+              </div>
+              
+              <!-- Trust Indicators with Luxury Design -->
+              <div class="mt-12 pt-8 border-t border-gray-100">
+                <div class="flex items-center justify-center space-x-8 text-sm text-gray-500">
+                  <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    Secure & Private
+                  </div>
+                  <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Easy Setup
+                  </div>
+                  <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+                    </svg>
+                    Professional Tools
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         <% end %>
       </div>
     </div>
-
     <!-- No modal needed - dropdowns are inline -->
   </div>
 </div>

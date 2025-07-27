@@ -8,7 +8,10 @@ fi
 
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
-  ./bin/rails db:prepare
+  echo "Checking database connection..."
+  ./bin/rails runner "puts 'Database URL: ' + (ENV['DATABASE_URL'] || 'NOT SET')" || true
+  echo "Running db:prepare..."
+  ./bin/rails db:prepare || echo "WARNING: db:prepare failed, continuing anyway"
 fi
 
 exec "${@}"

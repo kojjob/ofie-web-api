@@ -1,8 +1,19 @@
 class ApplicationController < ActionController::Base
+  # Security concerns
+  include InputSanitizer
+  
   # Skip CSRF protection for API requests
   protect_from_forgery with: :null_session
+  
+  # Request tracking
+  before_action :set_request_id
   before_action :authenticate_request, unless: :web_request?
-
+  
+  # Error handling
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ActionController::ParameterMissing, with: :parameter_missing
+  rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
+  
   attr_reader :current_user
   helper_method :current_user, :user_signed_in?
 
@@ -78,5 +89,44 @@ class ApplicationController < ActionController::Base
 
   def skip_authentication
     skip_before_action :authenticate_request
+  end
+  
+  # Error handlers
+  def record_not_found(exception)
+    respond_to do |format|
+      format.html { render file: 'public/404.html', status: :not_found, layout: false }
+      format.json { render json: { error: 'Record not found' }, status: :not_found }
+    end
+  end
+  
+  def parameter_missing(exception)
+    render json: { error: "Missing parameter: #{exception.param}" }, status: :bad_request
+  end
+  
+  def record_invalid(exception)
+    render json: { 
+      error: 'Validation failed', 
+      details: exception.record.errors.full_messages 
+    }, status: :unprocessable_entity
+  end
+  
+  # Request tracking
+  def set_request_id
+    # Use Rails' built-in request ID
+    response.headers['X-Request-ID'] = request.request_id
+  end
+  
+  # Logging helper
+  def log_action(action, resource = nil, details = {})
+    Rails.logger.info({
+      timestamp: Time.current.iso8601,
+      request_id: request.request_id,
+      user_id: current_user&.id,
+      action: action,
+      resource: resource,
+      details: details,
+      ip: request.remote_ip,
+      user_agent: request.user_agent
+    }.to_json)
   end
 end

@@ -1,3 +1,5 @@
+require 'csv'
+
 class BatchPropertiesController < ApplicationController
   before_action :authenticate_web_request
   before_action :authorize_landlord
@@ -138,6 +140,31 @@ class BatchPropertiesController < ApplicationController
       processing_queue: processing_queue,
       timestamp: Time.current.iso8601
     }
+  end
+
+  # GET /batch_properties/:id
+  def show
+    @batch_upload = current_user.batch_property_uploads.find(params[:id])
+    @batch_items = @batch_upload.batch_property_items
+                                .includes(:property)
+                                .order(:row_number)
+                                .page(params[:page])
+                                .per(20)
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render json: {
+          batch_upload: batch_upload_json(@batch_upload),
+          items: @batch_items.map { |item| batch_item_json(item) },
+          pagination: {
+            current_page: @batch_items.current_page,
+            total_pages: @batch_items.total_pages,
+            total_count: @batch_items.total_count
+          }
+        }
+      end
+    end
   end
 
   # GET /batch_properties/:id/preview
@@ -403,6 +430,25 @@ class BatchPropertiesController < ApplicationController
         error: "Failed to retry item",
         errors: @batch_item.errors.full_messages
       }, status: :unprocessable_entity
+    end
+  end
+
+  # GET /batch_properties/:id/results
+  def results
+    @batch_upload = current_user.batch_property_uploads.find(params[:id])
+    
+    respond_to do |format|
+      format.csv do
+        csv_data = generate_results_csv(@batch_upload)
+        send_data csv_data,
+                  filename: "batch_upload_#{@batch_upload.id}_results_#{Date.current.strftime('%Y%m%d')}.csv",
+                  type: "text/csv",
+                  disposition: "attachment"
+      end
+      format.html do
+        redirect_to batch_property_path(@batch_upload), 
+                    notice: "Please use the 'Download Results' button to get the CSV file."
+      end
     end
   end
 
@@ -708,5 +754,27 @@ class BatchPropertiesController < ApplicationController
     total = batch_upload.total_items
 
     (processed.to_f / total * 100).round(1)
+  end
+
+  def generate_results_csv(batch_upload)
+    CSV.generate(headers: true) do |csv|
+      # Add headers
+      headers = ["Row Number", "Status", "Property ID", "Title", "Address", "Error Message"]
+      csv << headers
+
+      # Add data rows
+      batch_upload.batch_property_items.includes(:property).order(:row_number).each do |item|
+        property_data = JSON.parse(item.property_data) rescue {}
+        
+        csv << [
+          item.row_number,
+          item.status,
+          item.property_id,
+          property_data['title'] || 'N/A',
+          property_data['address'] || 'N/A',
+          item.error_message
+        ]
+      end
+    end
   end
 end

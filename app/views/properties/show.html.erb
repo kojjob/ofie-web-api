@@ -1,246 +1,198 @@
 <% content_for :title, "#{@property.title} - Ofie" %>
 <% content_for :meta_description, truncate(@property.description, length: 160) %>
 
-<div class="min-h-screen bg-gradient-to-br from-neutral-50 via-slate-50 to-stone-50 relative overflow-hidden">
-  <!-- Advanced Background Layers -->
-  <div class="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-transparent to-purple-50/20"></div>
-  <div class="absolute inset-0 bg-grid-neutral-100/40 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] pointer-events-none"></div>
+<!-- 2025 Professional Property Show Page -->
+<div class="min-h-screen bg-neutral-50" data-controller="properties--show" data-properties--show-property-id-value="<%= @property.id %>">
   
-  <!-- Dynamic Floating Elements -->
-  <div class="absolute top-1/4 -right-20 w-80 h-80 bg-gradient-to-br from-indigo-200/15 via-purple-200/10 to-pink-200/15 rounded-full blur-3xl animate-float-slow"></div>
-  <div class="absolute -bottom-20 -left-20 w-96 h-96 bg-gradient-to-tr from-cyan-200/15 via-blue-200/10 to-indigo-200/15 rounded-full blur-3xl animate-float-reverse"></div>
-  <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-r from-emerald-200/10 to-teal-200/10 rounded-full blur-2xl animate-pulse-slow"></div>
+  <!-- Hero Section -->
+  <section class="relative">
+    <%= render 'hero_gallery' %>
+  </section>
 
-  <div class="relative z-10">
-    <!-- Enhanced Hero Section -->
-    <div class="relative">
-      <%= render 'hero_gallery' %>
-      
-      <!-- Hero Overlay Gradient -->
-      <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white/80 via-white/40 to-transparent backdrop-blur-sm"></div>
-    </div>
-
-    <!-- Main Content Container -->
-    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
-      <!-- Property Title Bar -->
-      <div class="relative -mt-16 z-20 mb-12">
-        <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-neutral-900/5 border border-white/60 p-8 mx-4 sm:mx-6 lg:mx-0">
-          <%= render 'property_header' %>
-        </div>
-      </div>
-
-      <!-- Main Content Grid -->
-      <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 lg:gap-12 pb-20">
-        <!-- Primary Content Area -->
-        <div class="xl:col-span-8 space-y-10">
-          <!-- Property Description Card -->
-          <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-neutral-900/5 border border-white/60 p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-neutral-900/10">
-            <%= render 'property_description' %>
-          </div>
-
-          <!-- Amenities Showcase -->
-          <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-neutral-900/5 border border-white/60 p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-neutral-900/10">
-            <%= render 'amenities_section' %>
-          </div>
-
-          <!-- Interactive Map -->
-          <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-neutral-900/5 border border-white/60 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-neutral-900/10">
-            <%= render 'map' %>
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Property Header Strip -->
+    <div class="relative z-10 mb-12 -mt-4">
+      <div class="bg-white border border-gray-200 shadow-sm rounded-lg p-6 mx-4">
+        <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+          <!-- Property Title & Location -->
+          <div class="flex-1">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                  <%= @property.title %>
+                </h1>
+                <div class="flex items-center text-gray-600">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                  <span class="text-lg"><%= @property.address %>, <%= @property.city %></span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Property Stats -->
+            <div class="flex items-center space-x-8">
+              <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                </svg>
+                <span class="text-gray-900 font-semibold"><%= @property.bedrooms %></span>
+                <span class="text-gray-600 ml-1">bed<%= @property.bedrooms == 1 ? '' : 's' %></span>
+              </div>
+              <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-gray-900 font-semibold"><%= @property.bathrooms %></span>
+                <span class="text-gray-600 ml-1">bath<%= @property.bathrooms == 1 ? '' : 's' %></span>
+              </div>
+              <% if @property.square_feet %>
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span class="text-gray-900 font-semibold"><%= number_with_delimiter(@property.square_feet) %></span>
+                  <span class="text-gray-600 ml-1">sq ft</span>
+                </div>
+              <% end %>
+            </div>
           </div>
           
-          <!-- Reviews Carousel -->
-          <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-neutral-900/5 border border-white/60 p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-neutral-900/10">
-            <%= render 'reviews_section' %>
-          </div>
-
-          <!-- Enhanced Comments Section -->
-          <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-neutral-900/5 border border-white/60 transition-all duration-500 hover:shadow-2xl hover:shadow-neutral-900/10">
-            <%= render 'property_comments/comments_section' %>
-          </div>
-        </div>
-        
-        <!-- Enhanced Sidebar -->
-        <div class="xl:col-span-4 space-y-8">
-          <!-- Sticky Sidebar Container -->
-          <div class="sticky top-8 space-y-8">
-            <!-- Premium Booking Card -->
-            <div class="bg-gradient-to-br from-white/90 to-white/70 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-neutral-900/10 border border-white/60 overflow-hidden transition-all duration-500 hover:shadow-3xl hover:shadow-neutral-900/15 hover:scale-[1.02]">
-              <%= render 'booking_card' %>
+          <!-- Price & Quick Actions -->
+          <div class="lg:text-right">
+            <div class="text-4xl font-bold text-gray-900 mb-2">
+              $<%= number_with_delimiter(@property.price) %>
+              <span class="text-lg font-medium text-gray-600">/month</span>
             </div>
-            
-            <!-- Host Profile Card -->
-            <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-neutral-900/5 border border-white/60 p-6 transition-all duration-500 hover:shadow-2xl hover:shadow-neutral-900/10">
-              <%= render 'host_information' %>
-            </div>
-            
-            <!-- House Rules Card -->
-            <div class="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl shadow-neutral-900/5 border border-white/60 p-6 transition-all duration-500 hover:shadow-2xl hover:shadow-neutral-900/10">
-              <%= render 'house_rules' %>
+            <div class="flex lg:justify-end space-x-3">
+              <% if user_signed_in? %>
+                <button data-action="click->properties--show#toggleFavorite" 
+                        class="p-2 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors duration-200">
+                  <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                  </svg>
+                </button>
+              <% end %>
+              <button data-action="click->properties--show#shareProperty" 
+                      class="p-2 border border-gray-300 rounded-lg hover:border-gray-400 transition-colors duration-200">
+                <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                </svg>
+              </button>
             </div>
           </div>
         </div>
-      </div>
-      
-      <!-- Related Properties Showcase -->
-      <div class="bg-gradient-to-r from-white/80 via-white/60 to-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-neutral-900/5 border border-white/60 p-10 mb-16 transition-all duration-500 hover:shadow-3xl hover:shadow-neutral-900/10">
-        <%= render 'related_properties' %>
       </div>
     </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 pb-16">
+      
+      <!-- Primary Content Area (2/3 width) -->
+      <div class="xl:col-span-2 space-y-8">
+        
+        <!-- Property Description -->
+        <section class="bg-white border border-gray-200 rounded-lg">
+          <div class="p-6 border-b border-gray-100">
+            <h2 class="text-xl font-semibold text-gray-900">About this property</h2>
+          </div>
+          <div class="p-6">
+            <%= render 'property_description' %>
+          </div>
+        </section>
+
+        <!-- Amenities Grid -->
+        <section class="bg-white border border-gray-200 rounded-lg">
+          <div class="p-6 border-b border-gray-100">
+            <h2 class="text-xl font-semibold text-gray-900">Amenities</h2>
+          </div>
+          <div class="p-6">
+            <%= render 'amenities_section' %>
+          </div>
+        </section>
+
+        <!-- Location & Map -->
+        <section class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <div class="p-6 border-b border-gray-100">
+            <h2 class="text-xl font-semibold text-gray-900">Location</h2>
+          </div>
+          <%= render 'map' %>
+        </section>
+        
+        <!-- Reviews -->
+        <section class="bg-white border border-gray-200 rounded-lg">
+          <div class="p-6 border-b border-gray-100">
+            <h2 class="text-xl font-semibold text-gray-900">Reviews</h2>
+          </div>
+          <div class="p-6">
+            <%= render 'reviews_section' %>
+          </div>
+        </section>
+
+        <!-- Comments -->
+        <section class="bg-white border border-gray-200 rounded-lg">
+          <div class="p-6 border-b border-gray-100">
+            <h2 class="text-xl font-semibold text-gray-900">Comments</h2>
+          </div>
+          <%= render 'property_comments/comments_section' %>
+        </section>
+      </div>
+      
+      <!-- Sidebar (1/3 width) -->
+      <div class="xl:col-span-1">
+        <div class="sticky top-6 space-y-6">
+          
+          <!-- Booking Card -->
+          <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
+            <div class="p-4 bg-blue-50 border-b border-gray-100">
+              <h3 class="font-semibold text-gray-900">Reserve your stay</h3>
+            </div>
+            <%= render 'booking_card' %>
+          </div>
+          
+          <!-- Host Information -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <h3 class="font-semibold text-gray-900 mb-4">Host information</h3>
+            <%= render 'host_information' %>
+          </div>
+          
+          <!-- Property Details -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <h3 class="font-semibold text-gray-900 mb-4">Property details</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-gray-600">Property type</span>
+                <span class="text-gray-900 font-medium"><%= @property.property_type&.humanize || 'Property' %></span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Availability</span>
+                <span class="text-gray-900 font-medium">
+                  <%= @property.availability_status&.humanize || 'Available' %>
+                </span>
+              </div>
+
+            </div>
+          </div>
+          
+          <!-- House Rules -->
+          <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <h3 class="font-semibold text-gray-900 mb-4">House rules</h3>
+            <%= render 'house_rules' %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Related Properties -->
+    <section class="bg-white border border-gray-200 rounded-lg p-6 mb-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Similar properties</h2>
+      <%= render 'related_properties' %>
+    </section>
   </div>
 </div>
 
-<!-- Enhanced Scheduling Modal -->
+<!-- Scheduling Modal -->
 <%= render 'scheduling_modal' %>
-
-<!-- Advanced Custom Styles -->
-<style>
-  /* Enhanced Grid Background */
-  .bg-grid-neutral-100\/40 {
-    background-image: url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23f5f5f5' fill-opacity='0.3'%3e%3cpath d='M30 30h30v30H30V30zm-30 0h30v30H0V30z'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
-  }
-
-  /* Advanced Animations */
-  @keyframes float-slow {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(5deg); }
-  }
-
-  @keyframes float-reverse {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(15px) rotate(-3deg); }
-  }
-
-  @keyframes pulse-slow {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.05); }
-  }
-
-  @keyframes slideInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes fadeInScale {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  .animate-float-slow {
-    animation: float-slow 8s ease-in-out infinite;
-  }
-
-  .animate-float-reverse {
-    animation: float-reverse 10s ease-in-out infinite;
-  }
-
-  .animate-pulse-slow {
-    animation: pulse-slow 6s ease-in-out infinite;
-  }
-
-  .animate-slide-up {
-    animation: slideInUp 0.8s ease-out;
-  }
-
-  .animate-fade-in-scale {
-    animation: fadeInScale 0.6s ease-out;
-  }
-
-  /* Enhanced Glass Morphism */
-  .backdrop-blur-xl {
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-  }
-
-  .backdrop-blur-2xl {
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-  }
-
-  /* Enhanced Shadows */
-  .shadow-3xl {
-    box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
-  }
-
-  /* Text Enhancement */
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  /* Enhanced Hover Effects */
-  .hover-lift {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .hover-lift:hover {
-    transform: translateY(-4px);
-  }
-
-  /* Smooth Scroll Behavior */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  /* Enhanced Focus States */
-  *:focus {
-    outline: 2px solid rgba(99, 102, 241, 0.5);
-    outline-offset: 2px;
-  }
-
-  /* Progressive Enhancement for Reduced Motion */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-    
-    .animate-float-slow,
-    .animate-float-reverse,
-    .animate-pulse-slow {
-      animation: none;
-    }
-  }
-
-  /* Enhanced Typography */
-  .font-display {
-    font-feature-settings: 'cv03', 'cv04', 'cv09';
-  }
-
-  /* Dark Mode Considerations */
-  @media (prefers-color-scheme: dark) {
-    .bg-grid-neutral-100\/40 {
-      background-image: url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23374151' fill-opacity='0.2'%3e%3cpath d='M30 30h30v30H30V30zm-30 0h30v30H0V30z'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
-    }
-  }
-
-  /* Performance Optimizations */
-  .will-change-transform {
-    will-change: transform;
-  }
-
-  .will-change-auto {
-    will-change: auto;
-  }
-
-  /* Container Queries for Enhanced Responsiveness */
-  @container (min-width: 768px) {
-    .container-responsive {
-      padding: 2rem;
-    }
-  }
-</style>

@@ -50,13 +50,10 @@ export default class extends Controller {
     // Close other dropdowns first
     this.closeAllDropdowns()
 
-    if (dropdown && dropdown.classList.contains('hidden')) {
+    if (dropdown && dropdown.hasAttribute('data-dropdown')) {
       // Show this dropdown
       dropdown.classList.remove('hidden')
       this.currentDropdown = dropdown
-
-      // Position dropdown
-      this.positionDropdown(button, dropdown)
     }
   }
 
@@ -66,33 +63,6 @@ export default class extends Controller {
       dropdown.classList.add('hidden')
     })
     this.currentDropdown = null
-  }
-
-  positionDropdown(button, dropdown) {
-    const rect = button.getBoundingClientRect()
-    const dropdownRect = dropdown.getBoundingClientRect()
-    const viewportHeight = window.innerHeight
-    const viewportWidth = window.innerWidth
-
-    // Reset positioning
-    dropdown.style.top = ''
-    dropdown.style.bottom = ''
-    dropdown.style.left = ''
-    dropdown.style.right = ''
-
-    // Position horizontally (prefer right-aligned)
-    if (rect.right - dropdownRect.width >= 0) {
-      dropdown.style.right = '0'
-    } else {
-      dropdown.style.left = '0'
-    }
-
-    // Position vertically (prefer below, but above if no space)
-    if (rect.bottom + dropdownRect.height <= viewportHeight) {
-      dropdown.style.top = '100%'
-    } else {
-      dropdown.style.bottom = '100%'
-    }
   }
 
   // Property actions

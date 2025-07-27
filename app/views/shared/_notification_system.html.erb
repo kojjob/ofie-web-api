@@ -1,0 +1,31 @@
+<%# Unified Notification System - Include this in your layout %>
+<div data-controller="notification-system" 
+     data-notification-system-position-value="top-right"
+     data-notification-system-max-notifications-value="5"
+     data-notification-system-default-duration-value="5000"
+     id="global-notification-container">
+  <%# Notifications will be dynamically added here %>
+</div>
+
+<%# Handle Rails flash messages with the unified system %>
+<% if flash.any? %>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Wait for notification system to initialize
+      setTimeout(function() {
+        <% flash.each do |type, message| %>
+          <% notification_type = case type.to_s
+               when 'notice', 'success' then 'success'
+               when 'alert', 'error' then 'error'
+               when 'warning' then 'warning'
+               else 'info'
+             end %>
+          
+          if (window.NotificationSystem) {
+            window.NotificationSystem.<%= notification_type %>('<%= j(message) %>');
+          }
+        <% end %>
+      }, 100);
+    });
+  </script>
+<% end %>
