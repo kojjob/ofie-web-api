@@ -1,6 +1,6 @@
 class NewsletterController < ApplicationController
   # Skip authentication for newsletter signup
-  skip_before_action :authenticate_user!, only: [ :create ]
+  skip_before_action :authenticate_request, only: [ :create ]
 
   def create
     @email = params[:email]
