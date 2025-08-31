@@ -57,7 +57,7 @@
                          data-scheduling-target="timeSlotOption"
                          data-action="click->scheduling#selectTimeSlot"
                          data-time-value="<%= time_value %>">
-                    <%= form.radio_button :time_slot, time_value, class: "sr-only", data: { scheduling_target: "timeSlotRadio" } %>
+                    <%= form.radio_button :time_slot, time_value, class: "sr-only time-slot-radio", data: { scheduling_target: "timeSlotRadio" } %>
                     <span class="text-sm font-medium text-gray-700"><%= time_label %></span>
                     <div class="absolute inset-0 border-2 border-transparent rounded-lg pointer-events-none"></div>
                   </label>
@@ -93,7 +93,7 @@
                      data-scheduling-target="viewingTypeOption"
                      data-value="in_person"
                      data-action="click->scheduling#selectViewingType">
-                <%= form.radio_button :viewing_type, "in_person", class: "sr-only", checked: true, data: { scheduling_target: "viewingTypeRadio" } %>
+                <%= form.radio_button :viewing_type, "in_person", class: "sr-only viewing-type-radio", checked: true, data: { scheduling_target: "viewingTypeRadio" } %>
                 <div class="flex items-center w-full">
                   <div class="flex-shrink-0 w-5 h-5 border-2 border-blue-600 rounded-full mr-3 flex items-center justify-center"
                        data-scheduling-target="viewingTypeIndicator">
@@ -110,7 +110,7 @@
                      data-scheduling-target="viewingTypeOption"
                      data-value="virtual"
                      data-action="click->scheduling#selectViewingType">
-                <%= form.radio_button :viewing_type, "virtual", class: "sr-only", data: { scheduling_target: "viewingTypeRadio" } %>
+                <%= form.radio_button :viewing_type, "virtual", class: "sr-only viewing-type-radio", data: { scheduling_target: "viewingTypeRadio" } %>
                 <div class="flex items-center w-full">
                   <div class="flex-shrink-0 w-5 h-5 border-2 border-gray-300 rounded-full mr-3 flex items-center justify-center"
                        data-scheduling-target="viewingTypeIndicator">
