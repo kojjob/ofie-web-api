@@ -1,23 +1,58 @@
-# fly.toml app configuration file generated for ofie-web-api-floral-haze-3128 on 2025-07-25T11:16:25+01:00
-#
+# fly.toml app configuration file for Ofie Web API
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
 
 app = 'ofie-web-api-floral-haze-3128'
 primary_region = 'lhr'
 console_command = '/rails/bin/rails console'
 
 [build]
+  dockerfile = "Dockerfile"
 
+[deploy]
+  release_command = "./bin/rails db:prepare"
+
+[env]
+  PORT = "8080"
+  RAILS_ENV = "production"
+  RAILS_LOG_TO_STDOUT = "true"
+  RAILS_SERVE_STATIC_FILES = "true"
+  
+  # Solid Queue configuration
+  SOLID_QUEUE_IN_PUMA = "true"
+  
+  # Application configuration
+  FORCE_SSL = "true"
+  
 [http_service]
   internal_port = 8080
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
   processes = ['app']
+
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    path = "/health"
+    port = 8080
+    timeout = "5s"
+    type = "http"
 
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+
+[[statics]]
+  guest_path = "/rails/public"
+  url_prefix = "/"
+
+[processes]
+  app = ""
