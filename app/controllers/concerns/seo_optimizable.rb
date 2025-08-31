@@ -9,7 +9,7 @@ module SeoOptimizable
                   :twitter_card, :twitter_title, :twitter_description, :twitter_image,
                   :canonical_url, :robots_meta, :structured_data_json,
                   :alternate_languages, :breadcrumb_json
-    
+
     before_action :set_default_meta_tags
   end
 
@@ -23,7 +23,7 @@ module SeoOptimizable
       og: default_og_tags,
       twitter: default_twitter_tags,
       canonical: request.original_url,
-      robots: 'index, follow',
+      robots: "index, follow",
       alternate_languages: [],
       structured_data: []
     }
@@ -31,29 +31,29 @@ module SeoOptimizable
 
   def set_meta_tags(options = {})
     @meta_tags ||= {}
-    
+
     # Basic meta tags
     @meta_tags[:title] = options[:title] if options[:title].present?
     @meta_tags[:description] = options[:description] if options[:description].present?
     @meta_tags[:keywords] = options[:keywords] if options[:keywords].present?
-    
+
     # Open Graph tags
     if options[:og].present?
       @meta_tags[:og] ||= {}
       @meta_tags[:og].merge!(options[:og])
     end
-    
+
     # Twitter Card tags
     if options[:twitter].present?
       @meta_tags[:twitter] ||= {}
       @meta_tags[:twitter].merge!(options[:twitter])
     end
-    
+
     # Other SEO tags
     @meta_tags[:canonical] = options[:canonical] if options[:canonical].present?
     @meta_tags[:robots] = options[:robots] if options[:robots].present?
     @meta_tags[:alternate_languages] = options[:alternate_languages] if options[:alternate_languages].present?
-    
+
     # Structured data
     add_structured_data(options[:structured_data]) if options[:structured_data].present?
   end
@@ -89,9 +89,9 @@ module SeoOptimizable
   def og_image
     image = @meta_tags&.dig(:og, :image)
     return image if image.present?
-    
+
     # Default OG image
-    helpers.image_url('og-default.png') rescue nil
+    helpers.image_url("og-default.png") rescue nil
   end
 
   def og_url
@@ -99,12 +99,12 @@ module SeoOptimizable
   end
 
   def og_type
-    @meta_tags&.dig(:og, :type) || 'website'
+    @meta_tags&.dig(:og, :type) || "website"
   end
 
   # Twitter Card accessors
   def twitter_card
-    @meta_tags&.dig(:twitter, :card) || 'summary_large_image'
+    @meta_tags&.dig(:twitter, :card) || "summary_large_image"
   end
 
   def twitter_title
@@ -123,14 +123,14 @@ module SeoOptimizable
   def canonical_url
     url = @meta_tags&.dig(:canonical)
     return url if url.present?
-    
+
     # Build canonical URL from current request
     "#{request.protocol}#{request.host_with_port}#{request.path}"
   end
 
   # Robots meta
   def robots_meta
-    @meta_tags&.dig(:robots) || 'index, follow'
+    @meta_tags&.dig(:robots) || "index, follow"
   end
 
   # Alternate languages for international SEO
@@ -141,10 +141,10 @@ module SeoOptimizable
   # Structured data JSON-LD
   def structured_data_json
     return nil unless @meta_tags&.dig(:structured_data).present?
-    
+
     data = @meta_tags[:structured_data]
-    data = [data] unless data.is_a?(Array)
-    
+    data = [ data ] unless data.is_a?(Array)
+
     data.map do |item|
       item.is_a?(String) ? item : item.to_json
     end
@@ -153,7 +153,7 @@ module SeoOptimizable
   # Breadcrumb structured data
   def breadcrumb_json
     return nil unless @breadcrumbs.present?
-    
+
     {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -191,20 +191,21 @@ module SeoOptimizable
     {
       title: default_meta_title,
       description: default_meta_description,
-      type: 'website',
+      type: "website",
       site_name: site_name,
-      locale: 'en_US'
+      locale: "en_US"
     }
   end
 
   def default_twitter_tags
     {
-      card: 'summary_large_image',
-      site: '@ofie_platform'
+      card: "summary_large_image",
+      site: "@ofie_platform"
     }
   end
 
   def site_name
-    'Ofie'
+    "Ofie"
   end
 end
+

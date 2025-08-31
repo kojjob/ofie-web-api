@@ -13,7 +13,7 @@ module StructuredDataHelper
       "datePosted": property.created_at.iso8601,
       "dateModified": property.updated_at.iso8601,
       "tourBookingPage": new_property_viewing_url(property),
-      
+
       # Property details
       "propertyID": property.id,
       "yearBuilt": property.year_built,
@@ -22,7 +22,7 @@ module StructuredDataHelper
       "numberOfRooms": property.bedrooms,
       "numberOfBathroomsTotal": property.bathrooms,
       "accommodationCategory": property.property_type&.capitalize,
-      
+
       # Pricing information
       "offers": {
         "@type": "Offer",
@@ -32,11 +32,11 @@ module StructuredDataHelper
         "availability": property_availability_schema(property),
         "validFrom": property.created_at.iso8601
       },
-      
+
       # Location information
       "address": property_address_schema(property),
       "geo": property_geo_schema(property),
-      
+
       # Size information
       "floorSize": {
         "@type": "QuantitativeValue",
@@ -44,20 +44,20 @@ module StructuredDataHelper
         "unitCode": "FTK",
         "unitText": "square feet"
       },
-      
+
       # Amenities
       "amenityFeature": property_amenities_schema(property),
-      
+
       # Images
       "image": property_images_schema(property),
       "photo": property_images_schema(property),
-      
+
       # Additional details
       "additionalProperty": property_additional_features(property),
-      
+
       # Agent/Owner information
       "seller": property_seller_schema(property),
-      
+
       # Reviews if available
       "review": property_reviews_schema(property),
       "aggregateRating": property_rating_schema(property)
@@ -79,7 +79,7 @@ module StructuredDataHelper
   # Generate geo coordinates structured data
   def property_geo_schema(property)
     return nil unless property.latitude.present? && property.longitude.present?
-    
+
     {
       "@type": "GeoCoordinates",
       "latitude": property.latitude,
@@ -101,7 +101,7 @@ module StructuredDataHelper
   # Generate amenities structured data
   def property_amenities_schema(property)
     amenities = []
-    
+
     amenities << { "@type": "LocationFeatureSpecification", "name": "Parking", "value": true } if property.parking
     amenities << { "@type": "LocationFeatureSpecification", "name": "Laundry", "value": true } if property.laundry
     amenities << { "@type": "LocationFeatureSpecification", "name": "Gym", "value": true } if property.gym
@@ -109,14 +109,14 @@ module StructuredDataHelper
     amenities << { "@type": "LocationFeatureSpecification", "name": "Elevator", "value": true } if property.elevator
     amenities << { "@type": "LocationFeatureSpecification", "name": "Balcony", "value": true } if property.balcony
     amenities << { "@type": "LocationFeatureSpecification", "name": "Pet Friendly", "value": true } if property.pet_friendly
-    
+
     amenities
   end
 
   # Generate images structured data
   def property_images_schema(property)
     return [] unless property.images.attached?
-    
+
     property.images.map do |image|
       {
         "@type": "ImageObject",
@@ -130,7 +130,7 @@ module StructuredDataHelper
   # Generate additional property features
   def property_additional_features(property)
     features = []
-    
+
     if property.furnished?
       features << {
         "@type": "PropertyValue",
@@ -138,7 +138,7 @@ module StructuredDataHelper
         "value": "Yes"
       }
     end
-    
+
     if property.utilities_included?
       features << {
         "@type": "PropertyValue",
@@ -146,14 +146,14 @@ module StructuredDataHelper
         "value": "Yes"
       }
     end
-    
+
     features
   end
 
   # Generate seller/agent structured data
   def property_seller_schema(property)
     return nil unless property.user.present?
-    
+
     {
       "@type": "Person",
       "name": property.user.full_name,
@@ -165,7 +165,7 @@ module StructuredDataHelper
   # Generate reviews structured data
   def property_reviews_schema(property)
     return [] unless property.reviews.published.any?
-    
+
     property.reviews.published.limit(5).map do |review|
       {
         "@type": "Review",
@@ -188,7 +188,7 @@ module StructuredDataHelper
   # Generate aggregate rating structured data
   def property_rating_schema(property)
     return nil unless property.reviews.published.any?
-    
+
     {
       "@type": "AggregateRating",
       "ratingValue": property.average_rating,
@@ -300,3 +300,4 @@ module StructuredDataHelper
     }
   end
 end
+
