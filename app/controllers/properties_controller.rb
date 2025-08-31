@@ -24,7 +24,10 @@ class PropertiesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html # Render the HTML view - no eager loading needed for HTML
+      format.html do
+        # Eager load photos for HTML view to avoid N+1 queries in properties grid
+        @properties = @properties.with_attached_photos
+      end
       format.json do
         # Only include photos for JSON responses that use property_json
         @properties = @properties.with_attached_photos unless request.xhr?
@@ -86,6 +89,12 @@ class PropertiesController < ApplicationController
 
   # GET /properties/:id
   def show
+    # Preload related properties with photos to avoid N+1 queries
+    @related_properties = Property.where.not(id: @property.id)
+                                  .available
+                                  .includes(photos_attachments: :blob)
+                                  .limit(4)
+    
     respond_to do |format|
       format.html # Render the HTML view
       format.json {
@@ -211,7 +220,12 @@ class PropertiesController < ApplicationController
   end
 
   def set_property
-    @property = Property.includes(photos_attachments: :blob).find(params[:id])
+    @property = Property.includes(
+      :user, 
+      photos_attachments: :blob,
+      property_comments: [:user, :replies],
+      property_reviews: :user
+    ).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     respond_to do |format|
       format.html { 

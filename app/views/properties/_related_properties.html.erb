@@ -23,7 +23,7 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      <% Property.where.not(id: @property.id).available.limit(4).each do |property| %>
+      <% @related_properties.each do |property| %>
         <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
           <div class="aspect-[4/3] relative overflow-hidden">
             <% if property.photos.attached? && property.photos.any? %>
