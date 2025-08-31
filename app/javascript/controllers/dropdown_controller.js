@@ -7,7 +7,7 @@ export default class extends Controller {
   connect() {
     this.isOpen = false;
     this.setupKeyboardNavigation();
-    this.setupOutsideClickListener();
+    // Don't set up outside click listener here - only when opening
   }
 
   toggle(event) {
@@ -26,6 +26,9 @@ export default class extends Controller {
     this.element.querySelector('button').setAttribute('aria-expanded', 'true');
     this.isOpen = true;
     
+    // Set up outside click listener when opening
+    this.setupOutsideClickListener();
+    
     // Focus first menu item
     const firstMenuItem = this.menuTarget.querySelector('a');
     if (firstMenuItem) {
@@ -37,6 +40,9 @@ export default class extends Controller {
     this.menuTarget.classList.add('hidden');
     this.element.querySelector('button').setAttribute('aria-expanded', 'false');
     this.isOpen = false;
+    
+    // Remove outside click listener when closing
+    this.removeOutsideClickListener();
     
     // Return focus to button
     this.element.querySelector('button').focus();
@@ -61,18 +67,29 @@ export default class extends Controller {
   }
 
   setupOutsideClickListener() {
+    // Create the click handler
     this.boundClickHandler = (event) => {
-      if (this.isOpen && !this.element.contains(event.target)) {
+      // Check if click is outside the dropdown
+      if (!this.element.contains(event.target)) {
         this.close();
       }
     };
-    document.addEventListener('click', this.boundClickHandler);
+    
+    // Use setTimeout to avoid catching the opening click
+    setTimeout(() => {
+      document.addEventListener('click', this.boundClickHandler);
+    }, 0);
+  }
+  
+  removeOutsideClickListener() {
+    if (this.boundClickHandler) {
+      document.removeEventListener('click', this.boundClickHandler);
+      this.boundClickHandler = null;
+    }
   }
 
   disconnect() {
-    if (this.boundClickHandler) {
-      document.removeEventListener('click', this.boundClickHandler);
-    }
+    this.removeOutsideClickListener();
   }
 
   navigateMenu(direction) {

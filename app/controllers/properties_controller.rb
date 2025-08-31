@@ -8,7 +8,6 @@ class PropertiesController < ApplicationController
   def index
     @properties = Property.available
                          .with_attached_photos
-                         .includes(:user)
                          .by_city(params[:city])
                          .by_property_type(params[:property_type])
                          .by_bedrooms(params[:bedrooms])

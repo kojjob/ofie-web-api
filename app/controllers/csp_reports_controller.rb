@@ -1,6 +1,6 @@
 class CspReportsController < ApplicationController
-  skip_before_action :verify_authenticity_token
-  skip_before_action :authenticate_user!, if: :skip_auth?
+  skip_before_action :authenticate_request
+  skip_forgery_protection
 
   def create
     # Log the CSP violation report for monitoring purposes
