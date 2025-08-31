@@ -8,7 +8,8 @@ class SitemapGeneratorService
   end
   
   def generate
-    builder = Nokogiri::XML::Builder.new do |xml|
+    builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
+      xml.comment " This is a sitemap file for search engines. Learn more at https://www.sitemaps.org/ "
       xml.urlset('xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9',
                  'xmlns:image' => 'http://www.google.com/schemas/sitemap-image/1.1',
                  'xmlns:video' => 'http://www.google.com/schemas/sitemap-video/1.1') do
@@ -67,19 +68,14 @@ class SitemapGeneratorService
     })
     
     # Individual property pages
-    Property.published.includes(:images_attachments).find_each do |property|
-      images = property.images.map do |image|
-        {
-          loc: rails_blob_url(image, host: @host, protocol: @protocol),
-          caption: property.title,
-          title: property.title
-        }
-      end if property.images.attached?
+    Property.where(availability_status: 'available').find_each do |property|
+      # Skip images for now as Property doesn't have image attachments
+      images = []
       
       add_url(xml, property_url(property, host: @host, protocol: @protocol), {
         lastmod: property.updated_at.iso8601,
-        changefreq: property_changefreq(property),
-        priority: property_priority(property),
+        changefreq: 'weekly',
+        priority: 0.8,
         images: images || []
       })
     end
@@ -98,7 +94,7 @@ class SitemapGeneratorService
     end
     
     # Add city-specific pages
-    cities = Property.published.distinct.pluck(:city).compact
+    cities = Property.where(availability_status: 'available').distinct.pluck(:city).compact
     cities.each do |city|
       add_url(xml, properties_url(city: city, host: @host, protocol: @protocol), {
         lastmod: Date.today.iso8601,
@@ -110,6 +106,8 @@ class SitemapGeneratorService
   
   def add_user_pages(xml)
     # Public user profiles (if applicable)
+    # Skip user pages as public_profile doesn't exist
+    return
     User.where(public_profile: true).find_each do |user|
       add_url(xml, user_url(user, host: @host, protocol: @protocol), {
         lastmod: user.updated_at.iso8601,
@@ -122,9 +120,10 @@ class SitemapGeneratorService
   def add_help_pages(xml)
     # FAQ pages, guides, etc.
     help_sections = [
-      { path: faq_url(host: @host, protocol: @protocol), priority: 0.6 },
-      { path: rental_guide_url(host: @host, protocol: @protocol), priority: 0.6 },
-      { path: landlord_guide_url(host: @host, protocol: @protocol), priority: 0.6 }
+      # Add actual help pages that exist in routes
+      { path: help_url(host: @host, protocol: @protocol), priority: 0.6 },
+      { path: about_url(host: @host, protocol: @protocol), priority: 0.6 },
+      { path: contact_url(host: @host, protocol: @protocol), priority: 0.6 }
     ] rescue []
     
     help_sections.each do |section|

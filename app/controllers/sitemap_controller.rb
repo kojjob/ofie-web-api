@@ -6,7 +6,8 @@ class SitemapController < ApplicationController
     @sitemap = SitemapGeneratorService.new(request.host_with_port).generate
     
     respond_to do |format|
-      format.xml { render xml: @sitemap }
+      format.xml { render xml: @sitemap, content_type: 'application/xml' }
+      format.any { render xml: @sitemap, content_type: 'application/xml' }
     end
   end
 end
