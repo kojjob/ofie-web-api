@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Ofie - Property Rental Platform</title>
+    <meta charset="utf-8">
+    <title><%= meta_title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <!-- SEO Meta Tags -->
+    <%= render_meta_tags %>
+    
+    <!-- Security Tags -->
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "design_system", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "z-index", "data-turbo-track": "reload" %>
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -21,21 +27,37 @@
             crossorigin=""></script>
 
     <%= javascript_importmap_tags %>
+    
+    <!-- Structured Data -->
+    <%= render_structured_data %>
+    <%= render_breadcrumb_structured_data %>
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
   </head>
 
   <body class="bg-gray-50">
 
     <%= render "shared/navbar" %>
     
-    <!-- Enhanced Flash Messages -->
-    <%= render "shared/flash_messages" %>
+    <!-- Unified Notification System -->
+    <%= render "shared/notification_system" %>
 
     <!-- Main Content -->
-    <main class="min-h-screen">
+    <main class="min-h-screen min-w-screen">
       <%= yield %>
     </main>
 
     <!-- Footer -->
     <%= render "shared/footer" %>
+
+    <!-- Bot Chat Widget - Only show on specific pages -->
+    <% if show_bot_widget? %>
+      <%= render "shared/bot_chat_widget" %>
+    <% end %>
   </body>
 </html>

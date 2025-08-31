@@ -1,0 +1,107 @@
+<% content_for :title, @page_title %>
+<% content_for :description, @page_description %>
+
+<div class="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
+  <div class="container mx-auto px-4 py-12">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">
+        <%= @page_title %>
+      </h1>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        <%= @page_description %>
+      </p>
+    </div>
+
+    <!-- Market Analysis Tools Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      
+      <!-- Rental Market Trends -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Rental Market Trends</h3>
+        <p class="text-gray-600 mb-4">Analyze rental price trends and market conditions in your area.</p>
+        <span class="inline-flex items-center text-gray-500 font-medium">Coming Soon</span>
+      </div>
+
+      <!-- Comparable Properties -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Comparable Properties</h3>
+        <p class="text-gray-600 mb-4">Find and compare similar properties to determine optimal pricing.</p>
+        <span class="inline-flex items-center text-gray-500 font-medium">Coming Soon</span>
+      </div>
+
+      <!-- Neighborhood Analysis -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Neighborhood Analysis</h3>
+        <p class="text-gray-600 mb-4">Get detailed insights about neighborhood demographics and amenities.</p>
+        <span class="inline-flex items-center text-gray-500 font-medium">Coming Soon</span>
+      </div>
+
+      <!-- Investment Opportunities -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Investment Opportunities</h3>
+        <p class="text-gray-600 mb-4">Discover emerging markets and high-potential investment areas.</p>
+        <span class="inline-flex items-center text-gray-500 font-medium">Coming Soon</span>
+      </div>
+
+      <!-- Market Reports -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Market Reports</h3>
+        <p class="text-gray-600 mb-4">Access comprehensive market reports and analytics.</p>
+        <span class="inline-flex items-center text-gray-500 font-medium">Coming Soon</span>
+      </div>
+
+      <!-- Price Predictions -->
+      <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+        <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Price Predictions</h3>
+        <p class="text-gray-600 mb-4">AI-powered rental price predictions and market forecasts.</p>
+        <span class="inline-flex items-center text-gray-500 font-medium">Coming Soon</span>
+      </div>
+
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-16">
+      <div class="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto border border-gray-100">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Get Market Insights</h2>
+        <p class="text-gray-600 mb-6">Access professional market analysis tools and stay ahead of rental market trends.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <%= link_to "Sign Up Free", register_path, class: "inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-xl text-base font-medium text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl" %>
+          <%= link_to "Landlord Tools", landlord_tools_path, class: "inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-xl text-base font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all duration-200" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

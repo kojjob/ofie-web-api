@@ -1,6 +1,6 @@
-<% content_for :title, "Ofie - Your Dream Home Awaits | Premium Real Estate Platform" %>
-<% content_for :description, "Discover luxury homes, apartments, and properties with Ofie. Advanced search, verified listings, and expert guidance to find your perfect home. Start your journey today!" %>
-<% content_for :keywords, "real estate, homes for sale, apartments, luxury properties, property search, dream home, real estate platform" %>
+<% content_for :title, seo_title %>
+<% content_for :description, seo_description %>
+<% content_for :keywords, seo_keywords %>
 
 <!-- Hero Section with Sophisticated Design -->
 <section class="relative min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white overflow-hidden">
@@ -33,7 +33,7 @@
             <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
-            <span class="text-sm font-medium text-white/90">Trusted by 25,000+ Families</span>
+            <span class="text-sm font-medium text-white/90">Trusted by <%= format_number_with_suffix(total_families_count) %>+ Families</span>
           </div>
           <div class="w-px h-4 bg-white/20"></div>
           <div class="flex items-center space-x-1">
@@ -42,7 +42,7 @@
               <div class="w-6 h-6 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full border border-white/20"></div>
               <div class="w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full border border-white/20"></div>
             </div>
-            <span class="text-xs text-white/70 ml-2">4.9★</span>
+            <span class="text-xs text-white/70 ml-2"><%= platform_rating %>★</span>
           </div>
         </div>
       </div>
@@ -50,20 +50,20 @@
       <!-- Hero Title -->
       <div class="text-center mb-16">
         <h1 class="text-6xl md:text-8xl font-light mb-8 leading-[0.9] tracking-tight">
-          <span class="block font-extralight text-white/95">Find Your</span>
+          <span class="block font-extralight text-white/95"><%= hero_title_line_1 %></span>
           <span class="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-300 font-medium animate-gradient">
-            Perfect Home
+            <%= hero_title_line_2 %>
           </span>
           <span class="block text-2xl md:text-3xl mt-6 text-white/70 font-light tracking-wide">
-            Where luxury meets simplicity
+            <%= hero_subtitle %>
           </span>
         </h1>
         
         <p class="text-lg md:text-xl mb-12 text-white/70 max-w-3xl mx-auto leading-relaxed font-light">
-          Discover curated properties with our intelligent search platform. 
-          <span class="text-white/90">Premium listings</span> • 
-          <span class="text-white/90">Instant matches</span> • 
-          <span class="text-white/90">Verified quality</span>
+          <%= hero_description %>
+          <% hero_features.each_with_index do |feature, index| %>
+            <span class="text-white/90"><%= feature %></span><%= index < hero_features.length - 1 ? ' • ' : '' %>
+          <% end %>
         </p>
         
         <!-- Refined Social Proof -->
@@ -74,7 +74,7 @@
               <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full border-2 border-slate-800 shadow-lg"></div>
               <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full border-2 border-slate-800 shadow-lg"></div>
               <div class="w-10 h-10 bg-gradient-to-r from-orange-400 to-yellow-400 rounded-full border-2 border-slate-800 shadow-lg flex items-center justify-center">
-                <span class="text-xs font-semibold text-slate-800">12K+</span>
+                <span class="text-xs font-semibold text-slate-800"><%= format_number_with_suffix(monthly_joiners_count) %>+</span>
               </div>
             </div>
             <div class="text-left">
@@ -91,7 +91,7 @@
         <div class="bg-white/[0.08] backdrop-blur-xl rounded-3xl p-6 lg:p-8 border border-white/10 shadow-2xl">
           <div class="text-center mb-6">
             <h2 class="text-xl lg:text-2xl font-light text-white mb-2">Begin Your Search</h2>
-            <p class="text-sm text-white/60">50,000+ verified properties • Updated in real-time</p>
+            <p class="text-sm text-white/60"><%= format_large_number(verified_properties_count) %>+ verified properties • Updated in real-time</p>
           </div>
           
           <%= form_with url: properties_path, method: :get, local: true, class: "space-y-6" do |form| %>
@@ -100,15 +100,9 @@
               <!-- Property Type -->
               <div>
                 <label class="block text-xs font-medium text-white/90 mb-2">Property Type</label>
-                <%= form.select :property_type, 
-                    options_for_select([
-                      ['Any Type', ''],
-                      ['House', 'house'],
-                      ['Apartment', 'apartment'],
-                      ['Condo', 'condo'],
-                      ['Townhouse', 'townhouse']
-                    ], params[:property_type]), 
-                    {}, 
+                <%= form.select :property_type,
+                    options_for_select(property_type_options, params[:property_type]),
+                    {},
                     { class: "w-full px-4 py-3 rounded-xl bg-white/[0.08] border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-300 hover:bg-white/[0.12] backdrop-blur-md text-sm" } %>
               </div>
               
@@ -124,31 +118,25 @@
               <!-- Bedrooms -->
               <div>
                 <label class="block text-xs font-medium text-white/90 mb-2">Bedrooms</label>
-                <%= form.select :bedrooms, 
-                    options_for_select([
-                      ['Any', ''],
-                      ['1+', '1'],
-                      ['2+', '2'],
-                      ['3+', '3'],
-                      ['4+', '4']
-                    ], params[:bedrooms]), 
-                    {}, 
+                <%= form.select :bedrooms,
+                    options_for_select(bedroom_options, params[:bedrooms]),
+                    {},
                     { class: "w-full px-4 py-3 rounded-xl bg-white/[0.08] border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-300 hover:bg-white/[0.12] backdrop-blur-md text-sm" } %>
               </div>
               
               <!-- Price Range -->
               <div>
                 <label class="block text-xs font-medium text-white/90 mb-2">Min Price</label>
-                <%= form.text_field :min_price, 
-                    placeholder: "$300,000", 
+                <%= form.text_field :min_price,
+                    placeholder: min_price_placeholder,
                     value: params[:min_price],
                     class: "w-full px-4 py-3 rounded-xl bg-white/[0.08] border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-300 hover:bg-white/[0.12] backdrop-blur-md text-sm" %>
               </div>
               
               <div>
                 <label class="block text-xs font-medium text-white/90 mb-2">Max Price</label>
-                <%= form.text_field :max_price, 
-                    placeholder: "$800,000", 
+                <%= form.text_field :max_price,
+                    placeholder: max_price_placeholder,
                     value: params[:max_price],
                     class: "w-full px-4 py-3 rounded-xl bg-white/[0.08] border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-300 hover:bg-white/[0.12] backdrop-blur-md text-sm" %>
               </div>
@@ -159,9 +147,9 @@
               <%= form.submit "Search Properties", 
                   class: "bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600 text-white font-medium py-3 px-10 rounded-xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-blue-400/30 shadow-2xl" %>
               <div class="mt-3 flex items-center justify-center space-x-4 text-xs text-white/60">
-                <span>✓ Free to use</span>
-                <span>✓ Instant results</span>
-                <span>✓ No registration</span>
+                <% search_benefits.each do |benefit| %>
+                  <span><%= benefit %></span>
+                <% end %>
               </div>
             </div>
           <% end %>
@@ -206,9 +194,9 @@
               <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
             </svg>
           </div>
-          <div class="text-4xl lg:text-5xl font-light text-slate-900 mb-3 counter" data-target="<%= @total_properties || 50000 %>">0</div>
+          <div class="text-4xl lg:text-5xl font-light text-slate-900 mb-3 counter" data-target="<%= total_properties_stat %>">0</div>
           <div class="text-slate-600 font-medium mb-2">Premium Properties</div>
-          <div class="text-sm text-emerald-600 font-medium">+18% this quarter</div>
+          <div class="text-sm text-emerald-600 font-medium"><%= growth_rate_text %></div>
         </div>
       </div>
       
@@ -220,7 +208,7 @@
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
           </div>
-          <div class="text-4xl lg:text-5xl font-light text-slate-900 mb-3 counter" data-target="<%= @available_properties || 12500 %>">0</div>
+          <div class="text-4xl lg:text-5xl font-light text-slate-900 mb-3 counter" data-target="<%= available_properties_stat %>">0</div>
           <div class="text-slate-600 font-medium mb-2">Available Now</div>
           <div class="text-sm text-blue-600 font-medium">Updated hourly</div>
         </div>
@@ -234,9 +222,9 @@
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
           </div>
-          <div class="text-4xl lg:text-5xl font-light text-slate-900 mb-3 counter" data-target="<%= @total_users || 25000 %>">0</div>
+          <div class="text-4xl lg:text-5xl font-light text-slate-900 mb-3 counter" data-target="<%= total_users_stat %>">0</div>
           <div class="text-slate-600 font-medium mb-2">Happy Families</div>
-          <div class="text-sm text-amber-600 font-medium">4.9★ rating</div>
+          <div class="text-sm text-amber-600 font-medium"><%= platform_rating %>★ rating</div>
         </div>
       </div>
       
@@ -248,7 +236,7 @@
               <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
             </svg>
           </div>
-          <div class="text-4xl lg:text-5xl font-light text-slate-900 mb-3 counter" data-target="<%= @cities_count || 150 %>">0</div>
+          <div class="text-4xl lg:text-5xl font-light text-slate-900 mb-3 counter" data-target="<%= cities_count_stat %>">0</div>
           <div class="text-slate-600 font-medium mb-2">Cities Covered</div>
           <div class="text-sm text-indigo-600 font-medium">Nationwide</div>
         </div>
@@ -265,7 +253,7 @@
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
             </svg>
           </div>
-          <span class="font-medium">Award Winner 2024</span>
+          <span class="font-medium"><%= trust_badges[0][:text] if trust_badges[0] %></span>
         </div>
         <div class="flex items-center space-x-3 text-slate-400 hover:text-slate-600 transition-colors duration-300">
           <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-500 rounded-lg flex items-center justify-center">
@@ -273,7 +261,7 @@
               <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
             </svg>
           </div>
-          <span class="font-medium">Bank-Level Security</span>
+          <span class="font-medium"><%= trust_badges[1][:text] if trust_badges[1] %></span>
         </div>
         <div class="flex items-center space-x-3 text-slate-400 hover:text-slate-600 transition-colors duration-300">
           <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center">
@@ -281,7 +269,7 @@
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
           </div>
-          <span class="font-medium">Verified Listings</span>
+          <span class="font-medium"><%= trust_badges[2][:text] if trust_badges[2] %></span>
         </div>
         <div class="flex items-center space-x-3 text-slate-400 hover:text-slate-600 transition-colors duration-300">
           <div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center">
@@ -289,7 +277,7 @@
               <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
             </svg>
           </div>
-          <span class="font-medium">24/7 Support</span>
+          <span class="font-medium"><%= trust_badges[3][:text] if trust_badges[3] %></span>
         </div>
       </div>
     </div>
@@ -496,7 +484,7 @@
         </span>
       </h2>
       <p class="text-xl text-white/70 max-w-3xl mx-auto font-light leading-relaxed">
-        We redefine the real estate experience with cutting-edge technology, personalized service, and unmatched expertise
+        <%= features_section_description %>
       </p>
     </div>
     
@@ -510,7 +498,7 @@
             </svg>
           </div>
           <h3 class="text-2xl font-semibold text-white mb-4">Trusted Excellence</h3>
-          <p class="text-white/70 leading-relaxed mb-6">Over 25,000 successful transactions and a 4.9-star rating from satisfied clients who found their perfect home through our platform.</p>
+          <p class="text-white/70 leading-relaxed mb-6">Over <%= format_large_number(total_families_count) %> successful transactions and a <%= platform_rating %>-star rating from satisfied clients who found their perfect home through our platform.</p>
           <div class="flex items-center space-x-3">
             <div class="flex -space-x-1">
               <div class="w-8 h-8 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full border-2 border-slate-800"></div>
@@ -535,7 +523,7 @@
           <div class="bg-white/10 rounded-xl p-4 border border-white/20">
             <div class="flex items-center justify-between text-sm">
               <span class="text-white/80">Average search time</span>
-              <span class="text-white font-semibold">< 3 seconds</span>
+              <span class="text-white font-semibold"><%= search_time_text %></span>
             </div>
           </div>
         </div>
@@ -596,15 +584,14 @@
         </div>
         
         <h2 class="text-5xl lg:text-7xl font-light text-white mb-8 tracking-tight">
-          <span class="block">Your Dream Home</span>
+          <span class="block"><%= cta_title_line_1 %></span>
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-blue-300 to-purple-300 font-medium">
-            Awaits You
+            <%= cta_title_line_2 %>
           </span>
         </h2>
         
         <p class="text-xl lg:text-2xl text-white/70 mb-12 leading-relaxed max-w-4xl mx-auto font-light">
-          Join over 25,000 satisfied homeowners who discovered their perfect property with our premium platform. 
-          Start your journey today and experience the future of real estate.
+          <%= cta_description %>
         </p>
       </div>
       
@@ -650,30 +637,14 @@
       
       <!-- Trust indicators -->
       <div class="flex flex-wrap justify-center items-center gap-8 text-sm text-white/60">
-        <div class="flex items-center space-x-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-          </svg>
-          <span>No hidden fees</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-          </svg>
-          <span>Free to use</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-          </svg>
-          <span>24/7 support</span>
-        </div>
-        <div class="flex items-center space-x-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-          </svg>
-          <span>Satisfaction guaranteed</span>
-        </div>
+        <% cta_trust_indicators.each do |indicator| %>
+          <div class="flex items-center space-x-2">
+            <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <span><%= indicator %></span>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

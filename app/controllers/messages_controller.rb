@@ -73,9 +73,12 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       if @message.save
+        # Check if bot should respond
+        bot_response = check_for_bot_response(@message)
+
         format.html { redirect_to @conversation, notice: "Message was successfully sent." }
         format.json do
-          render json: {
+          response_data = {
             message: {
               id: @message.id,
               content: @message.content,
@@ -88,7 +91,23 @@ class MessagesController < ApplicationController
               created_at: @message.created_at,
               read: @message.read
             }
-          }, status: :created
+          }
+
+          # Include bot response if generated
+          if bot_response
+            response_data[:bot_response] = {
+              id: bot_response.id,
+              content: bot_response.content,
+              sender: {
+                id: bot_response.sender.id,
+                name: bot_response.sender.name,
+                role: bot_response.sender.role
+              },
+              created_at: bot_response.created_at
+            }
+          end
+
+          render json: response_data, status: :created
         end
       else
         format.html { redirect_to @conversation, alert: @message.errors.full_messages.join(", ") }
@@ -164,5 +183,46 @@ class MessagesController < ApplicationController
 
   def message_update_params
     params.require(:message).permit(:read)
+  end
+
+  def check_for_bot_response(message)
+    # Check if bot should respond to this message
+    bot = Bot.primary_bot
+    return nil unless bot
+
+    # Don't respond to bot's own messages
+    return nil if message.sender.bot?
+
+    # Check if message mentions bot or contains help keywords
+    content = message.content.downcase
+    should_respond = content.include?("bot") ||
+                    content.include?("help") ||
+                    content.include?("assistant") ||
+                    content.include?("ofie") ||
+                    content.include?("?") || # Questions
+                    content.match?(/\b(how|what|when|where|why|can|could|would|should)\b/)
+
+    if should_respond
+      # Generate bot response using BotService
+      bot_response = BotService.new(
+        user: message.sender,
+        query: message.content,
+        conversation: @conversation
+      ).process_query
+
+      # Create bot message
+      bot_message = @conversation.messages.create!(
+        sender: bot,
+        content: bot_response[:response],
+        message_type: "text"
+      )
+
+      return bot_message
+    end
+
+    nil
+  rescue => e
+    Rails.logger.error "Bot response error: #{e.message}"
+    nil
   end
 end

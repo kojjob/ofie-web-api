@@ -210,11 +210,12 @@ class MaintenanceRequestsManager {
         ...this.filters
       });
 
-      const response = await fetch(`/api/v1/maintenance_requests?${params}`, {
+      const response = await fetch(`/maintenance_requests.json?${params}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        credentials: 'same-origin'
       });
 
       if (response.ok) {
@@ -232,11 +233,12 @@ class MaintenanceRequestsManager {
 
   async loadUserProperties() {
     try {
-      const response = await fetch('/api/v1/properties', {
+      const response = await fetch('/properties.json', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        credentials: 'same-origin'
       });
 
       if (response.ok) {
@@ -403,11 +405,15 @@ class MaintenanceRequestsManager {
         return;
       }
 
-      const response = await fetch(`/api/v1/properties/${propertyId}/maintenance_requests`, {
+      // Add CSRF token to form data
+      formData.append('authenticity_token', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'));
+
+      const response = await fetch('/maintenance_requests', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
         },
+        credentials: 'same-origin',
         body: formData
       });
 

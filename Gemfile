@@ -30,6 +30,9 @@ gem "omniauth-rails_csrf_protection"
 # Token generation for password reset and email verification
 gem "securerandom"
 
+# CSV processing for batch property uploads
+gem "csv"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mswin mswin64 mingw x64_mingw jruby ]
 
@@ -61,12 +64,29 @@ gem "importmap-rails"
 
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
 gem "tailwindcss-rails"
-gem "image_processing", "~> 1.2"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
+
+# Security enhancements
+gem "rack-attack"
+gem "secure_headers"
+
+# API documentation
+gem "rswag-api"
+gem "rswag-ui"
+
+# Background job monitoring
+# Using Solid Queue (Rails 8 native) instead of Sidekiq
+
+# Application monitoring
+gem "sentry-ruby"
+gem "sentry-rails"
+
+# API versioning
+gem "versionist"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -77,11 +97,61 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Factory pattern for test data
+  gem "factory_bot_rails"
+
+  # Generate fake data for tests
+  gem "faker"
+
+  # Stub HTTP requests in tests
+  gem "webmock"
+
+  # Record HTTP interactions for tests
+  gem "vcr"
+end
+
+group :test do
+  # Code coverage analysis
+  gem "simplecov", require: false
+
+  # Clean database between tests
+  gem "database_cleaner-active_record"
+
+  # Time travel for testing
+  gem "timecop"
+
+  # Better test assertions
+  gem "shoulda-matchers"
+
+  # Capybara for integration tests
+  gem "capybara"
+  gem "selenium-webdriver"
 end
 
 group :development do
   # Preview emails in browser during development
   gem "letter_opener"
+
+  # N+1 query detection
+  gem "bullet"
+
+  # Better error pages
+  gem "better_errors"
+  gem "binding_of_caller"
+
+  # Performance profiling
+  gem "rack-mini-profiler"
+  gem "memory_profiler"
+  gem "stackprof"
+
+  # Git hooks
+  gem "lefthook"
+
+  # Security audit
+  gem "bundler-audit"
 end
 
 gem "kaminari", "~> 1.2"
+
+gem "dockerfile-rails", ">= 1.7", group: :development

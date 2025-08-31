@@ -1,0 +1,205 @@
+<% content_for :title, "Batch Property Listing" %>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50" 
+     data-controller="batch-properties batch-progress"
+     data-batch-progress-poll-interval-value="3000">
+  
+  <!-- Enhanced Header Section -->
+  <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold mb-4">Batch Property Listing</h1>
+        <p class="text-xl text-blue-100 mb-8">Upload multiple properties at once using CSV files</p>
+        
+        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <%= link_to "Upload New Batch", new_batch_property_path,
+                      class: "group bg-white text-blue-600 px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Upload New Batch
+          <% end %>
+
+          <%= link_to "Download Template", template_batch_properties_path(format: :csv),
+                      class: "group bg-blue-500 hover:bg-blue-400 text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center" do %>
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Download Template
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Enhanced Quick Stats with Real-time Updates -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12" data-batch-progress-target="statsContainer">
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 group hover:shadow-xl transition-all duration-300">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Total Uploads</p>
+            <p class="text-2xl font-bold text-gray-900" data-batch-progress-target="totalUploads">
+              <%= @recent_uploads.count %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 group hover:shadow-xl transition-all duration-300">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m0 0h2M7 7h10M7 11h4m6 0h2M7 15h10"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Properties Created</p>
+            <p class="text-2xl font-bold text-gray-900" data-batch-progress-target="propertiesCreated">
+              <%= @recent_uploads.sum(:successful_items) %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 group hover:shadow-xl transition-all duration-300">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Processing</p>
+            <p class="text-2xl font-bold text-gray-900" data-batch-progress-target="processing">
+              <%= @recent_uploads.where(status: ['processing', 'validated']).count %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 group hover:shadow-xl transition-all duration-300">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-pink-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <p class="text-sm font-medium text-gray-600">Failed Items</p>
+            <p class="text-2xl font-bold text-gray-900" data-batch-progress-target="failedItems">
+              <%= @recent_uploads.sum(:failed_items) %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Recent Uploads Table -->
+    <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 overflow-hidden">
+      <div class="px-8 py-6 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900">Recent Uploads</h2>
+            <p class="text-gray-600 mt-1">Track your batch property uploads and their status</p>
+          </div>
+          
+          <!-- Real-time Status Indicator -->
+          <div class="flex items-center space-x-2">
+            <div class="flex items-center text-sm text-gray-500">
+              <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse mr-2" data-batch-progress-target="statusIndicator"></div>
+              <span data-batch-progress-target="statusText">Live Updates Active</span>
+            </div>
+            
+            <!-- Refresh Button -->
+            <button type="button"
+                    data-action="click->batch-progress#refreshData"
+                    class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+                    title="Refresh data">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto" data-batch-progress-target="tableContainer">
+        <% if @recent_uploads.any? %>
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Results</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200" data-batch-progress-target="tableBody">
+              <% @recent_uploads.each do |upload| %>
+                <%= render 'batch_properties/upload_row', upload: upload %>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <%= render 'batch_properties/empty_state' %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Processing Queue (shown when there are active uploads) -->
+    <% if @recent_uploads.where(status: ['processing', 'validated']).any? %>
+      <div class="mt-8 bg-blue-50 border border-blue-200 rounded-2xl p-6" data-batch-progress-target="processingQueue">
+        <div class="flex items-center mb-4">
+          <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+            <svg class="w-5 h-5 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-blue-900">Processing Queue</h3>
+            <p class="text-blue-700 text-sm">
+              <%= pluralize(@recent_uploads.where(status: ['processing', 'validated']).count, 'batch') %> in queue
+            </p>
+          </div>
+        </div>
+        
+        <div class="space-y-3">
+          <% @recent_uploads.where(status: ['processing', 'validated']).limit(3).each do |upload| %>
+            <div class="bg-white rounded-lg p-4 flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="w-3 h-3 bg-blue-400 rounded-full animate-pulse mr-3"></div>
+                <div>
+                  <p class="text-sm font-medium text-gray-900"><%= upload.filename %></p>
+                  <p class="text-xs text-gray-600">
+                    <%= pluralize(upload.total_items, 'property') %> • 
+                    Started <%= time_ago_in_words(upload.created_at) %> ago
+                  </p>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-sm font-medium text-blue-600"><%= upload.progress_percentage %>%</div>
+                <div class="w-24 bg-gray-200 rounded-full h-1 mt-1">
+                  <div class="bg-blue-600 h-1 rounded-full transition-all duration-300" 
+                       style="width: <%= upload.progress_percentage %>%"></div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Toast Notifications -->
+  <%= render 'batch_properties/toast_notifications' %>
+</div>

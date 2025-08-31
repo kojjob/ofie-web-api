@@ -1,0 +1,116 @@
+/* Z-Index Scale System
+ * 
+ * Centralized z-index management to prevent conflicts and maintain consistent layering.
+ * Each level represents a specific layer in the application's visual hierarchy.
+ * 
+ * Usage: Use CSS custom properties (var(--z-*)) instead of hardcoding z-index values.
+ */
+
+:root {
+  /* Base layers */
+  --z-negative: -1;        /* Elements behind the default layer */
+  --z-base: 0;             /* Default stacking context */
+  --z-above: 1;            /* Slightly elevated elements */
+  
+  /* Interactive elements */
+  --z-dropdown: 10;        /* Dropdown menus */
+  --z-sticky: 20;          /* Sticky headers/navigation */
+  --z-fixed: 30;           /* Fixed position elements */
+  
+  /* Overlays and modals */
+  --z-overlay: 40;         /* Page overlays/backdrops */
+  --z-modal: 50;           /* Modal dialogs */
+  --z-popover: 60;         /* Tooltips, popovers */
+  
+  /* Critical UI */
+  --z-notification: 70;    /* Toast notifications */
+  --z-critical: 80;        /* Critical alerts/warnings */
+  --z-maximum: 90;         /* Maximum elevation (use sparingly) */
+}
+
+/* Common z-index assignments */
+
+/* Navigation */
+.navbar,
+nav {
+  z-index: var(--z-sticky);
+}
+
+/* Dropdowns */
+.dropdown,
+.dropdown-menu,
+[data-dropdown] {
+  z-index: var(--z-dropdown);
+}
+
+/* Modals and overlays */
+.modal-backdrop,
+.overlay {
+  z-index: var(--z-overlay);
+}
+
+.modal,
+.dialog {
+  z-index: var(--z-modal);
+}
+
+/* Tooltips and popovers */
+.tooltip,
+.popover,
+[data-tooltip] {
+  z-index: var(--z-popover);
+}
+
+/* Notifications */
+.notification,
+.toast,
+.alert-fixed,
+#global-notification-container {
+  z-index: var(--z-notification);
+}
+
+/* Gallery and lightbox */
+.lightbox,
+.gallery-fullscreen {
+  z-index: var(--z-modal);
+}
+
+/* Chat widget */
+.chat-widget,
+.bot-chat-widget {
+  z-index: var(--z-fixed);
+}
+
+/* Loading indicators */
+.loading-overlay,
+.spinner-overlay {
+  z-index: var(--z-overlay);
+}
+
+/* Utility classes for direct usage */
+.z-negative { z-index: var(--z-negative); }
+.z-base { z-index: var(--z-base); }
+.z-above { z-index: var(--z-above); }
+.z-dropdown { z-index: var(--z-dropdown); }
+.z-sticky { z-index: var(--z-sticky); }
+.z-fixed { z-index: var(--z-fixed); }
+.z-overlay { z-index: var(--z-overlay); }
+.z-modal { z-index: var(--z-modal); }
+.z-popover { z-index: var(--z-popover); }
+.z-notification { z-index: var(--z-notification); }
+.z-critical { z-index: var(--z-critical); }
+.z-maximum { z-index: var(--z-maximum); }
+
+/* Tailwind overrides for consistency */
+.z-0 { z-index: var(--z-base) !important; }
+.z-10 { z-index: var(--z-dropdown) !important; }
+.z-20 { z-index: var(--z-sticky) !important; }
+.z-30 { z-index: var(--z-fixed) !important; }
+.z-40 { z-index: var(--z-overlay) !important; }
+.z-50 { z-index: var(--z-modal) !important; }
+
+/* Replace hardcoded z-[9999] with proper scale */
+.\!z-\[9999\],
+.z-\[9999\] {
+  z-index: var(--z-notification) !important;
+}

@@ -9,6 +9,21 @@ class MaintenanceRequestsController < ApplicationController
                            .order(requested_at: :desc)
                            .page(params[:page])
                            .per(20)
+
+    # Handle JSON requests for AJAX calls
+    respond_to do |format|
+      format.html
+      format.json {
+        render json: {
+          maintenance_requests: @maintenance_requests.map { |request| maintenance_request_json(request) },
+          meta: {
+            current_page: @maintenance_requests.current_page,
+            total_pages: @maintenance_requests.total_pages,
+            total_count: @maintenance_requests.total_count
+          }
+        }
+      }
+    end
   end
 
   # GET /maintenance_requests/:id
@@ -27,10 +42,15 @@ class MaintenanceRequestsController < ApplicationController
 
   # POST /maintenance_requests
   def create
-    @property = Property.find(params[:property_id]) if params[:property_id]
+    # Handle property_id from params or from maintenance_request params
+    property_id = params[:property_id] || params.dig(:maintenance_request, :property_id)
+    @property = Property.find(property_id) if property_id
 
     unless @property && can_create_request_for_property?(@property)
-      redirect_to maintenance_requests_path, alert: "Access denied"
+      respond_to do |format|
+        format.html { redirect_to maintenance_requests_path, alert: "Access denied" }
+        format.json { render json: { error: "Access denied" }, status: :forbidden }
+      end
       return
     end
 
@@ -39,10 +59,26 @@ class MaintenanceRequestsController < ApplicationController
 
     if @maintenance_request.save
       attach_photos if params[:photos].present?
-      redirect_to @maintenance_request, notice: "Maintenance request created successfully"
+      respond_to do |format|
+        format.html { redirect_to @maintenance_request, notice: "Maintenance request created successfully" }
+        format.json {
+          render json: {
+            message: "Maintenance request created successfully",
+            maintenance_request: maintenance_request_json(@maintenance_request)
+          }, status: :created
+        }
+      end
     else
       @properties = current_user_properties
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { render :new, status: :unprocessable_entity }
+        format.json {
+          render json: {
+            error: "Failed to create maintenance request",
+            details: @maintenance_request.errors.full_messages
+          }, status: :unprocessable_entity
+        }
+      end
     end
   end
 
@@ -182,5 +218,47 @@ class MaintenanceRequestsController < ApplicationController
     params[:photos].each do |photo|
       @maintenance_request.photos.attach(photo)
     end
+  end
+
+  def current_user_maintenance_requests
+    if current_user.landlord?
+      current_user.landlord_maintenance_requests
+    else
+      current_user.tenant_maintenance_requests
+    end
+  end
+
+  def maintenance_request_json(request)
+    {
+      id: request.id,
+      title: request.title,
+      description: request.description,
+      priority: request.priority,
+      status: request.status,
+      category: request.category,
+      urgent: request.urgent,
+      requested_at: request.requested_at.iso8601,
+      scheduled_at: request.scheduled_at&.iso8601,
+      estimated_cost: request.estimated_cost,
+      days_since_requested: request.days_since_requested.to_i,
+      property: {
+        id: request.property.id,
+        title: request.property.title,
+        address: request.property.address,
+        city: request.property.city,
+        state: request.property.state
+      },
+      tenant: {
+        id: request.tenant.id,
+        name: request.tenant.name,
+        email: request.tenant.email
+      },
+      landlord: {
+        id: request.landlord.id,
+        name: request.landlord.name,
+        email: request.landlord.email
+      },
+      photos: request.photos.attached? ? request.photos.map { |photo| url_for(photo) } : []
+    }
   end
 end

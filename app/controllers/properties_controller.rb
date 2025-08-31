@@ -7,7 +7,8 @@ class PropertiesController < ApplicationController
   # GET /properties
   def index
     @properties = Property.available
-                         .includes(:user, photos_attachments: :blob)
+                         .with_attached_photos
+                         .includes(:user)
                          .by_city(params[:city])
                          .by_property_type(params[:property_type])
                          .by_bedrooms(params[:bedrooms])
@@ -51,7 +52,8 @@ class PropertiesController < ApplicationController
     else
       search_term = "%#{query}%"
       @properties = Property.available
-                           .includes(:user, photos_attachments: :blob)
+                           .with_attached_photos
+                           .includes(:user)
                            .where(
                              "title ILIKE ? OR description ILIKE ? OR address ILIKE ? OR city ILIKE ?",
                              search_term, search_term, search_term, search_term
@@ -183,12 +185,17 @@ class PropertiesController < ApplicationController
   def my_properties
     authorize_landlord
     @properties = current_user.properties
-                             .includes(photos_attachments: :blob)
+                             .with_attached_photos
                              .order(created_at: :desc)
 
-    render json: {
-      properties: @properties.map { |property| property_json(property, include_stats: true) }
-    }
+    respond_to do |format|
+      format.html # Render the HTML view for landlord property management
+      format.json do
+        render json: {
+          properties: @properties.map { |property| property_json(property, include_stats: true) }
+        }
+      end
+    end
   end
 
   private

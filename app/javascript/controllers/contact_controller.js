@@ -74,7 +74,7 @@ export default class extends Controller {
     `
     
     document.body.appendChild(modal)
-    document.body.style.overflow = 'hidden'
+    document.body.classList.add('overflow-hidden-body')
     
     // Add event listeners
     this.setupCallModalEventListeners(modal, cleanPhone, displayPhone)
@@ -136,7 +136,7 @@ export default class extends Controller {
     `
     
     document.body.appendChild(modal)
-    document.body.style.overflow = 'hidden'
+    document.body.classList.add('overflow-hidden-body')
     
     // Add event listeners
     this.setupContactModalEventListeners(modal)
@@ -165,7 +165,7 @@ export default class extends Controller {
   }
 
   closeModal(modal) {
-    document.body.style.overflow = 'auto'
+    document.body.classList.remove('overflow-hidden-body')
     modal.remove()
   }
 
@@ -189,37 +189,16 @@ export default class extends Controller {
         button.classList.add('bg-white', 'border-gray-300', 'text-gray-700', 'hover:border-blue-500', 'hover:text-blue-600')
       }, 2000)
       
-      this.showNotification('Phone number copied to clipboard!')
+      // Use the unified notification system
+      if (window.NotificationSystem) {
+        window.NotificationSystem.success('Phone number copied to clipboard!')
+      }
     } catch (error) {
       console.error('Failed to copy phone number:', error)
-      this.showNotification('Failed to copy phone number', 'error')
+      // Use the unified notification system
+      if (window.NotificationSystem) {
+        window.NotificationSystem.error('Failed to copy phone number')
+      }
     }
-  }
-
-  showNotification(message, type = 'success') {
-    const notification = document.createElement('div')
-    const bgColor = type === 'success' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'
-    
-    notification.className = `fixed top-4 right-4 ${bgColor} border px-6 py-4 rounded-lg shadow-lg z-50 transition-all duration-300`
-    notification.innerHTML = `
-      <div class="flex items-center">
-        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-          ${type === 'success' 
-            ? '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>'
-            : '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>'
-          }
-        </svg>
-        <span>${message}</span>
-      </div>
-    `
-    
-    document.body.appendChild(notification)
-    
-    // Remove notification after 3 seconds
-    setTimeout(() => {
-      notification.style.opacity = '0'
-      notification.style.transform = 'translateX(100%)'
-      setTimeout(() => notification.remove(), 300)
-    }, 3000)
   }
 }

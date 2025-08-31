@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  # Health check endpoint
+  get "/health", to: "health#show"
+
+  # CSP Report endpoint
+  post "/csp-report", to: "csp_reports#create"
+
+  # SEO routes
+  get "/sitemap.xml", to: "sitemap#index", defaults: { format: "xml" }
+
   # API routes
   namespace :api do
     namespace :v1 do
@@ -150,6 +159,18 @@ Rails.application.routes.draw do
           end
         end
       end
+
+      # Bot routes
+      namespace :bot do
+        post :chat
+        post :start_conversation
+        get :suggestions
+        get :faqs
+        post :feedback
+      end
+
+      # Rental Applications API routes
+      get "rental_applications/approved", to: "rental_applications#approved_for_lease"
     end
   end
 
@@ -165,10 +186,6 @@ Rails.application.routes.draw do
   post "forgot_password", to: "auth#forgot_password"
   get "reset_password", to: "auth#reset_password"
   patch "reset_password", to: "auth#reset_password"
-
-  # API routes for backward compatibility
-  post "auth/register", to: "auth#register"
-  post "auth/login", to: "auth#login"
 
   # User profile routes (Web)
   get "profile", to: "users#show", as: "profile"
@@ -255,6 +272,24 @@ Rails.application.routes.draw do
     end
   end
 
+  # Batch Properties routes (Web)
+  resources :batch_properties, only: [ :index, :new, :show, :destroy ] do
+    collection do
+      get :template
+      post :upload
+    end
+    member do
+      get :preview
+      post :process_batch
+      post :fix_status
+      post :retry_failed
+      get :status
+      get :results
+      get "item_details/:item_id", action: :item_details, as: :item_details
+      post "retry_item/:item_id", action: :retry_item, as: :retry_item
+    end
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -322,6 +357,27 @@ Rails.application.routes.draw do
 
   # Home page
   get "/home", to: "home#index", as: "home"
+  get "/about", to: "home#about", as: "about"
+  get "/help", to: "home#help", as: "help"
+  get "/contact", to: "home#contact", as: "contact"
+  get "/terms_of_service", to: "home#terms_of_service", as: "terms_of_service"
+  get "/privacy_policy", to: "home#privacy_policy", as: "privacy_policy"
+  get "/cookie_policy", to: "home#cookie_policy", as: "cookie_policy"
+  get "/accessibility", to: "home#accessibility", as: "accessibility"
+  get "tenant_screening", to: "home#tenant_screening", as: "tenant_screening"
+
+  # Newsletter and additional routes
+  post "/newsletter/signup", to: "newsletter#create", as: "newsletter_signup"
+
+  # Additional footer routes
+  get "/calculators", to: "tools#calculators", as: "calculators"
+  get "/neighborhoods", to: "home#neighborhoods", as: "neighborhoods"
+  get "/resources/renters", to: "home#renter_resources", as: "resources_renters"
+  get "/dashboard/properties", to: "dashboard#properties", as: "dashboard_properties"
+  get "/market-analysis", to: "tools#market_analysis", as: "market_analysis"
+  get "/landlord-tools", to: "tools#landlord_tools", as: "landlord_tools"
+  get "/careers", to: "home#careers", as: "careers"
+  get "/press", to: "home#press", as: "press"
 
   # Defines the root path route ("/")
   root "home#index"

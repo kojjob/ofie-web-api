@@ -1,57 +1,95 @@
 import { Controller } from "@hotwired/stimulus"
+import { ErrorHandlingMixin } from "../mixins/error_handling_mixin"
 
-export default class extends Controller {
+export default class extends ErrorHandlingMixin(Controller) {
   static values = { propertyId: Number }
+  static targets = ["button", "loading"]
 
   connect() {
     this.checkFavoriteStatus()
   }
 
   async toggle() {
-    try {
-      const response = await fetch(`/properties/${this.propertyIdValue}/favorite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-        },
-        credentials: 'same-origin'
-      })
+    // Disable button during operation
+    this.disableInteraction()
+    
+    const result = await this.handleAsync(
+      async () => {
+        const response = await fetch(`/properties/${this.propertyIdValue}/favorite`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+          },
+          credentials: 'same-origin'
+        })
 
-      if (response.ok) {
-        const data = await response.json()
-        this.updateButtonState(data.favorited)
-        this.showNotification(data.favorited ? 'Added to favorites' : 'Removed from favorites')
-      } else if (response.status === 401) {
-        // User not logged in
-        this.showNotification('Please log in to save properties', 'error')
-        // Optionally redirect to login
-        window.location.href = '/users/sign_in'
-      } else {
-        throw new Error('Failed to update favorite status')
+        if (!response.ok) {
+          if (response.status === 401) {
+            // Special handling for authentication
+            const error = new Error('Authentication required')
+            error.status = 401
+            error.requiresAuth = true
+            throw error
+          }
+          throw new Error(`HTTP ${response.status}`)
+        }
+
+        return response.json()
+      },
+      {
+        onError: (error) => {
+          if (error.status === 401 || error.requiresAuth) {
+            this.showNotification('Please log in to save properties', 'error')
+            setTimeout(() => {
+              window.location.href = '/users/sign_in'
+            }, 1500)
+          } else {
+            this.showNotification('Failed to update favorite status. Please try again.', 'error')
+          }
+        },
+        onFinally: () => {
+          this.enableInteraction()
+        },
+        retries: 1,
+        retryDelay: 1000
       }
-    } catch (error) {
-      console.error('Error toggling favorite:', error)
-      this.showNotification('Something went wrong. Please try again.', 'error')
+    )
+
+    if (result.success) {
+      this.updateButtonState(result.data.favorited)
+      this.showNotification(
+        result.data.favorited ? 'Added to favorites' : 'Removed from favorites'
+      )
     }
   }
 
   async checkFavoriteStatus() {
-    try {
-      const response = await fetch(`/properties/${this.propertyIdValue}/favorite_status`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
-        },
-        credentials: 'same-origin'
-      })
+    const result = await this.handleAsync(
+      async () => {
+        const response = await fetch(`/properties/${this.propertyIdValue}/favorite_status`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+          },
+          credentials: 'same-origin'
+        })
 
-      if (response.ok) {
-        const data = await response.json()
-        this.updateButtonState(data.favorited)
+        if (response.ok) {
+          return response.json()
+        }
+        
+        // Don't throw error for status check - just return null
+        return null
+      },
+      {
+        showNotification: false,
+        retries: 0
       }
-    } catch (error) {
-      console.error('Error checking favorite status:', error)
+    )
+
+    if (result.success && result.data) {
+      this.updateButtonState(result.data.favorited)
     }
   }
 
@@ -81,10 +119,17 @@ export default class extends Controller {
   }
 
   showNotification(message, type = 'success') {
+    // Use the unified notification system if available
+    if (window.NotificationSystem) {
+      window.NotificationSystem[type](message)
+      return
+    }
+    
+    // Fallback to simple notification
     const notification = document.createElement('div')
     const bgColor = type === 'success' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'
     
-    notification.className = `fixed top-4 right-4 ${bgColor} border px-6 py-4 rounded-lg shadow-lg z-50 transition-all duration-300`
+    notification.className = `fixed top-24 right-4 ${bgColor} border px-6 py-4 rounded-lg shadow-lg z-notification transition-all-300 animate-slide-in`
     notification.innerHTML = `
       <div class="flex items-center">
         <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -101,9 +146,34 @@ export default class extends Controller {
     
     // Remove notification after 3 seconds
     setTimeout(() => {
-      notification.style.opacity = '0'
-      notification.style.transform = 'translateX(100%)'
+      notification.classList.remove('animate-slide-in')
+      notification.classList.add('animate-slide-out')
       setTimeout(() => notification.remove(), 300)
     }, 3000)
+  }
+
+  // Override to show/hide loading state if we have a loading target
+  showLoadingState() {
+    if (this.hasLoadingTarget) {
+      this.loadingTarget.classList.remove('hidden')
+    }
+    
+    // Add loading state to button
+    const svg = this.element.querySelector('svg')
+    if (svg) {
+      svg.classList.add('animate-pulse')
+    }
+  }
+
+  hideLoadingState() {
+    if (this.hasLoadingTarget) {
+      this.loadingTarget.classList.add('hidden')
+    }
+    
+    // Remove loading state from button
+    const svg = this.element.querySelector('svg')
+    if (svg) {
+      svg.classList.remove('animate-pulse')
+    }
   }
 }
