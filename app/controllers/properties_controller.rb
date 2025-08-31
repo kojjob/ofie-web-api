@@ -211,9 +211,15 @@ class PropertiesController < ApplicationController
   end
 
   def set_property
-    @property = Property.find(params[:id])
+    @property = Property.includes(photos_attachments: :blob).find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error: "Property not found" }, status: :not_found
+    respond_to do |format|
+      format.html { 
+        flash[:error] = "Property not found"
+        redirect_to properties_path 
+      }
+      format.json { render json: { error: "Property not found" }, status: :not_found }
+    end
   end
 
   def authorize_landlord
