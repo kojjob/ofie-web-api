@@ -25,16 +25,17 @@ class PropertiesController < ApplicationController
 
     respond_to do |format|
       format.html do
-        # Eager load photos for HTML view to avoid N+1 queries in properties grid
-        @properties = @properties.with_attached_photos
+        # Only eager load what's needed for the properties grid view
+        @properties = @properties.includes(photos_attachments: :blob)
       end
       format.json do
-        # Only include photos for JSON responses that use property_json
-        @properties = @properties.with_attached_photos unless request.xhr?
-        
         if request.xhr?
+          # For AJAX requests (properties grid), only load photos
+          @properties = @properties.includes(photos_attachments: :blob)
           render partial: "properties_grid", locals: { properties: @properties }
         else
+          # For JSON API, include user data for property_json serialization
+          @properties = @properties.includes(:user, photos_attachments: :blob)
           render json: {
             properties: @properties.map { |property| property_json(property) },
             meta: {
@@ -89,12 +90,16 @@ class PropertiesController < ApplicationController
 
   # GET /properties/:id
   def show
-    # Preload related properties with photos to avoid N+1 queries
+    # Load data needed for the show page
     @related_properties = Property.where.not(id: @property.id)
                                   .available
                                   .includes(photos_attachments: :blob)
                                   .limit(4)
-    
+
+    # Load recent reviews and comments for the show page
+    @recent_reviews = @property.property_reviews.includes(:user).recent.limit(5)
+    @recent_comments = @property.recent_comments(10)
+
     respond_to do |format|
       format.html # Render the HTML view
       format.json {
@@ -194,10 +199,9 @@ class PropertiesController < ApplicationController
   # GET /properties/my_properties (for landlords)
   def my_properties
     authorize_landlord
-    @properties = current_user.properties.order(created_at: :desc)
-    
-    # Only include photos for JSON responses
-    @properties = @properties.with_attached_photos if request.format.json?
+    @properties = current_user.properties
+                              .includes(photos_attachments: :blob)
+                              .order(created_at: :desc)
 
     respond_to do |format|
       format.html # Render the HTML view for landlord property management
@@ -220,17 +224,23 @@ class PropertiesController < ApplicationController
   end
 
   def set_property
-    @property = Property.includes(
-      :user, 
-      photos_attachments: :blob,
-      property_comments: [:user, :replies],
-      property_reviews: :user
-    ).find(params[:id])
+    # Only eager load what's actually used in the views
+    case action_name
+    when 'show'
+      # For show page, we need user and photos, comments are loaded separately
+      @property = Property.includes(:user, photos_attachments: :blob).find(params[:id])
+    when 'edit'
+      # For edit page, we only need photos
+      @property = Property.includes(photos_attachments: :blob).find(params[:id])
+    else
+      # For other actions, minimal loading
+      @property = Property.find(params[:id])
+    end
   rescue ActiveRecord::RecordNotFound
     respond_to do |format|
-      format.html { 
+      format.html {
         flash[:error] = "Property not found"
-        redirect_to properties_path 
+        redirect_to properties_path
       }
       format.json { render json: { error: "Property not found" }, status: :not_found }
     end
@@ -287,10 +297,17 @@ class PropertiesController < ApplicationController
       photos: property.photos.attached? ? property.photos.map { |photo| rails_blob_url(photo) } : []
     }
 
-    if options[:include_contact]
+    if options[:include_contact] && property.association(:user).loaded?
       json[:landlord] = {
         id: property.user.id,
         email: property.user.email
+      }
+    elsif options[:include_contact]
+      # If user isn't loaded, load it to avoid N+1
+      user = property.user
+      json[:landlord] = {
+        id: user.id,
+        email: user.email
       }
     end
 

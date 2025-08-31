@@ -271,15 +271,19 @@ export default class extends Controller {
       })
       
       xhr.addEventListener('load', () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          // Parse response as fetch-like object
+        try {
+          const data = JSON.parse(xhr.responseText)
           resolve({
-            ok: true,
+            ok: xhr.status >= 200 && xhr.status < 300,
             status: xhr.status,
-            json: () => Promise.resolve(JSON.parse(xhr.responseText))
+            json: () => Promise.resolve(data)
           })
-        } else {
-          reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`))
+        } catch (e) {
+          resolve({
+            ok: false,
+            status: xhr.status,
+            json: () => Promise.resolve({ error: 'Failed to parse response' })
+          })
         }
       })
       
@@ -548,8 +552,11 @@ export default class extends Controller {
 
 // Make processProperties available globally for the dynamic button
 window.processProperties = function(batchUploadId) {
-  const controller = document.querySelector('[data-controller="batch-upload"]')
-  if (controller && controller.batchUploadController) {
-    controller.batchUploadController.processProperties(batchUploadId)
+  const element = document.querySelector('[data-controller="batch-upload"]')
+  if (element) {
+    const controller = Stimulus.getControllerForElementAndIdentifier(element, 'batch-upload')
+    if (controller) {
+      controller.processProperties(batchUploadId)
+    }
   }
 }

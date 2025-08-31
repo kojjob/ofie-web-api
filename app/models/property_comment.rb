@@ -1,7 +1,7 @@
 class PropertyComment < ApplicationRecord
   belongs_to :user
   belongs_to :property
-  belongs_to :parent, class_name: "PropertyComment", optional: true
+  belongs_to :parent, class_name: "PropertyComment", optional: true, counter_cache: :replies_count
 
   has_many :replies, class_name: "PropertyComment", foreign_key: "parent_id", dependent: :destroy
   has_many :comment_likes, dependent: :destroy
