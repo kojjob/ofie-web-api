@@ -104,4 +104,4 @@ export default class extends Controller {
     
     menuItems[nextIndex].focus();
   }
-}
+};

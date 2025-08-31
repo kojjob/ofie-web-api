@@ -301,4 +301,4 @@ export default class extends Controller {
       }, 300)
     }, 3000)
   }
-}
+};
