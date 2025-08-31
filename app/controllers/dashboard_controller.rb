@@ -13,7 +13,7 @@ class DashboardController < ApplicationController
 
   def landlord_dashboard
     # Use more specific includes for photos to avoid over-eager loading
-    @properties = current_user.properties.includes(photos_attachments: :blob)
+    @properties = current_user.properties.with_attached_photos
     # Create a separate limited collection for the dashboard view to avoid N+1 queries
     @properties_for_display = @properties.limit(6)
     
