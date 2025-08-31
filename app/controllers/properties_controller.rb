@@ -7,7 +7,7 @@ class PropertiesController < ApplicationController
   # GET /properties
   def index
     @properties = Property.available
-                         .with_attached_photos
+                         .includes(photos_attachments: :blob)
                          .by_city(params[:city])
                          .by_property_type(params[:property_type])
                          .by_bedrooms(params[:bedrooms])
@@ -51,8 +51,7 @@ class PropertiesController < ApplicationController
     else
       search_term = "%#{query}%"
       @properties = Property.available
-                           .with_attached_photos
-                           .includes(:user)
+                           .includes(:user, photos_attachments: :blob)
                            .where(
                              "title ILIKE ? OR description ILIKE ? OR address ILIKE ? OR city ILIKE ?",
                              search_term, search_term, search_term, search_term
@@ -184,7 +183,7 @@ class PropertiesController < ApplicationController
   def my_properties
     authorize_landlord
     @properties = current_user.properties
-                             .with_attached_photos
+                             .includes(photos_attachments: :blob)
                              .order(created_at: :desc)
 
     respond_to do |format|
