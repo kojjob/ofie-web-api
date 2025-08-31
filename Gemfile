@@ -79,8 +79,7 @@ gem "rswag-api"
 gem "rswag-ui"
 
 # Background job monitoring
-gem "sidekiq" # Alternative to solid_queue with better monitoring
-gem "sidekiq-cron"
+# Using Solid Queue (Rails 8 native) instead of Sidekiq
 
 # Application monitoring
 gem "sentry-ruby"

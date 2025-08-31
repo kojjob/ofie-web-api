@@ -39,7 +39,7 @@ A modern, comprehensive real estate management platform built with Ruby on Rails
 - **Framework**: Ruby on Rails 8.0.2
 - **Database**: PostgreSQL 15+
 - **Caching**: Solid Cache (Rails 8 native)
-- **Background Jobs**: Solid Queue / Sidekiq
+- **Background Jobs**: Solid Queue (Rails 8 native)
 - **Authentication**: Devise + JWT
 - **Authorization**: Pundit
 - **File Storage**: Active Storage with S3
@@ -65,7 +65,6 @@ A modern, comprehensive real estate management platform built with Ruby on Rails
 - Ruby 3.3.0
 - Rails 8.0.2
 - PostgreSQL 15+
-- Redis 7+ (optional, for Action Cable)
 - Node.js 18+ and Yarn
 - ImageMagick (for image processing)
 
@@ -271,8 +270,7 @@ heroku create ofie-web-api
 # Add PostgreSQL
 heroku addons:create heroku-postgresql:hobby-dev
 
-# Add Redis for Action Cable
-heroku addons:create heroku-redis:hobby-dev
+# Solid Queue uses database for background jobs, no Redis needed
 
 # Set environment variables
 heroku config:set RAILS_MASTER_KEY=$(cat config/master.key)

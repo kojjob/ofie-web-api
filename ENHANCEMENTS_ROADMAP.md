@@ -42,13 +42,13 @@ This document outlines comprehensive enhancements for the property management Ra
 - [ ] Add query performance monitoring
 
 #### 2.2 Caching Implementation
-- [ ] Configure Redis for caching
+- [ ] Configure Solid Cache (Rails 8 native)
 - [ ] Implement fragment caching
 - [ ] Add Russian doll caching
 - [ ] Cache API responses
 
 #### 2.3 Background Jobs
-- [ ] Configure Sidekiq for job processing
+- [ ] Configure Solid Queue for job processing
 - [ ] Move email sending to background jobs
 - [ ] Implement image processing jobs
 - [ ] Add notification jobs

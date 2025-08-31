@@ -13,10 +13,8 @@ Rails.application.configure do
   # Enable caching in development if ENABLE_CACHE is set
   if Rails.env.development? && ENV["ENABLE_CACHE"].present?
     config.action_controller.perform_caching = true
-    config.cache_store = :redis_cache_store, {
-      url: ENV.fetch("REDIS_URL", "redis://localhost:6379/1"),
-      expires_in: 1.hour
-    }
+    # Use Solid Cache in development when caching is enabled
+    config.cache_store = :solid_cache_store
   end
 end
 
