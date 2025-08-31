@@ -1,6 +1,7 @@
 class CspReportsController < ApplicationController
   skip_before_action :authenticate_request
-  skip_forgery_protection
+  # CSP reports need to accept POST without CSRF token
+  protect_from_forgery with: :null_session
 
   def create
     # Log the CSP violation report for monitoring purposes
