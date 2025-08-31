@@ -35,7 +35,7 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
 
   test "valid statuses" do
     valid_statuses = %w[pending processing completed completed_with_errors failed cancelled]
-    
+
     valid_statuses.each do |status|
       @upload.status = status
       assert @upload.valid?, "#{status} should be a valid status"
@@ -63,10 +63,10 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
   test "completed? method" do
     @upload.status = "completed"
     assert @upload.completed?
-    
+
     @upload.status = "completed_with_errors"
     assert @upload.completed?
-    
+
     @upload.status = "processing"
     assert_not @upload.completed?
   end
@@ -74,7 +74,7 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
   test "processing? method" do
     @upload.status = "processing"
     assert @upload.processing?
-    
+
     @upload.status = "completed"
     assert_not @upload.processing?
   end
@@ -82,10 +82,10 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
   test "has_errors? method" do
     @upload.status = "completed_with_errors"
     assert @upload.has_errors?
-    
+
     @upload.status = "failed"
     assert @upload.has_errors?
-    
+
     @upload.status = "completed"
     assert_not @upload.has_errors?
   end
@@ -93,17 +93,17 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
   test "can_retry? method" do
     @upload.status = "completed_with_errors"
     assert @upload.can_retry?
-    
+
     @upload.status = "failed"
     assert @upload.can_retry?
-    
+
     @upload.status = "processing"
     assert_not @upload.can_retry?
   end
 
   test "creates associated batch items" do
     @upload.save!
-    
+
     assert_difference "BatchPropertyItem.count", 3 do
       3.times do |i|
         @upload.batch_property_items.create!(
@@ -113,7 +113,7 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
         )
       end
     end
-    
+
     assert_equal 3, @upload.batch_property_items.count
   end
 
@@ -124,7 +124,7 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
       status: "success",
       row_data: { title: "Test Property" }
     )
-    
+
     assert_difference "BatchPropertyItem.count", -1 do
       @upload.destroy
     end
@@ -136,7 +136,7 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
     processing = BatchPropertyUpload.create!(user: @user, file_name: "processing.csv", status: "processing")
     completed = BatchPropertyUpload.create!(user: @user, file_name: "completed.csv", status: "completed")
     failed = BatchPropertyUpload.create!(user: @user, file_name: "failed.csv", status: "failed")
-    
+
     assert_includes BatchPropertyUpload.pending, pending
     assert_includes BatchPropertyUpload.processing, processing
     assert_includes BatchPropertyUpload.completed, completed
@@ -150,14 +150,14 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
       status: "completed",
       created_at: 2.days.ago
     )
-    
+
     new_upload = BatchPropertyUpload.create!(
       user: @user,
       file_name: "new.csv",
       status: "completed",
       created_at: 1.hour.ago
     )
-    
+
     recent = BatchPropertyUpload.recent
     assert_equal new_upload, recent.first
     assert_equal old_upload, recent.last
@@ -165,12 +165,12 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
 
   test "updates timestamps on status change" do
     @upload.save!
-    
+
     # Test started_at
     assert_nil @upload.started_at
     @upload.update!(status: "processing")
     assert_not_nil @upload.started_at
-    
+
     # Test completed_at
     assert_nil @upload.completed_at
     @upload.update!(status: "completed")
@@ -187,7 +187,7 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
       status: "completed",
       completed_at: 1.hour.ago
     )
-    
+
     assert_equal 3600, @upload.duration_in_seconds
     assert_equal "01:00:00", @upload.formatted_duration
   end
@@ -200,7 +200,7 @@ class BatchPropertyUploadTest < ActiveSupport::TestCase
       failed_rows: 15,
       status: "completed_with_errors"
     )
-    
+
     summary = @upload.summary
     assert_equal 100, summary[:total]
     assert_equal 85, summary[:successful]

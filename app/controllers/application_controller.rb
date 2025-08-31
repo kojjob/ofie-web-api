@@ -3,17 +3,17 @@ class ApplicationController < ActionController::Base
   include InputSanitizer
   include ErrorHandler
   include SeoOptimizable
-  
+
   # Helper modules available to all views
   helper SiteConfigHelper
-  
+
   # Skip CSRF protection for API requests
   protect_from_forgery with: :null_session
-  
+
   # Request tracking
   before_action :set_request_id
   before_action :authenticate_request, unless: :web_request?
-  
+
   attr_reader :current_user
   helper_method :current_user, :user_signed_in?
 
@@ -90,14 +90,14 @@ class ApplicationController < ActionController::Base
   def skip_authentication
     skip_before_action :authenticate_request
   end
-  
-  
+
+
   # Request tracking
   def set_request_id
     # Use Rails' built-in request ID
-    response.headers['X-Request-ID'] = request.request_id
+    response.headers["X-Request-ID"] = request.request_id
   end
-  
+
   # Logging helper
   def log_action(action, resource = nil, details = {})
     Rails.logger.info({

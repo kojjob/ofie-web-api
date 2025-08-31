@@ -8,31 +8,31 @@ FactoryBot.define do
     user_type { "individual" }
     email_verified { true }
     email_verified_at { Time.current }
-    
+
     trait :unverified do
       email_verified { false }
       email_verified_at { nil }
     end
-    
+
     trait :admin do
       user_type { "admin" }
     end
-    
+
     trait :agent do
       user_type { "agent" }
       company_name { Faker::Company.name }
     end
-    
+
     trait :landlord do
       user_type { "landlord" }
     end
-    
+
     trait :with_profile_image do
       after(:create) do |user|
         user.profile_image.attach(
-          io: File.open(Rails.root.join('test/fixtures/files/sample_avatar.jpg')),
-          filename: 'avatar.jpg',
-          content_type: 'image/jpeg'
+          io: File.open(Rails.root.join("test/fixtures/files/sample_avatar.jpg")),
+          filename: "avatar.jpg",
+          content_type: "image/jpeg"
         )
       end
     end

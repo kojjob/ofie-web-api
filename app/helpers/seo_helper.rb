@@ -231,4 +231,3 @@ module SeoHelper
     end
   end
 end
-

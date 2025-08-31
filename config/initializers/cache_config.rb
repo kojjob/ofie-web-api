@@ -11,10 +11,10 @@ Rails.application.configure do
   end
 
   # Enable caching in development if ENABLE_CACHE is set
-  if Rails.env.development? && ENV['ENABLE_CACHE'].present?
+  if Rails.env.development? && ENV["ENABLE_CACHE"].present?
     config.action_controller.perform_caching = true
     config.cache_store = :redis_cache_store, {
-      url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/1'),
+      url: ENV.fetch("REDIS_URL", "redis://localhost:6379/1"),
       expires_in: 1.hour
     }
   end
@@ -26,20 +26,20 @@ module CacheKeys
   FEATURED_PROPERTIES = "featured_properties"
   RECENT_PROPERTIES = "recent_properties"
   PROPERTY_COUNT = "property_count"
-  
+
   # User-related cache keys
   USER_PROPERTIES = ->(user_id) { "user_#{user_id}_properties" }
   USER_FAVORITES = ->(user_id) { "user_#{user_id}_favorites" }
   USER_DASHBOARD = ->(user_id) { "user_#{user_id}_dashboard" }
-  
+
   # Search-related cache keys
   SEARCH_RESULTS = ->(query_hash) { "search_#{query_hash}" }
   LOCATION_PROPERTIES = ->(location) { "location_#{location.parameterize}_properties" }
-  
+
   # Payment-related cache keys
   PAYMENT_SUMMARY = ->(user_id) { "payment_summary_#{user_id}" }
   MONTHLY_REVENUE = ->(year, month) { "revenue_#{year}_#{month}" }
-  
+
   # Analytics cache keys
   ANALYTICS_DASHBOARD = "analytics_dashboard"
   PROPERTY_STATISTICS = "property_statistics"

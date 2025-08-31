@@ -300,4 +300,3 @@ module StructuredDataHelper
     }
   end
 end
-

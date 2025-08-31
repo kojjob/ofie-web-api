@@ -7,15 +7,15 @@ module Properties
 
     def call
       return failure("User must be a landlord") unless @user.landlord?
-      
+
       with_transaction do
         property = build_property
-        
+
         if property.save
           attach_images(property) if @params[:images].present?
           notify_subscribers(property)
           schedule_indexing(property)
-          
+
           log_execution("Property created: #{property.id}")
           success(property: property)
         else
@@ -34,7 +34,7 @@ module Properties
 
     def property_params
       params.except(:images).merge(
-        status: params[:status] || 'available',
+        status: params[:status] || "available",
         listed_at: Time.current
       )
     end
@@ -50,7 +50,7 @@ module Properties
     def notify_subscribers(property)
       # Send notifications to users who have saved searches matching this property
       NotificationJob.perform_later(
-        type: 'new_property',
+        type: "new_property",
         property_id: property.id,
         location: property.location
       )

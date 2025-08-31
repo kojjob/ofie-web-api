@@ -84,7 +84,7 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
-  
+
   # Bullet configuration for N+1 query detection
   config.after_initialize do
     Bullet.enable = true
@@ -93,16 +93,16 @@ Rails.application.configure do
     Bullet.console = true
     Bullet.rails_logger = true
     Bullet.add_footer = true
-    
+
     # Bullet whitelist
     Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :profile_image_attachment
     Bullet.add_safelist type: :n_plus_one_query, class_name: "Property", association: :photos_attachments
   end
-  
+
   # Rack Mini Profiler configuration
   config.after_initialize do
     # Enable Rack Mini Profiler (must come after Bullet)
-    Rack::MiniProfiler.config.position = 'bottom-right'
+    Rack::MiniProfiler.config.position = "bottom-right"
     Rack::MiniProfiler.config.start_hidden = true
     Rack::MiniProfiler.config.enable_advanced_debugging_tools = true
   end

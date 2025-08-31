@@ -1,25 +1,25 @@
 ENV["RAILS_ENV"] ||= "test"
 
 # SimpleCov must be started before any of your application code is required
-require 'simplecov'
-SimpleCov.start 'rails' do
-  add_filter '/test/'
-  add_filter '/config/'
-  add_filter '/vendor/'
-  add_filter '/db/'
-  
-  add_group 'Controllers', 'app/controllers'
-  add_group 'Models', 'app/models'
-  add_group 'Services', 'app/services'
-  add_group 'Helpers', 'app/helpers'
-  add_group 'Mailers', 'app/mailers'
-  add_group 'Jobs', 'app/jobs'
-  add_group 'Policies', 'app/policies'
-  add_group 'Serializers', 'app/serializers'
-  
+require "simplecov"
+SimpleCov.start "rails" do
+  add_filter "/test/"
+  add_filter "/config/"
+  add_filter "/vendor/"
+  add_filter "/db/"
+
+  add_group "Controllers", "app/controllers"
+  add_group "Models", "app/models"
+  add_group "Services", "app/services"
+  add_group "Helpers", "app/helpers"
+  add_group "Mailers", "app/mailers"
+  add_group "Jobs", "app/jobs"
+  add_group "Policies", "app/policies"
+  add_group "Serializers", "app/serializers"
+
   minimum_coverage 80
   minimum_coverage_by_file 60
-  
+
   formatter SimpleCov::Formatter::HTMLFormatter
 end
 
@@ -47,14 +47,14 @@ module ActiveSupport
 
     # Include FactoryBot methods
     include FactoryBot::Syntax::Methods
-    
+
     # Database cleaner setup
     DatabaseCleaner.strategy = :transaction
-    
+
     setup do
       DatabaseCleaner.start
     end
-    
+
     teardown do
       DatabaseCleaner.clean
       Timecop.return
@@ -63,14 +63,14 @@ module ActiveSupport
     # Helper method for JWT authentication in tests
     def auth_headers(user)
       token = JsonWebToken.encode(user_id: user.id)
-      { 'Authorization' => "Bearer #{token}" }
+      { "Authorization" => "Bearer #{token}" }
     end
-    
+
     # Helper method for creating authenticated requests
     def authenticated_request(user, method, path, params = {})
       send(method, path, params: params, headers: auth_headers(user))
     end
-    
+
     # Helper to parse JSON responses
     def json_response
       JSON.parse(@response.body)
@@ -86,12 +86,12 @@ VCR.configure do |config|
   config.allow_http_connections_when_no_cassette = false
   config.default_cassette_options = {
     record: :new_episodes,
-    match_requests_on: [:method, :uri, :body]
+    match_requests_on: [ :method, :uri, :body ]
   }
-  
+
   # Filter sensitive data
-  config.filter_sensitive_data('<STRIPE_KEY>') { ENV['STRIPE_API_KEY'] }
-  config.filter_sensitive_data('<JWT_SECRET>') { ENV['JWT_SECRET_KEY'] }
+  config.filter_sensitive_data("<STRIPE_KEY>") { ENV["STRIPE_API_KEY"] }
+  config.filter_sensitive_data("<JWT_SECRET>") { ENV["JWT_SECRET_KEY"] }
 end
 
 # Shoulda Matchers configuration
@@ -105,10 +105,10 @@ end
 # Capybara configuration
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :selenium_chrome_headless
-Capybara.save_path = Rails.root.join('tmp/capybara')
+Capybara.save_path = Rails.root.join("tmp/capybara")
 
 # WebMock configuration
 WebMock.disable_net_connect!(
   allow_localhost: true,
-  allow: ['chromedriver.storage.googleapis.com']
+  allow: [ "chromedriver.storage.googleapis.com" ]
 )

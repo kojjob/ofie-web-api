@@ -1,10 +1,10 @@
 Rails.application.routes.draw do
   # Health check endpoint
-  get '/health', to: 'health#show'
-  
+  get "/health", to: "health#show"
+
   # SEO routes
-  get '/sitemap.xml', to: 'sitemap#index', defaults: { format: 'xml' }
-  
+  get "/sitemap.xml", to: "sitemap#index", defaults: { format: "xml" }
+
   # API routes
   namespace :api do
     namespace :v1 do
@@ -282,8 +282,8 @@ Rails.application.routes.draw do
       post :retry_failed
       get :status
       get :results
-      get 'item_details/:item_id', action: :item_details, as: :item_details
-      post 'retry_item/:item_id', action: :retry_item, as: :retry_item
+      get "item_details/:item_id", action: :item_details, as: :item_details
+      post "retry_item/:item_id", action: :retry_item, as: :retry_item
     end
   end
 

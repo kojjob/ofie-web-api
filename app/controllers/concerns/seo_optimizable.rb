@@ -208,4 +208,3 @@ module SeoOptimizable
     "Ofie"
   end
 end
-

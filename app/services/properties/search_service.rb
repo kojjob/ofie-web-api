@@ -33,7 +33,7 @@ module Properties
 
     def base_query
       Property.includes(:user, :property_favorites, images_attachments: :blob)
-              .where(status: 'available')
+              .where(status: "available")
     end
 
     def build_filters
@@ -44,9 +44,9 @@ module Properties
         f[:bedrooms] = params[:bedrooms].to_i if params[:bedrooms].present?
         f[:bathrooms] = params[:bathrooms].to_i if params[:bathrooms].present?
         f[:property_type] = params[:property_type] if params[:property_type].present?
-        f[:amenities] = params[:amenities].split(',') if params[:amenities].present?
-        f[:pet_friendly] = params[:pet_friendly] == 'true' if params[:pet_friendly].present?
-        f[:parking] = params[:parking] == 'true' if params[:parking].present?
+        f[:amenities] = params[:amenities].split(",") if params[:amenities].present?
+        f[:pet_friendly] = params[:pet_friendly] == "true" if params[:pet_friendly].present?
+        f[:parking] = params[:parking] == "true" if params[:parking].present?
       end
     end
 
@@ -64,8 +64,8 @@ module Properties
 
     def filter_by_location(properties)
       # Use PostgreSQL full-text search for better matching
-      properties.where("location ILIKE ? OR address ILIKE ?", 
-                      "%#{filters[:location]}%", 
+      properties.where("location ILIKE ? OR address ILIKE ?",
+                      "%#{filters[:location]}%",
                       "%#{filters[:location]}%")
     end
 
@@ -113,18 +113,18 @@ module Properties
 
     def apply_sorting(properties)
       case params[:sort_by]
-      when 'price_asc'
+      when "price_asc"
         properties.order(price: :asc)
-      when 'price_desc'
+      when "price_desc"
         properties.order(price: :desc)
-      when 'newest'
+      when "newest"
         properties.order(created_at: :desc)
-      when 'bedrooms'
+      when "bedrooms"
         properties.order(bedrooms: :desc)
-      when 'popular'
+      when "popular"
         properties.left_joins(:property_favorites)
-                 .group('properties.id')
-                 .order('COUNT(property_favorites.id) DESC')
+                 .group("properties.id")
+                 .order("COUNT(property_favorites.id) DESC")
       else
         properties.order(created_at: :desc)
       end
@@ -135,13 +135,13 @@ module Properties
     end
 
     def current_page
-      [params[:page].to_i, 1].max
+      [ params[:page].to_i, 1 ].max
     end
 
     def per_page
       requested = params[:per_page].to_i
       return DEFAULT_PER_PAGE if requested <= 0
-      [requested, MAX_PER_PAGE].min
+      [ requested, MAX_PER_PAGE ].min
     end
   end
 end

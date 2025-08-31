@@ -17,20 +17,20 @@ module Cacheable
 
     # Cached find method
     def cached_find(id)
-      Rails.cache.fetch(["model", model_name.cache_key, id], expires_in: 1.hour) do
+      Rails.cache.fetch([ "model", model_name.cache_key, id ], expires_in: 1.hour) do
         find(id)
       end
     end
 
     # Cached collection methods
     def cached_all
-      Rails.cache.fetch([model_name.cache_key, "all"], expires_in: 1.hour) do
+      Rails.cache.fetch([ model_name.cache_key, "all" ], expires_in: 1.hour) do
         all.to_a
       end
     end
 
     def cached_recent(limit = 10)
-      Rails.cache.fetch([model_name.cache_key, "recent", limit], expires_in: 30.minutes) do
+      Rails.cache.fetch([ model_name.cache_key, "recent", limit ], expires_in: 30.minutes) do
         order(created_at: :desc).limit(limit).to_a
       end
     end
@@ -47,7 +47,7 @@ module Cacheable
   end
 
   def cached_associations(*associations)
-    Rails.cache.fetch([cache_key_with_version, "associations", associations], expires_in: 1.hour) do
+    Rails.cache.fetch([ cache_key_with_version, "associations", associations ], expires_in: 1.hour) do
       result = self
       associations.each do |association|
         result = result.public_send(association)
@@ -60,12 +60,12 @@ module Cacheable
 
   def clear_cache
     # Clear instance cache
-    Rails.cache.delete(["model", model_name.cache_key, id])
-    
+    Rails.cache.delete([ "model", model_name.cache_key, id ])
+
     # Clear collection caches
-    Rails.cache.delete([model_name.cache_key, "all"])
+    Rails.cache.delete([ model_name.cache_key, "all" ])
     Rails.cache.delete_matched("#{model_name.cache_key}/recent/*")
-    
+
     # Clear associated caches
     clear_associated_caches
   end

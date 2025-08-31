@@ -2,16 +2,16 @@
 module Api
   module V1
     class PropertiesController < ApplicationController
-      before_action :authenticate_request, except: [:index, :show, :search]
-      before_action :set_property, only: [:show, :update, :destroy]
-      before_action :authorize_owner, only: [:update, :destroy]
+      before_action :authenticate_request, except: [ :index, :show, :search ]
+      before_action :set_property, only: [ :show, :update, :destroy ]
+      before_action :authorize_owner, only: [ :update, :destroy ]
 
       # GET /api/v1/properties
       def index
         # Use the PropertiesQuery for complex filtering
         query = PropertiesQuery.new
           .search(params[:q])
-          .with_status('available')
+          .with_status("available")
           .price_between(params[:min_price], params[:max_price])
           .with_bedrooms(params[:bedrooms])
           .with_bathrooms(params[:bathrooms])
@@ -22,15 +22,15 @@ module Api
 
         # Apply sorting
         query = case params[:sort]
-                when 'price_asc' then query.price_low_to_high
-                when 'price_desc' then query.price_high_to_low
-                when 'newest' then query.newest_first
-                when 'popular' then query.most_popular
-                else query.newest_first
-                end
+        when "price_asc" then query.price_low_to_high
+        when "price_desc" then query.price_high_to_low
+        when "newest" then query.newest_first
+        when "popular" then query.most_popular
+        else query.newest_first
+        end
 
         # Cache the results
-        cache_key = ["properties", params.to_unsafe_h.sort].flatten.join("-")
+        cache_key = [ "properties", params.to_unsafe_h.sort ].flatten.join("-")
         @properties = Rails.cache.fetch(cache_key, expires_in: 30.minutes) do
           query.paginate(page: params[:page], per_page: params[:per_page] || 20).call
         end
@@ -64,11 +64,11 @@ module Api
       # GET /api/v1/properties/:id
       def show
         # Cache individual property
-        @property = Rails.cache.fetch(["property", params[:id]], expires_in: 1.hour) do
+        @property = Rails.cache.fetch([ "property", params[:id] ], expires_in: 1.hour) do
           Property.includes(:user, :property_reviews, images_attachments: :blob)
                   .find(params[:id])
         end
-        
+
         render json: @property
       end
 
@@ -90,9 +90,9 @@ module Api
       def update
         if @property.update(property_params)
           # Clear cache after update
-          Rails.cache.delete(["property", @property.id])
+          Rails.cache.delete([ "property", @property.id ])
           Rails.cache.delete_matched("properties/*")
-          
+
           render json: @property
         else
           render json: { errors: @property.errors.full_messages }, status: :unprocessable_entity
@@ -103,9 +103,9 @@ module Api
       def destroy
         @property.destroy
         # Clear cache after deletion
-        Rails.cache.delete(["property", @property.id])
+        Rails.cache.delete([ "property", @property.id ])
         Rails.cache.delete_matched("properties/*")
-        
+
         head :no_content
       end
 

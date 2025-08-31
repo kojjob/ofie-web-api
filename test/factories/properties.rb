@@ -10,7 +10,7 @@ FactoryBot.define do
     property_type { %w[apartment house condo townhouse villa].sample }
     listing_type { %w[sale rent].sample }
     status { "available" }
-    
+
     # Address fields
     address { Faker::Address.street_address }
     city { Faker::Address.city }
@@ -19,39 +19,39 @@ FactoryBot.define do
     postal_code { Faker::Address.zip_code }
     latitude { Faker::Address.latitude }
     longitude { Faker::Address.longitude }
-    
+
     # Features
-    features { ["parking", "swimming_pool", "gym", "security"].sample(2) }
-    
+    features { [ "parking", "swimming_pool", "gym", "security" ].sample(2) }
+
     trait :sold do
       status { "sold" }
     end
-    
+
     trait :rented do
       status { "rented" }
       listing_type { "rent" }
     end
-    
+
     trait :pending do
       status { "pending" }
     end
-    
+
     trait :with_photos do
       after(:create) do |property|
         3.times do |i|
           property.photos.attach(
             io: File.open(Rails.root.join("test/fixtures/files/property_#{i + 1}.jpg")),
             filename: "property_#{i + 1}.jpg",
-            content_type: 'image/jpeg'
+            content_type: "image/jpeg"
           )
         end
       end
     end
-    
+
     trait :featured do
       featured { true }
     end
-    
+
     trait :with_virtual_tour do
       virtual_tour_url { "https://example.com/virtual-tour/#{Faker::Alphanumeric.alphanumeric(number: 10)}" }
     end

@@ -98,16 +98,16 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
-  
+
   # Factory pattern for test data
   gem "factory_bot_rails"
-  
+
   # Generate fake data for tests
   gem "faker"
-  
+
   # Stub HTTP requests in tests
   gem "webmock"
-  
+
   # Record HTTP interactions for tests
   gem "vcr"
 end
@@ -115,16 +115,16 @@ end
 group :test do
   # Code coverage analysis
   gem "simplecov", require: false
-  
+
   # Clean database between tests
   gem "database_cleaner-active_record"
-  
+
   # Time travel for testing
   gem "timecop"
-  
+
   # Better test assertions
   gem "shoulda-matchers"
-  
+
   # Capybara for integration tests
   gem "capybara"
   gem "selenium-webdriver"
@@ -133,22 +133,22 @@ end
 group :development do
   # Preview emails in browser during development
   gem "letter_opener"
-  
+
   # N+1 query detection
   gem "bullet"
-  
+
   # Better error pages
   gem "better_errors"
   gem "binding_of_caller"
-  
+
   # Performance profiling
   gem "rack-mini-profiler"
   gem "memory_profiler"
   gem "stackprof"
-  
+
   # Git hooks
   gem "lefthook"
-  
+
   # Security audit
   gem "bundler-audit"
 end

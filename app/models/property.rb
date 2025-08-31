@@ -1,6 +1,6 @@
 class Property < ApplicationRecord
   include Cacheable
-  
+
   belongs_to :user
   has_many_attached :photos
 

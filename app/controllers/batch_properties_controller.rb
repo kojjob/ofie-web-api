@@ -1,4 +1,4 @@
-require 'csv'
+require "csv"
 
 class BatchPropertiesController < ApplicationController
   before_action :authenticate_web_request
@@ -99,7 +99,7 @@ class BatchPropertiesController < ApplicationController
                                  .limit(10)
 
     # Check for active uploads
-    active_uploads = @recent_uploads.where(status: ['processing', 'validated'])
+    active_uploads = @recent_uploads.where(status: [ "processing", "validated" ])
     has_active_uploads = active_uploads.any?
 
     # Prepare upload data for updates
@@ -107,7 +107,7 @@ class BatchPropertiesController < ApplicationController
       {
         id: upload.id,
         status: upload.status,
-        status_html: render_to_string('batch_properties/status_badge_enhanced', locals: { upload: upload }, layout: false),
+        status_html: render_to_string("batch_properties/status_badge_enhanced", locals: { upload: upload }, layout: false),
         progress_percentage: upload.progress_percentage,
         successful_items: upload.successful_items || 0,
         failed_items: upload.failed_items || 0,
@@ -133,7 +133,7 @@ class BatchPropertiesController < ApplicationController
       stats: {
         total_uploads: @recent_uploads.count,
         properties_created: @recent_uploads.sum(:successful_items),
-        processing: @recent_uploads.where(status: ['processing', 'validated']).count,
+        processing: @recent_uploads.where(status: [ "processing", "validated" ]).count,
         failed_items: @recent_uploads.sum(:failed_items)
       },
       uploads: uploads_data,
@@ -293,7 +293,7 @@ class BatchPropertiesController < ApplicationController
         status: "validated",
         valid_items: pending_items_count,
         total_items: @batch_upload.batch_property_items.count,
-        processed_items: @batch_upload.batch_property_items.where(status: ["completed", "failed"]).count,
+        processed_items: @batch_upload.batch_property_items.where(status: [ "completed", "failed" ]).count,
         failed_items: @batch_upload.batch_property_items.where(status: "failed").count,
         successful_items: @batch_upload.batch_property_items.where(status: "completed").count
       )
@@ -368,8 +368,8 @@ class BatchPropertiesController < ApplicationController
       @batch_upload.reload
       @batch_upload.update!(
         status: "validated",
-        failed_items: [@batch_upload.failed_items - retry_count, 0].max,
-        processed_items: [@batch_upload.processed_items - retry_count, 0].max
+        failed_items: [ @batch_upload.failed_items - retry_count, 0 ].max,
+        processed_items: [ @batch_upload.processed_items - retry_count, 0 ].max
       )
 
       Rails.logger.info "Successfully reset #{retry_count} failed items for batch #{@batch_upload.id}"
@@ -436,7 +436,7 @@ class BatchPropertiesController < ApplicationController
   # GET /batch_properties/:id/results
   def results
     @batch_upload = current_user.batch_property_uploads.find(params[:id])
-    
+
     respond_to do |format|
       format.csv do
         csv_data = generate_results_csv(@batch_upload)
@@ -446,7 +446,7 @@ class BatchPropertiesController < ApplicationController
                   disposition: "attachment"
       end
       format.html do
-        redirect_to batch_property_path(@batch_upload), 
+        redirect_to batch_property_path(@batch_upload),
                     notice: "Please use the 'Download Results' button to get the CSV file."
       end
     end
@@ -759,19 +759,19 @@ class BatchPropertiesController < ApplicationController
   def generate_results_csv(batch_upload)
     CSV.generate(headers: true) do |csv|
       # Add headers
-      headers = ["Row Number", "Status", "Property ID", "Title", "Address", "Error Message"]
+      headers = [ "Row Number", "Status", "Property ID", "Title", "Address", "Error Message" ]
       csv << headers
 
       # Add data rows
       batch_upload.batch_property_items.includes(:property).order(:row_number).each do |item|
         property_data = JSON.parse(item.property_data) rescue {}
-        
+
         csv << [
           item.row_number,
           item.status,
           item.property_id,
-          property_data['title'] || 'N/A',
-          property_data['address'] || 'N/A',
+          property_data["title"] || "N/A",
+          property_data["address"] || "N/A",
           item.error_message
         ]
       end

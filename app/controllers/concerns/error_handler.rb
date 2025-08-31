@@ -9,14 +9,14 @@ module ErrorHandler
     rescue_from ActionController::ParameterMissing, with: :handle_bad_request
     rescue_from JWT::DecodeError, with: :handle_unauthorized
     rescue_from JWT::ExpiredSignature, with: :handle_token_expired
-    
+
     # Stripe errors
     rescue_from Stripe::CardError, with: :handle_card_error
     rescue_from Stripe::InvalidRequestError, with: :handle_stripe_invalid_request
     rescue_from Stripe::AuthenticationError, with: :handle_stripe_authentication_error
     rescue_from Stripe::APIConnectionError, with: :handle_stripe_api_error
     rescue_from Stripe::StripeError, with: :handle_stripe_error
-    
+
     # Custom application errors
     rescue_from AuthenticationError, with: :handle_unauthorized
     rescue_from AuthorizationError, with: :handle_forbidden
@@ -28,7 +28,7 @@ module ErrorHandler
 
   def handle_standard_error(error)
     log_error(error)
-    
+
     if Rails.env.production?
       render_error("An error occurred. Please try again later.", :internal_server_error)
     else
@@ -37,7 +37,7 @@ module ErrorHandler
   end
 
   def handle_not_found(error)
-    resource = error.model || 'Resource'
+    resource = error.model || "Resource"
     render_error("#{resource} not found", :not_found)
   end
 
@@ -143,7 +143,7 @@ module ErrorHandler
   def log_error(error)
     Rails.logger.error "Error: #{error.class} - #{error.message}"
     Rails.logger.error error.backtrace.join("\n") if error.backtrace
-    
+
     # Send to error tracking service in production
     if Rails.env.production?
       Sentry.capture_exception(error) if defined?(Sentry)
@@ -152,7 +152,7 @@ module ErrorHandler
 
   def track_error(message, status)
     # Track error metrics for monitoring
-    Rails.logger.tagged('ERROR_METRICS') do
+    Rails.logger.tagged("ERROR_METRICS") do
       Rails.logger.error({
         message: message,
         status: status,
