@@ -283,8 +283,8 @@
           <div class="bg-white border border-gray-200 rounded overflow-hidden hover:border-gray-300 hover:shadow-md transition-all duration-200">
             <!-- Property Image -->
             <div class="relative h-48 bg-gray-100 overflow-hidden">
-              <% if property.photos.attached? && property.photos.any? %>
-                <%= image_tag property.photos.first, 
+              <% if property.has_photos_loaded? %>
+                <%= image_tag property.first_photo_safe,
                              alt: property.title,
                              class: "w-full h-full object-cover" %>
               <% else %>

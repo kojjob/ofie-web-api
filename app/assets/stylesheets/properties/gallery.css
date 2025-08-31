@@ -1,33 +1,30 @@
-// Gallery component styles
-// Clean flat design approach with minimal custom CSS
+/* Gallery component styles */
+/* Clean flat design approach with minimal custom CSS */
 
-.gallery {
-  // Smooth transitions for all gallery elements
-  * {
-    transition: all 0.2s ease-in-out;
-  }
+.gallery * {
+  transition: all 0.2s ease-in-out;
+}
 
-  // Main image container
-  .gallery-main {
-    @apply relative bg-gray-100;
-    
-    // Ensure proper aspect ratios
-    &.aspect-mobile {
-      aspect-ratio: 4/3;
-    }
-    
-    &.aspect-tablet {
-      @media (min-width: 640px) {
-        aspect-ratio: 16/9;
-      }
-    }
-    
-    &.aspect-desktop {
-      @media (min-width: 1024px) {
-        aspect-ratio: 2/1;
-      }
-    }
+.gallery .gallery-main {
+  position: relative;
+  background-color: #f3f4f6;
+}
+
+.gallery .gallery-main.aspect-mobile {
+  aspect-ratio: 4/3;
+}
+
+@media (min-width: 640px) {
+  .gallery .gallery-main.aspect-tablet {
+    aspect-ratio: 16/9;
   }
+}
+
+@media (min-width: 1024px) {
+  .gallery .gallery-main.aspect-desktop {
+    aspect-ratio: 2/1;
+  }
+}
 
   // Slide transitions
   .gallery-slide {

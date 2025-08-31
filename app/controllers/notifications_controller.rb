@@ -1,5 +1,6 @@
 class NotificationsController < ApplicationController
-  before_action :ensure_authenticated
+  skip_before_action :authenticate_request
+  before_action :ensure_web_authenticated
   before_action :set_notification, only: [ :show, :mark_read ]
 
   # GET /notifications
@@ -84,10 +85,11 @@ class NotificationsController < ApplicationController
 
   private
 
-  def ensure_authenticated
+  def ensure_web_authenticated
+    # For web-based requests (including AJAX from the web app), use session authentication
     unless current_user
       respond_to do |format|
-        format.html { redirect_to root_path, alert: "Please sign in to continue" }
+        format.html { redirect_to login_path, alert: "Please sign in to continue" }
         format.json { render json: { notifications: [], unread_count: 0 }, status: :ok }
       end
       return false

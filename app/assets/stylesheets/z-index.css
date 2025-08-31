@@ -39,8 +39,15 @@ nav {
 /* Dropdowns */
 .dropdown,
 .dropdown-menu,
-[data-dropdown] {
-  z-index: var(--z-dropdown);
+[data-dropdown],
+[data-dropdown-target="menu"],
+[data-notifications-target="dropdown"] {
+  z-index: var(--z-modal);
+}
+
+/* Mobile menu */
+[data-mobile-menu-target="menu"] {
+  z-index: var(--z-overlay);
 }
 
 /* Modals and overlays */

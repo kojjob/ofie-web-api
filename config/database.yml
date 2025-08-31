@@ -82,6 +82,8 @@ production:
   primary: &primary_production
     <<: *default
     url: <%= ENV["DATABASE_URL"] %>
+    pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+    timeout: 5000
   cache:
     <<: *primary_production
     database: ofie_web_api_production_cache

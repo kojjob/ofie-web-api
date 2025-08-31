@@ -28,6 +28,9 @@ export default class extends Controller {
     event.stopPropagation()
     console.log("Toggling notifications dropdown")
 
+    // Close other dropdowns first
+    this.closeOtherDropdowns()
+
     if (this.hasDropdownTarget) {
       if (this.isOpen) {
         this.close()
@@ -39,16 +42,55 @@ export default class extends Controller {
   
   open() {
     if (this.hasDropdownTarget) {
+      // Add opening animation
+      this.dropdownTarget.style.opacity = '0'
+      this.dropdownTarget.style.transform = 'translateY(-10px)'
       this.dropdownTarget.classList.remove("hidden")
+
+      // Prevent body scroll on mobile
+      if (window.innerWidth <= 768) {
+        document.body.classList.add('dropdown-open')
+      }
+
+      // Trigger animation
+      requestAnimationFrame(() => {
+        this.dropdownTarget.style.opacity = '1'
+        this.dropdownTarget.style.transform = 'translateY(0)'
+      })
+
+      // Update button aria state
+      const button = this.element.querySelector('button')
+      if (button) {
+        button.setAttribute('aria-expanded', 'true')
+      }
+
       this.isOpen = true
       this.loadNotifications()
       this.setupOutsideClickListener()
     }
   }
-  
+
   close() {
     if (this.hasDropdownTarget) {
-      this.dropdownTarget.classList.add("hidden")
+      // Add closing animation
+      this.dropdownTarget.style.opacity = '0'
+      this.dropdownTarget.style.transform = 'translateY(-10px)'
+
+      // Restore body scroll on mobile
+      if (window.innerWidth <= 768) {
+        document.body.classList.remove('dropdown-open')
+      }
+
+      setTimeout(() => {
+        this.dropdownTarget.classList.add("hidden")
+      }, 150)
+
+      // Update button aria state
+      const button = this.element.querySelector('button')
+      if (button) {
+        button.setAttribute('aria-expanded', 'false')
+      }
+
       this.isOpen = false
       this.removeOutsideClickListener()
     }
@@ -58,13 +100,18 @@ export default class extends Controller {
     event.preventDefault()
     console.log("Marking all notifications as read")
 
+    const csrfToken = this.getCSRFToken()
+    const formData = new FormData()
+    formData.append('authenticity_token', csrfToken)
+
     fetch('/notifications/mark_all_read', {
       method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': this.getCSRFToken(),
+        'X-CSRF-Token': csrfToken,
         'Accept': 'application/json'
-      }
+      },
+      body: formData,
+      credentials: 'same-origin'
     })
     .then(response => response.json())
     .then(data => {
@@ -83,10 +130,17 @@ export default class extends Controller {
   loadNotifications() {
     console.log("Loading notifications...")
 
-    fetch('/notifications.json', {
+    // Add CSRF token as a parameter to make it a "web request"
+    const csrfToken = this.getCSRFToken()
+    const url = new URL('/notifications.json', window.location.origin)
+    if (csrfToken) {
+      url.searchParams.append('authenticity_token', csrfToken)
+    }
+
+    fetch(url.toString(), {
       headers: {
         'Accept': 'application/json',
-        'X-CSRF-Token': this.getCSRFToken()
+        'X-CSRF-Token': csrfToken
       },
       credentials: 'same-origin'
     })
@@ -218,19 +272,46 @@ export default class extends Controller {
     }
   }
 
+  closeOtherDropdowns() {
+    // Close all user dropdowns
+    const userDropdowns = document.querySelectorAll('[data-controller*="dropdown"]')
+    userDropdowns.forEach(dropdown => {
+      if (dropdown !== this.element) {
+        try {
+          const controller = this.application.getControllerForElementAndIdentifier(dropdown, 'dropdown')
+          if (controller && controller.isOpen) {
+            controller.close()
+          }
+        } catch (error) {
+          // Fallback: manually close dropdown
+          const menu = dropdown.querySelector('[data-dropdown-target="menu"]')
+          if (menu && !menu.classList.contains('hidden')) {
+            menu.classList.add('hidden')
+            const button = dropdown.querySelector('button')
+            if (button) {
+              button.setAttribute('aria-expanded', 'false')
+            }
+          }
+        }
+      }
+    })
+  }
+
   setupOutsideClickListener() {
     this.boundHandleOutsideClick = (event) => {
       if (!this.element.contains(event.target)) {
         this.close()
       }
     }
-    
+
     // Use setTimeout to avoid catching the opening click
     setTimeout(() => {
-      document.addEventListener('click', this.boundHandleOutsideClick)
-    }, 0)
+      if (this.isOpen) {
+        document.addEventListener('click', this.boundHandleOutsideClick, { passive: true })
+      }
+    }, 50)
   }
-  
+
   removeOutsideClickListener() {
     if (this.boundHandleOutsideClick) {
       document.removeEventListener('click', this.boundHandleOutsideClick)
