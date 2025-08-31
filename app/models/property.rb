@@ -60,7 +60,6 @@ class Property < ApplicationRecord
   # Scopes for filtering
   scope :available, -> { where(availability_status: :available) }
   scope :by_city, ->(city) { where(city: city) if city.present? }
-  scope :by_state, ->(state) { where(state: state) if state.present? }
   scope :by_property_type, ->(type) { where(property_type: type) if type.present? }
   scope :by_bedrooms, ->(count) { where(bedrooms: count) if count.present? }
   scope :by_bathrooms, ->(count) { where(bathrooms: count) if count.present? }
@@ -134,7 +133,7 @@ class Property < ApplicationRecord
 
   # Helper method for full address
   def full_address
-    parts = [address, city, state, zip_code].compact.reject(&:blank?)
+    parts = [address, city].compact.reject(&:blank?)
     parts.join(", ")
   end
 
