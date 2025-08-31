@@ -19,8 +19,8 @@ export default class extends Controller {
   setupEventListeners() {
     // Prevent default drag behaviors
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      this.dropZoneTarget.addEventListener(eventName, this.preventDefaults, false)
-      document.body.addEventListener(eventName, this.preventDefaults, false)
+      this.dropZoneTarget.addEventListener(eventName, this.preventDefaults.bind(this), false)
+      document.body.addEventListener(eventName, this.preventDefaults.bind(this), false)
     })
   }
 
@@ -436,7 +436,7 @@ export default class extends Controller {
           </a>
           
           ${summary.valid > 0 ? `
-            <button onclick="this.processProperties('${batchUpload.id}')"
+            <button onclick="window.processProperties('${batchUpload.id}')"
                     class="flex-1 bg-green-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-700 transition-colors duration-200">
               Process ${summary.valid} Properties
             </button>
