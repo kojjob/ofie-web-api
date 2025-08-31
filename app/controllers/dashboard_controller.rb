@@ -12,7 +12,11 @@ class DashboardController < ApplicationController
   end
 
   def landlord_dashboard
-    @properties = current_user.properties.with_attached_photos
+    # Use more specific includes for photos to avoid over-eager loading
+    @properties = current_user.properties.includes(photos_attachments: :blob)
+    # Create a separate limited collection for the dashboard view to avoid N+1 queries
+    @properties_for_display = @properties.limit(6)
+    
     @stats = {
       total_properties: @properties.count,
       available_properties: @properties.where(availability_status: "available").count,
@@ -86,7 +90,7 @@ class DashboardController < ApplicationController
     # Properties management page for landlords
     authorize_landlord!
 
-    @properties = current_user.properties.with_attached_photos.order(created_at: :desc)
+    @properties = current_user.properties.includes(photos_attachments: :blob).order(created_at: :desc)
     @stats = {
       total_properties: @properties.count,
       available_properties: @properties.where(availability_status: "available").count,
