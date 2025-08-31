@@ -9,7 +9,7 @@ class PropertyCommentsController < ApplicationController
   def index
     @comments = @property.property_comments
                         .not_flagged
-                        .includes(:user, replies: :user)
+                        .includes(:user, :comment_likes, replies: [:user, :comment_likes])
                         .top_level
                         .recent
                         .limit(10)
@@ -233,8 +233,8 @@ class PropertyCommentsController < ApplicationController
     )
   end
 
-  def comment_json(comment)
-    {
+  def comment_json(comment, include_replies: true)
+    result = {
       id: comment.id,
       content: comment.display_content,
       user: {
@@ -248,9 +248,18 @@ class PropertyCommentsController < ApplicationController
       can_delete: comment.can_be_deleted_by?(current_user),
       edited: comment.edited?,
       edited_at: comment.edited_at,
-      created_at: comment.created_at,
-      replies: comment.replies.not_flagged.map { |reply| comment_json(reply) }
+      created_at: comment.created_at
     }
+
+    # Only include replies if requested and if replies are already loaded to avoid N+1
+    if include_replies && comment.association(:replies).loaded?
+      result[:replies] = comment.replies.not_flagged.map { |reply| comment_json(reply, include_replies: false) }
+    elsif include_replies
+      # If replies aren't loaded, load them with proper includes
+      result[:replies] = comment.replies.not_flagged.includes(:user, :comment_likes).map { |reply| comment_json(reply, include_replies: false) }
+    end
+
+    result
   end
 
   def comments_json(comments)

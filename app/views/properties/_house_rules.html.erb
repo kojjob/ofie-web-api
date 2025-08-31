@@ -28,7 +28,7 @@
               <p class="text-blue-700 text-sm">Move-in time</p>
             </div>
           </div>
-          <span class="text-blue-900 font-bold text-lg">3:00 PM - 9:00 PM</span>
+          <span class="text-blue-900 font-bold text-lg"><%= @property.check_in_time || "3:00 PM - 9:00 PM" %></span>
         </div>
       </div>
 
@@ -45,7 +45,7 @@
               <p class="text-emerald-700 text-sm">Move-out time</p>
             </div>
           </div>
-          <span class="text-emerald-900 font-bold text-lg">11:00 AM</span>
+          <span class="text-emerald-900 font-bold text-lg"><%= @property.check_out_time || "11:00 AM" %></span>
         </div>
       </div>
 
@@ -62,7 +62,7 @@
               <p class="text-purple-700 text-sm">Occupancy limit</p>
             </div>
           </div>
-          <span class="text-purple-900 font-bold text-lg">4 guests</span>
+          <span class="text-purple-900 font-bold text-lg"><%= @property.max_guests || 4 %> guests</span>
         </div>
       </div>
     </div>
@@ -82,7 +82,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </div>
-          <span class="text-red-800 font-semibold text-lg">No smoking anywhere in the property</span>
+          <span class="text-red-800 font-semibold text-lg"><%= @property.smoking_allowed? ? "Smoking allowed in designated areas" : "No smoking anywhere in the property" %></span>
         </div>
         
         <div class="flex items-center p-4 bg-gradient-to-r from-red-50 to-rose-50 rounded-2xl border border-red-200/50">
@@ -91,7 +91,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </div>
-          <span class="text-red-800 font-semibold text-lg">No pets allowed</span>
+          <span class="text-red-800 font-semibold text-lg"><%= @property.pets_allowed? ? "Pets allowed with restrictions" : "No pets allowed" %></span>
         </div>
         
         <div class="flex items-center p-4 bg-gradient-to-r from-red-50 to-rose-50 rounded-2xl border border-red-200/50">
@@ -100,7 +100,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </div>
-          <span class="text-red-800 font-semibold text-lg">No parties or large gatherings</span>
+          <span class="text-red-800 font-semibold text-lg"><%= @property.parties_allowed? ? "Small gatherings allowed with permission" : "No parties or large gatherings" %></span>
         </div>
       </div>
     </div>
@@ -116,7 +116,7 @@
       <div class="space-y-3">
         <div class="flex items-start p-4 bg-slate-50 rounded-2xl border border-slate-200/50">
           <div class="w-2 h-2 bg-slate-400 rounded-full mt-3 mr-3 flex-shrink-0"></div>
-          <span class="text-slate-700 font-medium">Please respect quiet hours from 10 PM to 8 AM</span>
+          <span class="text-slate-700 font-medium">Please respect quiet hours: <%= @property.quiet_hours || "10:00 PM - 8:00 AM" %></span>
         </div>
         
         <div class="flex items-start p-4 bg-slate-50 rounded-2xl border border-slate-200/50">

@@ -95,8 +95,8 @@
 
   <!-- Reviews List -->
   <div class="space-y-4">
-    <% if @property.property_reviews.any? %>
-      <% @property.property_reviews.includes(:user).recent.limit(5).each do |review| %>
+    <% if @recent_reviews.any? %>
+      <% @recent_reviews.each do |review| %>
         <div class="bg-white border border-gray-200 rounded-lg p-6">
           <!-- Review Header -->
           <div class="flex items-start justify-between mb-4">

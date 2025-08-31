@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_31_172054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -135,6 +135,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
     t.uuid "property_comment_id", null: false
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["property_comment_id", "user_id"], name: "index_comment_likes_on_comment_and_user", unique: true
     t.index ["property_comment_id"], name: "index_comment_likes_on_property_comment_id"
     t.index ["user_id", "property_comment_id"], name: "index_comment_likes_on_user_id_and_property_comment_id", unique: true
   end
@@ -364,21 +365,35 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
     t.integer "views_count", default: 0
     t.integer "applications_count", default: 0
     t.integer "favorites_count", default: 0
+    t.string "check_in_time", default: "3:00 PM"
+    t.string "check_out_time", default: "11:00 AM"
+    t.integer "max_guests", default: 4
+    t.boolean "smoking_allowed", default: false
+    t.boolean "parties_allowed", default: false
+    t.string "quiet_hours", default: "10:00 PM - 8:00 AM"
+    t.text "additional_rules"
+    t.integer "comments_count", default: 0, null: false
+    t.integer "reviews_count", default: 0, null: false
     t.index "to_tsvector('english'::regconfig, (((((((COALESCE(title, ''::character varying))::text || ' '::text) || COALESCE(description, ''::text)) || ' '::text) || (COALESCE(address, ''::character varying))::text) || ' '::text) || (COALESCE(city, ''::character varying))::text))", name: "index_properties_full_text_search", using: :gin
     t.index ["address"], name: "index_properties_on_address_gin", opclass: :gin_trgm_ops, using: :gin
     t.index ["availability_status"], name: "index_properties_on_availability_status"
+    t.index ["bedrooms", "bathrooms", "availability_status"], name: "index_properties_on_bed_bath_status"
     t.index ["bedrooms", "bathrooms"], name: "index_properties_on_bedrooms_and_bathrooms"
+    t.index ["city", "availability_status"], name: "index_properties_on_city_and_status"
     t.index ["city", "property_type"], name: "index_properties_on_city_and_property_type"
     t.index ["city"], name: "index_properties_on_city"
     t.index ["city"], name: "index_properties_on_city_gin", opclass: :gin_trgm_ops, using: :gin
     t.index ["description"], name: "index_properties_on_description_gin", opclass: :gin_trgm_ops, using: :gin
+    t.index ["price", "availability_status"], name: "index_properties_on_price_and_status"
     t.index ["price", "bedrooms", "bathrooms"], name: "index_properties_on_price_and_bedrooms_and_bathrooms"
     t.index ["price"], name: "index_properties_on_price"
+    t.index ["property_type", "availability_status"], name: "index_properties_on_type_and_status"
     t.index ["property_type"], name: "index_properties_on_property_type"
     t.index ["score", "created_at"], name: "index_properties_on_score_and_created_at"
     t.index ["score"], name: "index_properties_on_score"
     t.index ["status", "created_at"], name: "index_properties_on_status_and_created_at"
     t.index ["title"], name: "index_properties_on_title_gin", opclass: :gin_trgm_ops, using: :gin
+    t.index ["user_id", "availability_status"], name: "index_properties_on_user_and_status"
     t.index ["user_id", "status"], name: "index_properties_on_user_id_and_status"
     t.index ["user_id"], name: "index_properties_on_user_id"
   end
@@ -396,9 +411,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
     t.datetime "flagged_at", precision: nil
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "replies_count", default: 0, null: false
     t.index ["flagged"], name: "index_property_comments_on_flagged"
     t.index ["parent_id"], name: "index_property_comments_on_parent_id"
     t.index ["property_id", "created_at"], name: "index_property_comments_on_property_id_and_created_at"
+    t.index ["property_id", "flagged", "created_at"], name: "index_property_comments_on_property_flagged_created"
+    t.index ["property_id", "parent_id"], name: "index_property_comments_on_property_and_parent"
+    t.index ["user_id", "created_at"], name: "index_property_comments_on_user_and_created"
     t.index ["user_id", "created_at"], name: "index_property_comments_on_user_id_and_created_at"
     t.check_constraint "length(content) >= 1 AND length(content) <= 2000", name: "content_length_check"
   end
@@ -409,6 +428,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["property_id"], name: "index_property_favorites_on_property_id"
+    t.index ["user_id", "created_at"], name: "index_property_favorites_on_user_and_created"
     t.index ["user_id", "property_id"], name: "index_property_favorites_on_user_id_and_property_id", unique: true
     t.index ["user_id"], name: "index_property_favorites_on_user_id"
   end
@@ -423,6 +443,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
     t.integer "helpful_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["property_id", "rating"], name: "index_property_reviews_on_property_and_rating"
     t.index ["property_id", "rating"], name: "index_property_reviews_on_property_id_and_rating"
     t.index ["property_id"], name: "index_property_reviews_on_property_id"
     t.index ["user_id", "created_at"], name: "index_property_reviews_on_user_and_created_at"
@@ -448,6 +469,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
     t.index ["scheduled_at"], name: "index_property_viewings_on_scheduled_at"
     t.index ["status"], name: "index_property_viewings_on_status"
     t.index ["user_id", "property_id"], name: "index_property_viewings_on_user_and_property"
+    t.index ["user_id", "scheduled_at"], name: "index_property_viewings_on_user_and_scheduled"
     t.index ["user_id", "scheduled_at"], name: "index_property_viewings_on_user_id_and_scheduled_at"
     t.index ["user_id"], name: "index_property_viewings_on_user_id"
   end
@@ -521,6 +543,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
     t.string "avatar"
     t.json "preferences"
     t.datetime "last_seen_at"
+    t.integer "properties_count", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["email_verification_token"], name: "index_users_on_email_verification_token", unique: true
     t.index ["last_seen_at"], name: "index_users_on_last_seen_at"

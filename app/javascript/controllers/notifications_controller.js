@@ -13,27 +13,44 @@ export default class extends Controller {
     this.loadNotifications()
     this.startPolling()
     this.updateBadge()
-
-    // Add outside click listener
-    this.boundHandleOutsideClick = this.handleOutsideClick.bind(this)
-    document.addEventListener('click', this.boundHandleOutsideClick)
+    this.isOpen = false
+    
+    // Don't add outside click listener here - only when opening
   }
 
   disconnect() {
     this.stopPolling()
-    document.removeEventListener('click', this.boundHandleOutsideClick)
+    this.removeOutsideClickListener()
   }
 
   toggle(event) {
     event.preventDefault()
+    event.stopPropagation()
     console.log("Toggling notifications dropdown")
 
     if (this.hasDropdownTarget) {
-      this.dropdownTarget.classList.toggle("hidden")
-
-      if (!this.dropdownTarget.classList.contains("hidden")) {
-        this.loadNotifications()
+      if (this.isOpen) {
+        this.close()
+      } else {
+        this.open()
       }
+    }
+  }
+  
+  open() {
+    if (this.hasDropdownTarget) {
+      this.dropdownTarget.classList.remove("hidden")
+      this.isOpen = true
+      this.loadNotifications()
+      this.setupOutsideClickListener()
+    }
+  }
+  
+  close() {
+    if (this.hasDropdownTarget) {
+      this.dropdownTarget.classList.add("hidden")
+      this.isOpen = false
+      this.removeOutsideClickListener()
     }
   }
 
@@ -201,9 +218,23 @@ export default class extends Controller {
     }
   }
 
-  handleOutsideClick(event) {
-    if (!this.element.contains(event.target) && this.hasDropdownTarget) {
-      this.dropdownTarget.classList.add('hidden')
+  setupOutsideClickListener() {
+    this.boundHandleOutsideClick = (event) => {
+      if (!this.element.contains(event.target)) {
+        this.close()
+      }
+    }
+    
+    // Use setTimeout to avoid catching the opening click
+    setTimeout(() => {
+      document.addEventListener('click', this.boundHandleOutsideClick)
+    }, 0)
+  }
+  
+  removeOutsideClickListener() {
+    if (this.boundHandleOutsideClick) {
+      document.removeEventListener('click', this.boundHandleOutsideClick)
+      this.boundHandleOutsideClick = null
     }
   }
 
