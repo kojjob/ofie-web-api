@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   # Health check endpoint
   get '/health', to: 'health#show'
   
+  # SEO routes
+  get '/sitemap.xml', to: 'sitemap#index', defaults: { format: 'xml' }
+  
   # API routes
   namespace :api do
     namespace :v1 do

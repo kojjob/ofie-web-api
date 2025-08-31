@@ -2,6 +2,10 @@ class ApplicationController < ActionController::Base
   # Security concerns
   include InputSanitizer
   include ErrorHandler
+  include SeoOptimizable
+  
+  # Helper modules available to all views
+  helper SiteConfigHelper
   
   # Skip CSRF protection for API requests
   protect_from_forgery with: :null_session
