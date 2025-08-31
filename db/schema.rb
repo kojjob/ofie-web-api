@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_31_172054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -364,6 +364,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_210002) do
     t.integer "views_count", default: 0
     t.integer "applications_count", default: 0
     t.integer "favorites_count", default: 0
+    t.string "check_in_time", default: "3:00 PM"
+    t.string "check_out_time", default: "11:00 AM"
+    t.integer "max_guests", default: 4
+    t.boolean "smoking_allowed", default: false
+    t.boolean "parties_allowed", default: false
+    t.string "quiet_hours", default: "10:00 PM - 8:00 AM"
+    t.text "additional_rules"
     t.index "to_tsvector('english'::regconfig, (((((((COALESCE(title, ''::character varying))::text || ' '::text) || COALESCE(description, ''::text)) || ' '::text) || (COALESCE(address, ''::character varying))::text) || ' '::text) || (COALESCE(city, ''::character varying))::text))", name: "index_properties_full_text_search", using: :gin
     t.index ["address"], name: "index_properties_on_address_gin", opclass: :gin_trgm_ops, using: :gin
     t.index ["availability_status"], name: "index_properties_on_availability_status"
