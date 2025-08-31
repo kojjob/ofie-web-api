@@ -9,19 +9,26 @@ export default class extends Controller {
   ]
 
   connect() {
+    console.log('Batch upload controller connected')
     this.selectedFile = null
     this.maxFileSize = 10 * 1024 * 1024 // 10MB
     this.allowedTypes = ['.csv']
-    this.setupEventListeners()
-    this.initializeValidation()
+    try {
+      this.setupEventListeners()
+      this.initializeValidation()
+    } catch (error) {
+      console.error('Error during controller initialization:', error)
+    }
   }
 
   setupEventListeners() {
     // Prevent default drag behaviors
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      this.dropZoneTarget.addEventListener(eventName, this.preventDefaults.bind(this), false)
-      document.body.addEventListener(eventName, this.preventDefaults.bind(this), false)
-    })
+    if (this.hasDropZoneTarget) {
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        this.dropZoneTarget.addEventListener(eventName, this.preventDefaults.bind(this), false)
+        document.body.addEventListener(eventName, this.preventDefaults.bind(this), false)
+      })
+    }
   }
 
   initializeValidation() {
@@ -67,7 +74,13 @@ export default class extends Controller {
   }
 
   openFileDialog() {
-    this.fileInputTarget.click()
+    console.log('openFileDialog called')
+    console.log('fileInputTarget:', this.fileInputTarget)
+    if (this.fileInputTarget) {
+      this.fileInputTarget.click()
+    } else {
+      console.error('fileInputTarget not found')
+    }
   }
 
   handleFileSelect(e) {

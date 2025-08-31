@@ -78,7 +78,8 @@
             
             <button type="button" 
                     class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-3 rounded-2xl font-medium hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                    data-action="click->batch-upload#openFileDialog">
+                    data-action="click->batch-upload#openFileDialog"
+                    onclick="console.log('Button clicked'); document.querySelector('[data-batch-upload-target=fileInput]').click()">
               Select CSV File
             </button>
             
