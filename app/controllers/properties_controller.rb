@@ -7,7 +7,6 @@ class PropertiesController < ApplicationController
   # GET /properties
   def index
     @properties = Property.available
-                         .includes(photos_attachments: :blob)
                          .by_city(params[:city])
                          .by_property_type(params[:property_type])
                          .by_bedrooms(params[:bedrooms])
@@ -25,8 +24,11 @@ class PropertiesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html # Render the HTML view
+      format.html # Render the HTML view - no eager loading needed for HTML
       format.json do
+        # Only include photos for JSON responses that use property_json
+        @properties = @properties.with_attached_photos unless request.xhr?
+        
         if request.xhr?
           render partial: "properties_grid", locals: { properties: @properties }
         else
@@ -51,7 +53,8 @@ class PropertiesController < ApplicationController
     else
       search_term = "%#{query}%"
       @properties = Property.available
-                           .includes(:user, photos_attachments: :blob)
+                           .includes(:user)
+                           .with_attached_photos
                            .where(
                              "title ILIKE ? OR description ILIKE ? OR address ILIKE ? OR city ILIKE ?",
                              search_term, search_term, search_term, search_term
@@ -182,9 +185,10 @@ class PropertiesController < ApplicationController
   # GET /properties/my_properties (for landlords)
   def my_properties
     authorize_landlord
-    @properties = current_user.properties
-                             .includes(photos_attachments: :blob)
-                             .order(created_at: :desc)
+    @properties = current_user.properties.order(created_at: :desc)
+    
+    # Only include photos for JSON responses
+    @properties = @properties.with_attached_photos if request.format.json?
 
     respond_to do |format|
       format.html # Render the HTML view for landlord property management
