@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   # Health check endpoint
   get "/health", to: "health#show"
 
+  # CSP Report endpoint
+  post "/csp-report", to: "csp_reports#create"
+
   # SEO routes
   get "/sitemap.xml", to: "sitemap#index", defaults: { format: "xml" }
 
