@@ -1,6 +1,6 @@
 class Api::V1::RentalApplicationsController < ApplicationController
   before_action :authenticate_request
-  
+
   # GET /api/v1/rental_applications/approved
   def approved_for_lease
     # Only landlords can access this endpoint
@@ -13,7 +13,7 @@ class Api::V1::RentalApplicationsController < ApplicationController
     @approved_applications = RentalApplication.joins(:property)
                                              .includes(:property, :tenant)
                                              .where(properties: { user_id: current_user.id })
-                                             .where(status: 'approved')
+                                             .where(status: "approved")
                                              .where.missing(:lease_agreement)
                                              .order(created_at: :desc)
 

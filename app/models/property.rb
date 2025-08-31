@@ -1,4 +1,6 @@
 class Property < ApplicationRecord
+  include Cacheable
+
   belongs_to :user
   has_many_attached :photos
 
@@ -128,5 +130,16 @@ class Property < ApplicationRecord
 
   def recent_comments(limit = 5)
     property_comments.not_flagged.includes(:user, :replies).top_level.recent.limit(limit)
+  end
+
+  # Helper method for full address
+  def full_address
+    parts = [address, city, state, zip_code].compact.reject(&:blank?)
+    parts.join(", ")
+  end
+
+  # Check if property is available
+  def available?
+    availability_status == "available"
   end
 end

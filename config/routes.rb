@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  # Health check endpoint
+  get "/health", to: "health#show"
+
+  # CSP Report endpoint
+  post "/csp-report", to: "csp_reports#create"
+
+  # SEO routes
+  get "/sitemap.xml", to: "sitemap#index", defaults: { format: "xml" }
+
   # API routes
   namespace :api do
     namespace :v1 do
@@ -161,7 +170,7 @@ Rails.application.routes.draw do
       end
 
       # Rental Applications API routes
-      get 'rental_applications/approved', to: 'rental_applications#approved_for_lease'
+      get "rental_applications/approved", to: "rental_applications#approved_for_lease"
     end
   end
 
@@ -264,15 +273,20 @@ Rails.application.routes.draw do
   end
 
   # Batch Properties routes (Web)
-  resources :batch_properties, only: [:index, :new, :show, :destroy] do
+  resources :batch_properties, only: [ :index, :new, :show, :destroy ] do
     collection do
       get :template
       post :upload
     end
     member do
       get :preview
-      post :process
+      post :process_batch
+      post :fix_status
+      post :retry_failed
       get :status
+      get :results
+      get "item_details/:item_id", action: :item_details, as: :item_details
+      post "retry_item/:item_id", action: :retry_item, as: :retry_item
     end
   end
 

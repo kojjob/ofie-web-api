@@ -78,13 +78,13 @@ export default class extends Controller {
 
   addPositionClasses() {
     const positions = {
-      "top-left": "fixed top-4 left-4 z-50",
-      "top-right": "fixed top-4 right-4 z-50",
-      "top-center": "fixed top-4 left-1/2 transform -translate-x-1/2 z-50",
-      "bottom-left": "fixed bottom-4 left-4 z-50",
-      "bottom-right": "fixed bottom-4 right-4 z-50",
-      "bottom-center": "fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50",
-      "center": "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50",
+      "top-left": "fixed top-24 left-4 z-[9999]",
+      "top-right": "fixed top-24 right-4 z-[9999]",
+      "top-center": "fixed top-24 left-1/2 transform -translate-x-1/2 z-[9999]",
+      "bottom-left": "fixed bottom-4 left-4 z-[9999]",
+      "bottom-right": "fixed bottom-4 right-4 z-[9999]",
+      "bottom-center": "fixed bottom-4 left-1/2 transform -translate-x-1/2 z-[9999]",
+      "center": "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[9999]",
       "inline": "relative w-full"
     }
     

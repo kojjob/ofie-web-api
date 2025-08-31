@@ -31,7 +31,7 @@
         <div class="lg:col-span-1">
           <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 sticky top-8">
             <div class="text-center mb-6">
-              <div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl mb-4 shadow-lg shadow-emerald-500/25">
+              <div class="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg mb-4 shadow-lg shadow-emerald-500/25">
                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m0 0h2M7 7h10M7 11h10M7 15h10"></path>
                 </svg>
@@ -67,18 +67,18 @@
                   </svg>
                   <span class="text-sm"><%= @property.address %>, <%= @property.city %></span>
                 </div>
-                <div class="inline-flex items-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-xl font-bold text-lg shadow-lg shadow-blue-500/25">
+                <div class="inline-flex items-center bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg font-bold text-lg shadow-lg shadow-blue-500/25">
                   $<%= number_with_delimiter(@property.price) %><span class="text-sm font-medium ml-1">/month</span>
                 </div>
               </div>
 
               <div class="border-t border-gray-200 pt-4">
                 <div class="grid grid-cols-2 gap-4 text-sm">
-                  <div class="text-center p-3 bg-gray-50 rounded-xl">
+                  <div class="text-center p-3 bg-gray-50 rounded-lg">
                     <div class="font-semibold text-gray-900">Type</div>
                     <div class="text-gray-600 capitalize"><%= @property.property_type || 'N/A' %></div>
                   </div>
-                  <div class="text-center p-3 bg-gray-50 rounded-xl">
+                  <div class="text-center p-3 bg-gray-50 rounded-lg">
                     <div class="font-semibold text-gray-900">Status</div>
                     <div class="text-gray-600 capitalize"><%= @property.status || 'Available' %></div>
                   </div>
@@ -177,7 +177,7 @@
         <!-- Enhanced Tips Section -->
         <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 backdrop-blur-xl rounded-3xl border border-blue-200/50 p-8">
           <div class="flex items-center mb-6">
-            <div class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-amber-400 to-orange-500 rounded-xl mr-4 shadow-lg shadow-amber-500/25">
+            <div class="inline-flex items-center justify-center w-10 h-10 bg-gradient-to-r from-amber-400 to-orange-500 rounded-lg mr-4 shadow-lg shadow-amber-500/25">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
               </svg>
@@ -185,28 +185,28 @@
             <h3 class="text-xl font-bold text-gray-900">Pro Communication Tips</h3>
           </div>
           <div class="grid md:grid-cols-2 gap-4">
-            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-lg border border-white/20">
               <div class="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
               <div>
                 <p class="font-medium text-gray-900 mb-1">Be Specific</p>
                 <p class="text-sm text-gray-600">Include details about your requirements and timeline</p>
               </div>
             </div>
-            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-lg border border-white/20">
               <div class="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full mt-2"></div>
               <div>
                 <p class="font-medium text-gray-900 mb-1">Viewing Times</p>
                 <p class="text-sm text-gray-600">Mention your preferred viewing schedule</p>
               </div>
             </div>
-            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-lg border border-white/20">
               <div class="flex-shrink-0 w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
               <div>
                 <p class="font-medium text-gray-900 mb-1">Special Requirements</p>
                 <p class="text-sm text-gray-600">Share any special needs or concerns upfront</p>
               </div>
             </div>
-            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-xl border border-white/20">
+            <div class="flex items-start space-x-3 p-4 bg-white/50 rounded-lg border border-white/20">
               <div class="flex-shrink-0 w-2 h-2 bg-indigo-500 rounded-full mt-2"></div>
               <div>
                 <p class="font-medium text-gray-900 mb-1">Stay Professional</p>

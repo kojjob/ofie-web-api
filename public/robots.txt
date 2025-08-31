@@ -1,1 +1,45 @@
-# See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
+# Robots.txt for Ofie Property Platform
+# See https://www.robotstxt.org/robotstxt.html for documentation
+
+# Allow all bots to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow admin and API paths
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /dashboard/
+Disallow: /settings/
+Disallow: /profile/edit
+Disallow: /payments/
+Disallow: /maintenance_requests/
+Disallow: /rental_applications/
+
+# Disallow search and filter pages to prevent duplicate content
+Disallow: /properties?*
+Allow: /properties
+
+# Disallow user session pages
+Disallow: /login
+Disallow: /register
+Disallow: /forgot_password
+Disallow: /reset_password
+
+# Allow important bots full access
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+# Sitemap location
+Sitemap: https://ofie.com/sitemap.xml
+Sitemap: http://localhost:3000/sitemap.xml

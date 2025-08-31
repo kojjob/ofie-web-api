@@ -1,5 +1,5 @@
 # Enhanced API controller for intelligent bot interactions
-class Api::V1::BotController < ApplicationController
+class Api::V1::EnhancedBotController < ApplicationController
   before_action :authenticate_request
   before_action :find_or_create_conversation, only: [ :send_message ]
   before_action :initialize_bot_engine, only: [ :send_message, :get_suggestions ]

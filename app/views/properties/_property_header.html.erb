@@ -1,5 +1,5 @@
 <!-- Enhanced Property Header -->
-<div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-3xl transition-all duration-300">
+<div class="glass-card p-8 hover:shadow-3xl transition-all duration-300">
   <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-8">
     <div class="flex-1">
       <div class="mb-8">
@@ -7,7 +7,7 @@
           <%= @property.title %>
         </h1>
         <div class="flex items-center text-slate-600 mb-8">
-          <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+          <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600" style="border-radius: var(--radius-lg);" class="flex items-center justify-center mr-4 shadow-lg">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -19,9 +19,9 @@
 
       <!-- Compact Property Stats -->
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-        <div class="group bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200/50 hover:border-blue-400 hover:shadow-lg transition-all duration-300">
+        <div class="group bg-gradient-to-br from-blue-50 to-indigo-50 p-4 border border-blue-200/50 hover:border-blue-400 hover:shadow-lg transition-all duration-300" style="border-radius: var(--radius-lg);">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200" style="border-radius: var(--radius-lg);">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
               </svg>
@@ -33,9 +33,9 @@
           </div>
         </div>
 
-        <div class="group bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-4 border border-emerald-200/50 hover:border-emerald-400 hover:shadow-lg transition-all duration-300">
+        <div class="group bg-gradient-to-br from-emerald-50 to-teal-50 p-4 border border-emerald-200/50 hover:border-emerald-400 hover:shadow-lg transition-all duration-300" style="border-radius: var(--radius-lg);">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
+            <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200" style="border-radius: var(--radius-lg);">
               <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11"></path>
               </svg>
@@ -48,9 +48,9 @@
         </div>
 
         <% if @property.square_feet.present? %>
-          <div class="group bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200/50 hover:border-purple-400 hover:shadow-lg transition-all duration-300 col-span-2 md:col-span-1">
+          <div class="group bg-gradient-to-br from-purple-50 to-pink-50 p-4 border border-purple-200/50 hover:border-purple-400 hover:shadow-lg transition-all duration-300 col-span-2 md:col-span-1" style="border-radius: var(--radius-lg);">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
+              <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200" style="border-radius: var(--radius-lg);">
                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
                 </svg>
@@ -68,7 +68,7 @@
     <!-- Enhanced Price Badge -->
     <div class="mt-8 lg:mt-0 lg:ml-8">
       <div class="relative">
-        <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl opacity-90"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-90" style="border-radius: var(--radius-2xl);"></div>
         <div class="relative bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-10 py-8 rounded-3xl text-center shadow-2xl shadow-indigo-500/30 border border-white/20 transform hover:scale-105 transition-all duration-300">
           <div class="text-5xl font-bold mb-3">$<%= number_with_delimiter(@property.price) %></div>
           <div class="text-indigo-100 text-xl font-semibold">per month</div>

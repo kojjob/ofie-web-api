@@ -124,15 +124,15 @@
             Learn the basics of using Ofie, from account setup to your first rental transaction.
           </p>
           <div class="space-y-3">
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <%= link_to register_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Creating your account
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to edit_profile_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Profile setup guide
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to home_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Platform overview
-            </a>
+            <% end %>
           </div>
         </div>
 
@@ -152,15 +152,15 @@
             Everything landlords need to know about property management and tenant relations.
           </p>
           <div class="space-y-3">
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <%= link_to properties_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Listing your property
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to rental_applications_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Tenant screening
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to lease_agreements_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Lease management
-            </a>
+            <% end %>
           </div>
         </div>
 
@@ -180,15 +180,15 @@
             Guides for tenants on finding properties, applications, and rental processes.
           </p>
           <div class="space-y-3">
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <%= link_to properties_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Searching for properties
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to rental_applications_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Rental applications
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to payments_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Making payments
-            </a>
+            <% end %>
           </div>
         </div>
 
@@ -209,15 +209,15 @@
             Understanding payment processing, fees, and financial management features.
           </p>
           <div class="space-y-3">
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <%= link_to payments_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Payment methods
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to payments_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Setting up auto-pay
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to payments_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Understanding fees
-            </a>
+            <% end %>
           </div>
         </div>
 
@@ -238,15 +238,15 @@
             Troubleshooting common issues and technical questions about the platform.
           </p>
           <div class="space-y-3">
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <%= link_to contact_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Login issues
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to contact_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Browser compatibility
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to contact_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Mobile app help
-            </a>
+            <% end %>
           </div>
         </div>
 
@@ -265,15 +265,15 @@
             Information about legal requirements, compliance, and platform policies.
           </p>
           <div class="space-y-3">
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <%= link_to terms_of_service_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Terms of service
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to privacy_policy_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Privacy policy
-            </a>
-            <a href="#" class="block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200">
+            <% end %>
+            <%= link_to contact_path, class: "block text-emerald-600 hover:text-emerald-700 font-semibold transition-colors duration-200" do %>
               → Fair housing compliance
-            </a>
+            <% end %>
           </div>
         </div>
       </div>
@@ -321,9 +321,9 @@
                 </svg>
                 15 min read
               </div>
-              <a href="#" class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+              <%= link_to properties_path, class: "bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl" do %>
                 Start Guide
-              </a>
+              <% end %>
             </div>
           </div>
         </div>
@@ -358,9 +358,9 @@
                 </svg>
                 10 min read
               </div>
-              <a href="#" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+              <%= link_to rental_applications_path, class: "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl" do %>
                 Start Guide
-              </a>
+              <% end %>
             </div>
           </div>
         </div>
@@ -393,9 +393,9 @@
                 </svg>
                 20 min read
               </div>
-              <a href="#" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+              <%= link_to calculators_path, class: "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl" do %>
                 Start Guide
-              </a>
+              <% end %>
             </div>
           </div>
         </div>
@@ -432,9 +432,9 @@
                 </svg>
                 25 min read
               </div>
-              <a href="#" class="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+              <%= link_to analytics_path, class: "bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl" do %>
                 Start Guide
-              </a>
+              <% end %>
             </div>
           </div>
         </div>
@@ -527,9 +527,9 @@
             </div>
 
             <div class="pt-4">
-              <a href="#" class="block text-center bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl">
+              <%= link_to contact_path, class: "block text-center bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl" do %>
                 View All Videos
-              </a>
+              <% end %>
             </div>
           </div>
         </div>
@@ -554,7 +554,7 @@
           Can't find what you're looking for? Our support team is here to help with personalized assistance.
         </p>
         <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-          <%= link_to "Contact Support", contact_support_path, 
+          <%= link_to "Contact Support", contact_path, 
                       class: "bg-white text-emerald-600 hover:bg-emerald-50 px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" %>
           <button class="border-2 border-white text-white hover:bg-white hover:text-emerald-600 px-8 py-4 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-0.5"
                   data-action="click->chat#open">

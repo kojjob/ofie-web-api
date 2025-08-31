@@ -1,0 +1,64 @@
+<%# Empty State Component %>
+
+<div class="text-center py-16">
+  <!-- Animated Icon -->
+  <div class="w-24 h-24 mx-auto mb-6 relative">
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-2xl opacity-20 animate-pulse"></div>
+    <div class="absolute inset-2 bg-white rounded-xl flex items-center justify-center">
+      <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+    </div>
+  </div>
+  
+  <!-- Content -->
+  <div class="max-w-md mx-auto">
+    <h3 class="text-xl font-semibold text-gray-900 mb-3">No batch uploads yet</h3>
+    <p class="text-gray-600 mb-8 leading-relaxed">
+      Get started by uploading your first batch of properties. Our system will validate your CSV file and help you create multiple property listings efficiently.
+    </p>
+    
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <%= link_to "Upload Properties", new_batch_property_path,
+                  class: "inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-2xl text-base font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Upload First Batch
+      <% end %>
+      
+      <%= link_to "Download Template", template_batch_properties_path(format: :csv),
+                  class: "inline-flex items-center justify-center px-6 py-3 border border-gray-300 rounded-2xl text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        Get Template
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Help Text -->
+  <div class="mt-12 max-w-2xl mx-auto">
+    <div class="bg-blue-50 border border-blue-200 rounded-2xl p-6">
+      <h4 class="text-lg font-semibold text-blue-900 mb-4">How Batch Upload Works</h4>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+        <div class="text-center">
+          <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-xs font-bold">1</div>
+          <div class="text-blue-800 font-medium">Download Template</div>
+          <div class="text-blue-600">Get our CSV template with required fields</div>
+        </div>
+        <div class="text-center">
+          <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-xs font-bold">2</div>
+          <div class="text-blue-800 font-medium">Fill Your Data</div>
+          <div class="text-blue-600">Add property information to each row</div>
+        </div>
+        <div class="text-center">
+          <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 text-xs font-bold">3</div>
+          <div class="text-blue-800 font-medium">Upload & Process</div>
+          <div class="text-blue-600">We'll validate and create your properties</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

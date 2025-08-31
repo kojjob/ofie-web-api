@@ -2,6 +2,20 @@ require_relative "boot"
 
 require "rails/all"
 
+# Load CSV library for batch property uploads
+# Try multiple approaches to load CSV
+begin
+  require "csv"
+rescue LoadError
+  begin
+    # Try loading from standard library
+    require "csv"
+  rescue LoadError
+    # CSV will be handled with fallback methods
+    Rails.logger.warn "CSV library not available, will use fallback methods"
+  end
+end
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)

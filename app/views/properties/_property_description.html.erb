@@ -1,55 +1,72 @@
-<!-- Enhanced Property Description -->
-<div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-3xl transition-all duration-300">
-  <div class="flex items-center justify-between mb-8">
-    <div class="flex items-center space-x-4">
-      <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl">
-        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-        </svg>
-      </div>
-      <h2 class="text-3xl font-bold text-slate-800">About This Place</h2>
-    </div>
-    <div class="h-1 w-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full"></div>
-  </div>
-  
-  <div class="bg-slate-50/50 rounded-2xl p-8 border border-slate-200/50">
-    <div class="prose prose-xl prose-slate max-w-none">
-      <div class="text-slate-700 leading-relaxed text-lg font-medium">
+<!-- Modern Property Description - Professional Layout -->
+<div class="space-y-6">
+  <!-- Property Overview -->
+  <div>
+    <h3 class="text-lg font-semibold text-gray-900 mb-3">Property Overview</h3>
+    <div class="prose prose-gray max-w-none">
+      <p class="text-gray-700 leading-relaxed">
         <%= simple_format(@property.description) %>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Additional Property Features -->
-  <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200/50">
-      <div class="flex items-center space-x-3 mb-4">
-        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m11 0v-7M4 9h1m-1 4h1m-1 4h1m1-4v-7m7 0v7M9 9h1m-1 4h1"></path>
-          </svg>
-        </div>
-        <h3 class="text-lg font-bold text-blue-900">Property Type</h3>
-      </div>
-      <p class="text-blue-800 font-semibold"><%= @property.property_type&.humanize || "Apartment" %></p>
-    </div>
-    
-    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 border border-emerald-200/50">
-      <div class="flex items-center space-x-3 mb-4">
-        <div class="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-          </svg>
-        </div>
-        <h3 class="text-lg font-bold text-emerald-900">Move-in Date</h3>
-      </div>
-      <p class="text-emerald-800 font-semibold">
-        <% if @property.available? %>
-          Available Immediately
-        <% else %>
-          Contact for availability
-        <% end %>
       </p>
     </div>
   </div>
+
+  <!-- Key Features Grid -->
+  <div>
+    <h4 class="text-base font-semibold text-gray-900 mb-3">Key Features</h4>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <% if @property.furnished? %>
+        <div class="flex items-center text-gray-700">
+          <svg class="w-4 h-4 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          Fully Furnished
+        </div>
+      <% end %>
+      
+      <% if @property.parking_available? %>
+        <div class="flex items-center text-gray-700">
+          <svg class="w-4 h-4 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          Parking Available
+        </div>
+      <% end %>
+
+      <% if @property.pets_allowed? %>
+        <div class="flex items-center text-gray-700">
+          <svg class="w-4 h-4 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          Pet Friendly
+        </div>
+      <% end %>
+
+      <% if @property.balcony? %>
+        <div class="flex items-center text-gray-700">
+          <svg class="w-4 h-4 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          Private Balcony
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Additional Details -->
+  <% if @property.availability_status == 'available' %>
+    <div>
+      <h4 class="text-base font-semibold text-gray-900 mb-3">Availability Information</h4>
+      <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+        <div class="flex justify-between">
+          <span class="text-gray-600">Status:</span>
+          <span class="text-green-600 font-medium">Available for Rent</span>
+        </div>
+        
+        <div class="flex justify-between">
+          <span class="text-gray-600">Monthly Rent:</span>
+          <span class="text-gray-900 font-medium"><%= number_to_currency(@property.price) %></span>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>
