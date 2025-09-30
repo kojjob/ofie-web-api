@@ -210,6 +210,9 @@ Rails.application.routes.draw do
       end
     end
 
+    # Add nested property_reviews routes
+    resources :property_reviews, only: [ :index, :create ]
+
     # Add nested rental_applications routes
     resources :rental_applications, only: [ :new, :create ]
   end
