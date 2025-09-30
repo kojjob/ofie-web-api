@@ -76,6 +76,17 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Test fixtures replacement with a straightforward definition syntax
+  gem "factory_bot_rails", "~> 6.4"
+end
+
+group :test do
+  # Code coverage analysis
+  gem "simplecov", require: false
+
+  # Test data faker for generating realistic test data
+  gem "faker", "~> 3.2"
 end
 
 group :development do
