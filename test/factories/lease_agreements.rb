@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :lease_agreement do
-    association :landlord, factory: [:user, :landlord]
-    association :tenant, factory: [:user, :tenant]
+    landlord { association :user, :landlord }
+    tenant { association :user, :tenant }
     association :property
     association :rental_application
 

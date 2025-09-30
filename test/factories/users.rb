@@ -6,7 +6,7 @@ FactoryBot.define do
     password_confirmation { "password123" }
     role { :tenant }
     email_verified { false }
-    phone { Faker::PhoneNumber.phone_number }
+    phone { "+1#{Faker::Number.number(digits: 10)}" }
     bio { Faker::Lorem.paragraph }
     language { %w[en es fr].sample }
     timezone { "UTC" }

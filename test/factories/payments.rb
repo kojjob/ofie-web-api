@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :payment do
     association :lease_agreement
-    association :user, factory: [:user, :tenant]
+    user { association :user, :tenant }
 
     amount { Faker::Number.between(from: 500, to: 5000) }
     payment_type { "rent" }

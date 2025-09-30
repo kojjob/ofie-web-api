@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :maintenance_request do
     association :property
-    association :tenant, factory: [:user, :tenant]
-    association :landlord, factory: [:user, :landlord]
+    tenant { association :user, :tenant }
+    landlord { association :user, :landlord }
 
     title { Faker::Lorem.sentence(word_count: 5) }
     description { Faker::Lorem.paragraph(sentence_count: 3) }
@@ -67,13 +67,13 @@ FactoryBot.define do
 
     trait :in_progress do
       status { "in_progress" }
-      association :assigned_to, factory: [:user, :landlord]
+      assigned_to { association :user, :landlord }
       assigned_at { Time.current }
     end
 
     trait :completed do
       status { "completed" }
-      association :assigned_to, factory: [:user, :landlord]
+      assigned_to { association :user, :landlord }
       assigned_at { Time.current - 2.days }
       completed_at { Time.current }
     end
@@ -84,7 +84,7 @@ FactoryBot.define do
     end
 
     trait :with_assigned_to do
-      association :assigned_to, factory: [:user, :landlord]
+      assigned_to { association :user, :landlord }
       assigned_at { Time.current }
     end
   end

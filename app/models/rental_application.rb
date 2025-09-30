@@ -41,9 +41,9 @@ class RentalApplication < ApplicationRecord
   end
 
   def income_to_rent_ratio
-    return 0 if property.nil? || property.rent.nil? || monthly_income.nil?
+    return 0 if property.nil? || property.price.nil? || monthly_income.nil?
 
-    monthly_income / property.rent
+    monthly_income / property.price
   end
 
   private
@@ -59,10 +59,10 @@ class RentalApplication < ApplicationRecord
   end
 
   def monthly_income_sufficient
-    return unless monthly_income.present? && property&.rent.present?
+    return unless monthly_income.present? && property&.price.present?
 
     # Typically require 3x rent in income
-    minimum_income = property.rent * 3
+    minimum_income = property.price * 3
     if monthly_income < minimum_income
       errors.add(:monthly_income, "should be at least 3 times the monthly rent (#{minimum_income})")
     end
