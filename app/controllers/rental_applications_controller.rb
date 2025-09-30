@@ -28,7 +28,7 @@ class RentalApplicationsController < ApplicationController
   # GET /properties/:property_id/rental_applications/new
   def new
     # Check if user already has a pending application for this property
-    existing_application = current_user.rental_applications
+    existing_application = current_user.tenant_rental_applications
                                       .where(property: @property)
                                       .where(status: [ "pending", "under_review" ])
                                       .first
@@ -329,7 +329,7 @@ class RentalApplicationsController < ApplicationController
       RentalApplication.joins(:property).where(properties: { user_id: current_user.id })
     else
       # Tenant sees their own applications
-      current_user.rental_applications
+      current_user.tenant_rental_applications
     end
   end
 

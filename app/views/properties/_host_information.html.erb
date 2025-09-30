@@ -68,7 +68,7 @@
     <% if user_signed_in? && current_user != @property.user %>
       <!-- Apply Now Button -->
       <% if current_user.tenant? %>
-        <% existing_application = current_user.rental_applications.where(property: @property, status: ['pending', 'under_review']).first %>
+        <% existing_application = current_user.tenant_rental_applications.where(property: @property, status: ['pending', 'under_review']).first %>
         <% if existing_application %>
           <%= link_to rental_application_path(existing_application),
                       class: "group w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white py-4 px-6 rounded-2xl font-bold transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center justify-center" do %>
