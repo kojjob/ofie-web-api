@@ -25,17 +25,17 @@ class PropertiesController < ApplicationController
 
     respond_to do |format|
       format.html do
-        # Only eager load what's needed for the properties grid view
-        @properties = @properties.includes(photos_attachments: :blob)
+        # Load properties without eager loading to avoid warnings
+        # ActiveStorage will load attachments as needed
+        @properties = @properties
       end
       format.json do
         if request.xhr?
-          # For AJAX requests (properties grid), only load photos
-          @properties = @properties.includes(photos_attachments: :blob)
+          # For AJAX requests (properties grid)
           render partial: "properties_grid", locals: { properties: @properties }
         else
           # For JSON API, include user data for property_json serialization
-          @properties = @properties.includes(:user, photos_attachments: :blob)
+          @properties = @properties.includes(:user)
           render json: {
             properties: @properties.map { |property| property_json(property) },
             meta: {
@@ -93,7 +93,7 @@ class PropertiesController < ApplicationController
     # Load data needed for the show page
     @related_properties = Property.where.not(id: @property.id)
                                   .available
-                                  .includes(photos_attachments: :blob)
+                                  .with_attached_photos
                                   .limit(4)
 
     # Load recent reviews and comments for the show page
@@ -200,7 +200,6 @@ class PropertiesController < ApplicationController
   def my_properties
     authorize_landlord
     @properties = current_user.properties
-                              .includes(photos_attachments: :blob)
                               .order(created_at: :desc)
 
     respond_to do |format|
@@ -228,10 +227,10 @@ class PropertiesController < ApplicationController
     case action_name
     when 'show'
       # For show page, we need user and photos, comments are loaded separately
-      @property = Property.includes(:user, photos_attachments: :blob).find(params[:id])
+      @property = Property.includes(:user).with_attached_photos.find(params[:id])
     when 'edit'
       # For edit page, we only need photos
-      @property = Property.includes(photos_attachments: :blob).find(params[:id])
+      @property = Property.with_attached_photos.find(params[:id])
     else
       # For other actions, minimal loading
       @property = Property.find(params[:id])

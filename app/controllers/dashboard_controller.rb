@@ -44,7 +44,7 @@ class DashboardController < ApplicationController
   end
 
   def tenant_dashboard
-    @lease_agreements = current_user.lease_agreements.includes(property: [:user, photos_attachments: :blob])
+    @lease_agreements = current_user.tenant_lease_agreements.includes(property: [:user, photos_attachments: :blob])
     @stats = {
       active_leases: @lease_agreements.where(status: "active").count,
       applications_submitted: current_user.rental_applications.count,
