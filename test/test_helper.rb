@@ -30,6 +30,10 @@ require "bcrypt"
 # Load FactoryBot
 require "factory_bot_rails"
 
+# Load WebMock for HTTP request stubbing
+require "webmock/minitest"
+WebMock.disable_net_connect!(allow_localhost: true)
+
 module ActiveSupport
   class TestCase
     # Include FactoryBot methods

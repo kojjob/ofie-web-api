@@ -87,6 +87,12 @@ group :test do
 
   # Test data faker for generating realistic test data
   gem "faker", "~> 3.2"
+
+  # HTTP request stubbing for external API testing
+  gem "webmock", "~> 3.19"
+
+  # Record and replay HTTP interactions for tests
+  gem "vcr", "~> 6.2"
 end
 
 group :development do
