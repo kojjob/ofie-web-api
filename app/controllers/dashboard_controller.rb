@@ -38,14 +38,14 @@ class DashboardController < ApplicationController
   end
 
   def tenant_dashboard
-    @lease_agreements = current_user.lease_agreements.includes(property: { photos_attachments: :blob })
+    @lease_agreements = current_user.tenant_lease_agreements.includes(property: { photos_attachments: :blob })
     @stats = {
       active_leases: @lease_agreements.where(status: "active").count,
-      applications_submitted: current_user.rental_applications.count,
+      applications_submitted: current_user.tenant_rental_applications.count,
       pending_payments: current_user.payments.where(status: "pending").count,
       favorite_properties: current_user.property_favorites.count
     }
-    @recent_applications = current_user.rental_applications
+    @recent_applications = current_user.tenant_rental_applications
                                       .includes(property: { photos_attachments: :blob })
                                       .order(created_at: :desc)
                                       .limit(5)
