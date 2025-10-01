@@ -34,10 +34,16 @@ require "factory_bot_rails"
 require "webmock/minitest"
 WebMock.disable_net_connect!(allow_localhost: true)
 
+# Load test support files
+Dir[Rails.root.join("test/support/**/*.rb")].each { |f| require f }
+
 module ActiveSupport
   class TestCase
     # Include FactoryBot methods
     include FactoryBot::Syntax::Methods
+
+    # Include Stripe test helpers
+    include StripeHelpers
 
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
