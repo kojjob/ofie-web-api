@@ -93,6 +93,72 @@
       </div>
     </div>
 
+    <!-- AI Generated Indicator -->
+    <% if @lease_agreement.ai_generated? %>
+      <div class="mb-8">
+        <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-3xl shadow-lg p-6">
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+              </div>
+            </div>
+
+            <div class="flex-1">
+              <h3 class="text-lg font-bold text-purple-900 mb-2">
+                AI-Generated Lease Agreement
+              </h3>
+              <p class="text-purple-800 mb-3">
+                This lease was automatically generated using AI technology
+                (<%= @lease_agreement.llm_provider&.titleize || 'AI Provider' %><% if @lease_agreement.llm_model.present? %> - <%= @lease_agreement.llm_model %><% end %>).
+                Please review all terms carefully and customize as needed.
+              </p>
+
+              <div class="flex items-center space-x-4 text-sm">
+                <div class="flex items-center space-x-2">
+                  <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span class="text-purple-700 font-medium">
+                    <% if @lease_agreement.reviewed_by_landlord? %>
+                      Reviewed by landlord
+                    <% else %>
+                      Pending landlord review
+                    <% end %>
+                  </span>
+                </div>
+
+                <% if @lease_agreement.generation_cost.present? %>
+                  <div class="flex items-center space-x-2">
+                    <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="text-purple-700">
+                      Cost: $<%= number_with_precision(@lease_agreement.generation_cost, precision: 4) %>
+                    </span>
+                  </div>
+                <% end %>
+              </div>
+
+              <% if !@lease_agreement.reviewed_by_landlord? && current_user == @lease_agreement.landlord %>
+                <div class="mt-4 p-4 bg-white/50 rounded-2xl border border-purple-200">
+                  <p class="text-sm text-purple-900 font-medium mb-2">
+                    ⚠️ Important: AI-generated content requires your review
+                  </p>
+                  <p class="text-sm text-purple-800">
+                    As the landlord, please carefully review all clauses and terms.
+                    Edit the lease to match your requirements and local regulations before sending for signatures.
+                  </p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
     <!-- Property Information -->
     <div class="mb-8">
       <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-6">
