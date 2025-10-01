@@ -22,14 +22,14 @@ FactoryBot.define do
 
     trait :signed do
       status { "signed" }
-      tenant_signed_at { Time.current - 2.days }
-      landlord_signed_at { Time.current - 1.day }
+      signed_by_tenant_at { Time.current - 2.days }
+      signed_by_landlord_at { Time.current - 1.day }
     end
 
     trait :active do
       status { "active" }
-      tenant_signed_at { Time.current - 1.month }
-      landlord_signed_at { Time.current - 1.month }
+      signed_by_tenant_at { Time.current - 1.month }
+      signed_by_landlord_at { Time.current - 1.month }
       lease_start_date { Date.current - 15.days }
     end
 
@@ -46,11 +46,11 @@ FactoryBot.define do
     end
 
     trait :tenant_signed do
-      tenant_signed_at { Time.current }
+      signed_by_tenant_at { Time.current }
     end
 
     trait :landlord_signed do
-      landlord_signed_at { Time.current }
+      signed_by_landlord_at { Time.current }
     end
 
     trait :fully_signed do
