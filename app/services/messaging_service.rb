@@ -56,7 +56,7 @@ class MessagingService
       end
 
       # Validate conversation is active
-      unless conversation.active?
+      unless conversation.status == "active"
         return { success: false, error: "Conversation is not active" }
       end
 
@@ -132,9 +132,6 @@ class MessagingService
 
       # Users must have different roles
       return false if landlord.id == tenant.id
-
-      # Both users must be active
-      return false unless landlord.active? && tenant.active?
 
       true
     end
