@@ -21,7 +21,7 @@ class DashboardController < ApplicationController
     }
     @recent_applications = RentalApplication.joins(:property)
                                           .where(properties: { user_id: current_user.id })
-                                          .includes(:user, property: { photos_attachments: :blob })
+                                          .includes(:tenant, property: { photos_attachments: :blob })
                                           .order(created_at: :desc)
                                           .limit(5)
     @upcoming_payments = Payment.joins(lease_agreement: :property)
@@ -266,9 +266,9 @@ class DashboardController < ApplicationController
         address: application.property.address
       },
       applicant: {
-        id: application.user.id,
-        name: application.user.name,
-        email: application.user.email
+        id: application.tenant.id,
+        name: application.tenant.name,
+        email: application.tenant.email
       }
     }
   end
