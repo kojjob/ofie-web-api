@@ -114,6 +114,7 @@ Rails.application.routes.draw do
           post :approve
           post :reject
           post :under_review
+          post :generate_lease
         end
       end
 
@@ -306,6 +307,7 @@ Rails.application.routes.draw do
       post :reject
       get :under_review
       post :under_review
+      post :generate_lease
     end
 
     # Nested lease agreements routes
