@@ -1,5 +1,5 @@
 class Api::V1::PaymentsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_request
   before_action :set_payment, only: [ :show, :retry, :cancel ]
   before_action :set_lease_agreement, only: [ :index, :create ]
 

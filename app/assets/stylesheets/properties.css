@@ -337,7 +337,7 @@
   filter: brightness(1.1) contrast(1.05);
 }
 
-/* Thumbnail Clarity Enhancement - Force Clear Images */
+/* Thumbnail Clarity Enhancement - Force Clear Images with Maximum Specificity */
 .thumbnail-clear {
   filter: none !important;
   opacity: 1 !important;
@@ -346,21 +346,68 @@
   -webkit-backdrop-filter: none !important;
   transform: none;
   transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .thumbnail-clear:hover {
   transform: scale(1.02);
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-/* Ensure thumbnail buttons don't apply any blur effects */
+/* Ensure thumbnail container has no blur */
 [data-gallery-target="thumbnail"] {
   filter: none !important;
   backdrop-filter: none !important;
+  -webkit-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: white !important;
+  isolation: isolate;
 }
 
+/* Force clarity on thumbnail images */
 [data-gallery-target="thumbnail"] img {
   filter: none !important;
   opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: pixelated;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Extra specificity to override any parent blur effects */
+button[data-gallery-target="thumbnail"] img.thumbnail-clear {
+  filter: none !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  image-rendering: crisp-edges !important;
+}
+
+/* Force the entire thumbnail navigation section to be blur-free */
+.bg-white.border-t.border-gray-100 {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Nuclear option: Force all images in thumbnail containers to be crystal clear */
+[data-gallery-target="thumbnail"] * {
+  filter: none !important;
   backdrop-filter: none !important;
   -webkit-filter: none !important;
   -webkit-backdrop-filter: none !important;

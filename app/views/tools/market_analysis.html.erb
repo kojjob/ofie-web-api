@@ -1,0 +1,695 @@
+<% content_for :title, @page_title %>
+<% content_for :meta_description, @page_description %>
+
+<!-- Custom Styles for Advanced Effects -->
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .animate-slide-in-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+  }
+
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .chart-bar {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .chart-bar:hover {
+    transform: scaleY(1.05);
+    filter: brightness(1.2);
+  }
+</style>
+
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-blue-900 dark:to-purple-900">
+  <!-- Hero Section with Animated Background -->
+  <section class="relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600">
+      <div class="absolute inset-0 opacity-20">
+        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-float"></div>
+        <div class="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-float" style="animation-delay: 2s;"></div>
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-float" style="animation-delay: 4s;"></div>
+      </div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="container mx-auto px-4 py-24 md:py-32 relative z-10">
+      <div class="max-w-5xl mx-auto text-center">
+        <!-- Badge -->
+        <div class="inline-flex items-center px-6 py-3 glass-effect rounded-full mb-8 text-white animate-fade-in-up">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+          </svg>
+          <span class="text-sm font-semibold">Live Data • Updated Every 24 Hours</span>
+        </div>
+
+        <!-- Main Heading -->
+        <h1 class="text-5xl md:text-7xl font-black mb-6 text-white leading-tight animate-fade-in-up" style="animation-delay: 0.1s;">
+          London Rental Market
+          <span class="block bg-gradient-to-r from-yellow-200 to-pink-200 bg-clip-text text-transparent">Intelligence Hub</span>
+        </h1>
+
+        <!-- Description -->
+        <p class="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style="animation-delay: 0.2s;">
+          Comprehensive market analysis powered by real-time data from over 50,000 properties across London
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap justify-center gap-4 animate-fade-in-up" style="animation-delay: 0.3s;">
+          <a href="#market-insights" class="group px-8 py-4 bg-white text-blue-600 rounded-2xl font-bold hover:bg-opacity-90 transition-all duration-300 shadow-2xl hover:shadow-3xl flex items-center space-x-2">
+            <span>Explore Insights</span>
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+          </a>
+          <a href="#area-comparison" class="px-8 py-4 glass-effect text-white rounded-2xl font-bold hover:bg-white hover:bg-opacity-20 transition-all duration-300 border-2 border-white/30">
+            Compare Areas
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wave Divider -->
+    <div class="absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+        <path d="M0 0L60 10C120 20 240 40 360 46.7C480 53 600 47 720 43.3C840 40 960 40 1080 46.7C1200 53 1320 67 1380 73.3L1440 80V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V0Z" fill="currentColor" class="text-slate-50 dark:text-slate-900"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Key Metrics Dashboard -->
+  <section class="py-20 -mt-20 relative z-20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <!-- Metric Card 1 -->
+        <div class="group relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 hover-lift overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/10 to-transparent rounded-full -mr-16 -mt-16"></div>
+          <div class="relative z-10">
+            <div class="flex items-start justify-between mb-6">
+              <div class="p-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+              </div>
+              <div class="flex items-center space-x-1 px-3 py-1 bg-green-100 dark:bg-green-900 rounded-full">
+                <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-xs font-bold text-green-600 dark:text-green-400">+3.2%</span>
+              </div>
+            </div>
+            <h3 class="text-4xl font-black text-slate-900 dark:text-white mb-2">£2,450</h3>
+            <p class="text-slate-600 dark:text-slate-400 font-semibold mb-1">Average Monthly Rent</p>
+            <p class="text-xs text-slate-500 dark:text-slate-500">Across all London zones</p>
+          </div>
+        </div>
+
+        <!-- Metric Card 2 -->
+        <div class="group relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 hover-lift overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-500/10 to-transparent rounded-full -mr-16 -mt-16"></div>
+          <div class="relative z-10">
+            <div class="flex items-start justify-between mb-6">
+              <div class="p-4 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div class="flex items-center space-x-1 px-3 py-1 bg-green-100 dark:bg-green-900 rounded-full">
+                <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-xs font-bold text-green-600 dark:text-green-400">+1.8%</span>
+              </div>
+            </div>
+            <h3 class="text-4xl font-black text-slate-900 dark:text-white mb-2">94.5%</h3>
+            <p class="text-slate-600 dark:text-slate-400 font-semibold mb-1">Occupancy Rate</p>
+            <p class="text-xs text-slate-500 dark:text-slate-500">London-wide average</p>
+          </div>
+        </div>
+
+        <!-- Metric Card 3 -->
+        <div class="group relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 hover-lift overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/10 to-transparent rounded-full -mr-16 -mt-16"></div>
+          <div class="relative z-10">
+            <div class="flex items-start justify-between mb-6">
+              <div class="p-4 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div class="flex items-center space-x-1 px-3 py-1 bg-green-100 dark:bg-green-900 rounded-full">
+                <svg class="w-4 h-4 text-green-600 dark:text-green-400 transform rotate-180" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-xs font-bold text-green-600 dark:text-green-400">-5 days</span>
+              </div>
+            </div>
+            <h3 class="text-4xl font-black text-slate-900 dark:text-white mb-2">18 Days</h3>
+            <p class="text-slate-600 dark:text-slate-400 font-semibold mb-1">Time to Rent</p>
+            <p class="text-xs text-slate-500 dark:text-slate-500">Market median</p>
+          </div>
+        </div>
+
+        <!-- Metric Card 4 -->
+        <div class="group relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 hover-lift overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/10 to-transparent rounded-full -mr-16 -mt-16"></div>
+          <div class="relative z-10">
+            <div class="flex items-start justify-between mb-6">
+              <div class="p-4 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                </svg>
+              </div>
+              <div class="flex items-center space-x-1 px-3 py-1 bg-green-100 dark:bg-green-900 rounded-full">
+                <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span class="text-xs font-bold text-green-600 dark:text-green-400">+0.3%</span>
+              </div>
+            </div>
+            <h3 class="text-4xl font-black text-slate-900 dark:text-white mb-2">5.2%</h3>
+            <p class="text-slate-600 dark:text-slate-400 font-semibold mb-1">Rental Yield</p>
+            <p class="text-xs text-slate-500 dark:text-slate-500">Annual average</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Market Trends Section -->
+  <section id="market-insights" class="py-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-7xl mx-auto">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center px-4 py-2 bg-blue-100 dark:bg-blue-900 rounded-full mb-4">
+            <svg class="w-5 h-5 mr-2 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+            </svg>
+            <span class="text-sm font-bold text-blue-600 dark:text-blue-400">12-Month Analysis</span>
+          </div>
+          <h2 class="text-5xl font-black text-slate-900 dark:text-white mb-4">
+            Market Trends & Insights
+          </h2>
+          <p class="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
+            Track rental price movements and identify emerging opportunities with our comprehensive trend analysis
+          </p>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-8 lg:p-12">
+          <!-- Chart Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-6 mb-10">
+            <div class="flex gap-3">
+              <button class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg">
+                12 Months
+              </button>
+              <button class="px-6 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition-all">
+                6 Months
+              </button>
+              <button class="px-6 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition-all">
+                3 Months
+              </button>
+            </div>
+
+            <div class="flex items-center gap-6">
+              <div class="flex items-center">
+                <div class="w-4 h-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mr-3 shadow"></div>
+                <span class="text-sm font-semibold text-slate-600 dark:text-slate-400">Average Rent</span>
+              </div>
+              <div class="flex items-center">
+                <div class="w-4 h-4 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mr-3 shadow"></div>
+                <span class="text-sm font-semibold text-slate-600 dark:text-slate-400">Demand Index</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Chart -->
+          <div class="relative">
+            <div class="h-96 flex items-end justify-between gap-1 lg:gap-2 px-2">
+              <% [65, 68, 72, 70, 75, 78, 82, 80, 85, 88, 92, 95].each_with_index do |height, index| %>
+                <div class="flex-1 flex flex-col items-center group cursor-pointer">
+                  <div class="relative w-full">
+                    <div class="chart-bar w-full bg-gradient-to-t from-blue-600 to-indigo-500 rounded-t-2xl shadow-lg relative overflow-hidden group-hover:shadow-2xl" style="height: <%= height * 4 %>px">
+                      <div class="absolute inset-0 bg-gradient-to-t from-white/0 to-white/10"></div>
+                      <!-- Tooltip -->
+                      <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-2 bg-slate-900 text-white rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                        <div class="text-xs font-bold mb-1"><%= Date::MONTHNAMES[(index + 1)] %> 2024</div>
+                        <div class="text-sm">£<%= 2200 + (height * 5) %></div>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="text-xs font-bold text-slate-400 dark:text-slate-500 mt-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    <%= Date::ABBR_MONTHNAMES[index + 1] %>
+                  </span>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Y-Axis Labels -->
+            <div class="absolute left-0 top-0 bottom-0 -ml-12 flex flex-col justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
+              <span>£3,000</span>
+              <span>£2,500</span>
+              <span>£2,000</span>
+            </div>
+          </div>
+
+          <!-- Chart Summary -->
+          <div class="mt-10 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-blue-100 dark:border-blue-800">
+            <div class="flex items-start">
+              <div class="p-3 bg-blue-500 rounded-xl mr-4">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                </svg>
+              </div>
+              <div>
+                <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Key Insight</h4>
+                <p class="text-slate-600 dark:text-slate-400">
+                  Rental prices have shown a consistent upward trend, with a <span class="font-bold text-blue-600">12.8% increase</span> over the past year.
+                  Q4 shows the strongest growth, driven by increased demand from professionals and students.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Area Comparison Section -->
+  <section id="area-comparison" class="py-20 bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-blue-900">
+    <div class="container mx-auto px-4">
+      <div class="max-w-7xl mx-auto">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center px-4 py-2 bg-purple-100 dark:bg-purple-900 rounded-full mb-4">
+            <svg class="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span class="text-sm font-bold text-purple-600 dark:text-purple-400">Regional Analysis</span>
+          </div>
+          <h2 class="text-5xl font-black text-slate-900 dark:text-white mb-4">
+            Compare London Boroughs
+          </h2>
+          <p class="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
+            Discover the best investment opportunities across different London areas with detailed performance metrics
+          </p>
+        </div>
+
+        <!-- Comparison Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Central London -->
+          <div class="group relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden hover-lift">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="relative">
+              <!-- Header -->
+              <div class="bg-gradient-to-br from-blue-600 to-blue-700 p-8 text-white">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-3xl font-black">Central London</h3>
+                  <div class="p-3 bg-white/20 rounded-2xl backdrop-blur">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                  </div>
+                </div>
+                <p class="text-blue-100 text-sm font-semibold">Westminster • City of London • Kensington</p>
+              </div>
+
+              <!-- Metrics -->
+              <div class="p-8 space-y-6">
+                <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl">
+                  <div>
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">1-Bedroom</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">£3,200</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">2-Bedroom</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">£4,800</p>
+                  </div>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center">
+                    <span class="text-slate-600 dark:text-slate-400 font-semibold">Occupancy Rate</span>
+                    <span class="text-xl font-black text-green-600">96%</span>
+                  </div>
+                  <div class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" style="width: 96%"></div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Avg. Yield</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">4.2%</p>
+                  </div>
+                  <div class="p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Time to Rent</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">12 days</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-800">
+                  <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-sm font-bold text-green-700 dark:text-green-400">4.5% growth this quarter</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- East London -->
+          <div class="group relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden hover-lift">
+            <div class="absolute inset-0 bg-gradient-to-br from-green-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="relative">
+              <!-- Header -->
+              <div class="bg-gradient-to-br from-green-600 to-emerald-700 p-8 text-white">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-3xl font-black">East London</h3>
+                  <div class="p-3 bg-white/20 rounded-2xl backdrop-blur">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                  </div>
+                </div>
+                <p class="text-green-100 text-sm font-semibold">Hackney • Tower Hamlets • Shoreditch</p>
+              </div>
+
+              <!-- Metrics -->
+              <div class="p-8 space-y-6">
+                <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl">
+                  <div>
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">1-Bedroom</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">£2,100</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">2-Bedroom</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">£2,800</p>
+                  </div>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center">
+                    <span class="text-slate-600 dark:text-slate-400 font-semibold">Occupancy Rate</span>
+                    <span class="text-xl font-black text-green-600">93%</span>
+                  </div>
+                  <div class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" style="width: 93%"></div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Avg. Yield</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">5.8%</p>
+                  </div>
+                  <div class="p-4 bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-2xl">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Time to Rent</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">15 days</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-800">
+                  <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-sm font-bold text-green-700 dark:text-green-400">6.2% growth this quarter</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- South London -->
+          <div class="group relative bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden hover-lift">
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="relative">
+              <!-- Header -->
+              <div class="bg-gradient-to-br from-purple-600 to-pink-700 p-8 text-white">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-3xl font-black">South London</h3>
+                  <div class="p-3 bg-white/20 rounded-2xl backdrop-blur">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                    </svg>
+                  </div>
+                </div>
+                <p class="text-purple-100 text-sm font-semibold">Wandsworth • Lambeth • Clapham</p>
+              </div>
+
+              <!-- Metrics -->
+              <div class="p-8 space-y-6">
+                <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl">
+                  <div>
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">1-Bedroom</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">£1,900</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">2-Bedroom</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">£2,400</p>
+                  </div>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center">
+                    <span class="text-slate-600 dark:text-slate-400 font-semibold">Occupancy Rate</span>
+                    <span class="text-xl font-black text-green-600">91%</span>
+                  </div>
+                  <div class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style="width: 91%"></div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Avg. Yield</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">6.1%</p>
+                  </div>
+                  <div class="p-4 bg-gradient-to-br from-rose-50 to-red-50 dark:from-rose-900/20 dark:to-red-900/20 rounded-2xl">
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Time to Rent</p>
+                    <p class="text-2xl font-black text-slate-900 dark:text-white">22 days</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-200 dark:border-green-800">
+                  <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span class="text-sm font-bold text-green-700 dark:text-green-400">3.8% growth this quarter</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Property Type Analysis -->
+  <section class="py-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-7xl mx-auto">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center px-4 py-2 bg-indigo-100 dark:bg-indigo-900 rounded-full mb-4">
+            <svg class="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+            <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">Property Analysis</span>
+          </div>
+          <h2 class="text-5xl font-black text-slate-900 dark:text-white mb-4">
+            Performance by Property Type
+          </h2>
+          <p class="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
+            Compare demand and yield across different property configurations to optimize your investment strategy
+          </p>
+        </div>
+
+        <!-- Analysis Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Demand Analysis -->
+          <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-10">
+            <div class="flex items-center justify-between mb-8">
+              <h3 class="text-3xl font-black text-slate-900 dark:text-white">Rental Demand</h3>
+              <div class="p-3 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="space-y-8">
+              <% [
+                ['Studios', 75, 'from-blue-500 to-cyan-500'],
+                ['1 Bedroom', 92, 'from-green-500 to-emerald-500'],
+                ['2 Bedrooms', 88, 'from-purple-500 to-pink-500'],
+                ['3+ Bedrooms', 68, 'from-indigo-500 to-purple-500']
+              ].each do |type, value, gradient| %>
+                <div class="group">
+                  <div class="flex justify-between items-center mb-3">
+                    <span class="text-lg font-bold text-slate-700 dark:text-slate-300"><%= type %></span>
+                    <span class="text-2xl font-black text-slate-900 dark:text-white group-hover:scale-110 transition-transform"><%= value %>%</span>
+                  </div>
+                  <div class="relative h-4 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r <%= gradient %> rounded-full transition-all duration-700 ease-out hover:scale-x-105" style="width: <%= value %>%; transform-origin: left;"></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Yield Analysis -->
+          <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-10">
+            <div class="flex items-center justify-between mb-8">
+              <h3 class="text-3xl font-black text-slate-900 dark:text-white">Average Yield</h3>
+              <div class="p-3 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="space-y-8">
+              <% [
+                ['Studios', 6.2, 88, 'from-blue-500 to-cyan-500'],
+                ['1 Bedroom', 5.8, 82, 'from-green-500 to-emerald-500'],
+                ['2 Bedrooms', 5.1, 72, 'from-purple-500 to-pink-500'],
+                ['3+ Bedrooms', 4.5, 64, 'from-indigo-500 to-purple-500']
+              ].each do |type, yield_val, bar_width, gradient| %>
+                <div class="group">
+                  <div class="flex justify-between items-center mb-3">
+                    <span class="text-lg font-bold text-slate-700 dark:text-slate-300"><%= type %></span>
+                    <span class="text-2xl font-black text-slate-900 dark:text-white group-hover:scale-110 transition-transform"><%= yield_val %>%</span>
+                  </div>
+                  <div class="relative h-4 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r <%= gradient %> rounded-full transition-all duration-700 ease-out hover:scale-x-105" style="width: <%= bar_width %>%; transform-origin: left;"></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600"></div>
+    <div class="absolute inset-0 bg-grid-white/[0.05] bg-[size:20px_20px]"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="inline-flex items-center px-6 py-3 glass-effect rounded-full mb-8 text-white">
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+          </svg>
+          <span class="text-sm font-bold">Get Started Today</span>
+        </div>
+
+        <h2 class="text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
+          Ready for Personalized
+          <span class="block bg-gradient-to-r from-yellow-200 to-pink-200 bg-clip-text text-transparent">Market Insights?</span>
+        </h2>
+
+        <p class="text-xl text-blue-100 mb-12 max-w-2xl mx-auto leading-relaxed">
+          Join thousands of landlords and investors who trust our data-driven insights to make smarter property decisions
+        </p>
+
+        <div class="flex flex-wrap justify-center gap-4">
+          <%= link_to register_path, class: "group px-10 py-5 bg-white text-blue-600 rounded-2xl font-black text-lg hover:bg-opacity-90 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 flex items-center space-x-3" do %>
+            <span>Create Free Account</span>
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+          <% end %>
+
+          <%= link_to contact_path, class: "px-10 py-5 glass-effect text-white rounded-2xl font-black text-lg hover:bg-white hover:bg-opacity-20 transition-all duration-300 border-2 border-white/30 hover:scale-105" do %>
+            Contact Our Team
+          <% end %>
+        </div>
+
+        <div class="mt-12 flex items-center justify-center space-x-8 text-white/80">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+            <span class="text-sm font-semibold">50,000+ Properties</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2 text-green-300" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span class="text-sm font-semibold">Daily Updates</span>
+          </div>
+          <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span class="text-sm font-semibold">Verified Data</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -211,11 +211,11 @@
                 <div class="flex items-center space-x-4">
                   <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
                     <span class="text-lg font-bold text-white">
-                      <%= application.user.name&.first&.upcase || application.user.email.first.upcase %>
+                      <%= application.tenant.name&.first&.upcase || application.tenant.email.first.upcase %>
                     </span>
                   </div>
                   <div>
-                    <p class="text-lg font-semibold text-gray-900"><%= application.user.name || application.user.email %></p>
+                    <p class="text-lg font-semibold text-gray-900"><%= application.tenant.name || application.tenant.email %></p>
                     <p class="text-sm text-gray-600"><%= application.property.title %></p>
                   </div>
                 </div>

@@ -1,5 +1,5 @@
 class Api::V1::PaymentSchedulesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_request
   before_action :set_payment_schedule, only: [ :show, :update, :destroy, :activate, :deactivate, :toggle_auto_pay ]
   before_action :set_lease_agreement, only: [ :index, :create ]
 
