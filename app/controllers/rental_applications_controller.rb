@@ -315,11 +315,9 @@ class RentalApplicationsController < ApplicationController
 
   def rental_application_params
     params.require(:rental_application).permit(
-      :move_in_date, :monthly_income, :employment_status, :employer_name,
-      :employment_duration, :previous_address, :previous_landlord_contact,
-      :reason_for_moving, :references_contact, :additional_notes,
-      :pets_description, :emergency_contact_name, :emergency_contact_phone,
-      :background_check_consent, :credit_check_consent
+      :move_in_date, :monthly_income, :employment_status,
+      :previous_address, :references_contact, :additional_notes,
+      :credit_score
     )
   end
 
