@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_01_223806) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "pg_trgm"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -40,6 +41,46 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "batch_property_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "batch_property_upload_id", null: false
+    t.uuid "property_id"
+    t.integer "row_number", null: false
+    t.text "property_data", null: false
+    t.string "status", default: "pending", null: false
+    t.text "error_message"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["batch_property_upload_id", "row_number"], name: "idx_on_batch_property_upload_id_row_number_c7be2a97bf"
+    t.index ["batch_property_upload_id", "status"], name: "idx_on_batch_property_upload_id_status_78e998a09b"
+    t.index ["batch_property_upload_id"], name: "index_batch_property_items_on_batch_property_upload_id"
+    t.index ["property_id"], name: "index_batch_property_items_on_property_id"
+    t.index ["row_number"], name: "index_batch_property_items_on_row_number"
+    t.index ["status"], name: "index_batch_property_items_on_status"
+  end
+
+  create_table "batch_property_uploads", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.string "filename", null: false
+    t.string "status", default: "pending", null: false
+    t.integer "total_items", default: 0
+    t.integer "valid_items", default: 0
+    t.integer "invalid_items", default: 0
+    t.integer "processed_items", default: 0
+    t.integer "successful_items", default: 0
+    t.integer "failed_items", default: 0
+    t.text "error_message"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_batch_property_uploads_on_created_at"
+    t.index ["status"], name: "index_batch_property_uploads_on_status"
+    t.index ["user_id", "created_at"], name: "index_batch_property_uploads_on_user_id_and_created_at"
+    t.index ["user_id", "status"], name: "index_batch_property_uploads_on_user_id_and_status"
+    t.index ["user_id"], name: "index_batch_property_uploads_on_user_id"
   end
 
   create_table "bot_context_stores", force: :cascade do |t|
@@ -94,6 +135,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.uuid "property_comment_id", null: false
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["property_comment_id", "user_id"], name: "index_comment_likes_on_comment_and_user", unique: true
     t.index ["property_comment_id"], name: "index_comment_likes_on_property_comment_id"
     t.index ["user_id", "property_comment_id"], name: "index_comment_likes_on_user_id_and_property_comment_id", unique: true
   end
@@ -109,8 +151,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.datetime "updated_at", null: false
     t.json "metadata"
     t.index ["landlord_id", "tenant_id", "property_id"], name: "index_conversations_on_participants_and_property", unique: true
+    t.index ["landlord_id", "tenant_id"], name: "index_conversations_on_landlord_and_tenant"
     t.index ["landlord_id"], name: "index_conversations_on_landlord_id"
     t.index ["last_message_at"], name: "index_conversations_on_last_message_at"
+    t.index ["property_id", "created_at"], name: "index_conversations_on_property_and_created_at"
     t.index ["property_id"], name: "index_conversations_on_property_id"
     t.index ["status"], name: "index_conversations_on_status"
     t.index ["tenant_id"], name: "index_conversations_on_tenant_id"
@@ -134,14 +178,56 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.json "additional_terms"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "ai_generated", default: false
+    t.string "llm_provider"
+    t.string "llm_model"
+    t.jsonb "generation_metadata", default: {}
+    t.decimal "generation_cost", precision: 10, scale: 4
+    t.boolean "reviewed_by_landlord", default: false
+    t.text "landlord_review_notes"
+    t.index ["ai_generated"], name: "index_lease_agreements_on_ai_generated"
+    t.index ["landlord_id", "status"], name: "index_lease_agreements_on_landlord_and_status"
     t.index ["landlord_id"], name: "index_lease_agreements_on_landlord_id"
     t.index ["lease_end_date"], name: "index_lease_agreements_on_lease_end_date"
     t.index ["lease_number"], name: "index_lease_agreements_on_lease_number", unique: true
+    t.index ["lease_start_date", "lease_end_date"], name: "index_lease_agreements_on_dates"
     t.index ["lease_start_date"], name: "index_lease_agreements_on_lease_start_date"
+    t.index ["llm_provider"], name: "index_lease_agreements_on_llm_provider"
+    t.index ["property_id", "status"], name: "index_lease_agreements_on_property_and_status"
     t.index ["property_id"], name: "index_lease_agreements_on_property_id"
     t.index ["rental_application_id"], name: "index_lease_agreements_on_rental_application_id", unique: true
+    t.index ["reviewed_by_landlord"], name: "index_lease_agreements_on_reviewed_by_landlord"
     t.index ["status"], name: "index_lease_agreements_on_status"
+    t.index ["tenant_id", "status"], name: "index_lease_agreements_on_tenant_and_status"
     t.index ["tenant_id"], name: "index_lease_agreements_on_tenant_id"
+  end
+
+  create_table "lease_clauses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "category", null: false
+    t.string "jurisdiction"
+    t.text "clause_text", null: false
+    t.boolean "required", default: false
+    t.jsonb "variables", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category", "jurisdiction"], name: "index_lease_clauses_on_category_and_jurisdiction"
+    t.index ["category"], name: "index_lease_clauses_on_category"
+    t.index ["jurisdiction"], name: "index_lease_clauses_on_jurisdiction"
+    t.index ["required"], name: "index_lease_clauses_on_required"
+  end
+
+  create_table "lease_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "jurisdiction", null: false
+    t.text "template_content"
+    t.jsonb "required_clauses", default: []
+    t.jsonb "optional_clauses", default: []
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_lease_templates_on_active"
+    t.index ["jurisdiction", "active"], name: "index_lease_templates_on_jurisdiction_and_active"
+    t.index ["jurisdiction"], name: "index_lease_templates_on_jurisdiction"
   end
 
   create_table "maintenance_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -168,9 +254,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.index ["category"], name: "index_maintenance_requests_on_category"
     t.index ["landlord_id"], name: "index_maintenance_requests_on_landlord_id"
     t.index ["priority"], name: "index_maintenance_requests_on_priority"
+    t.index ["property_id", "status"], name: "index_maintenance_requests_on_property_and_status"
     t.index ["property_id"], name: "index_maintenance_requests_on_property_id"
     t.index ["requested_at"], name: "index_maintenance_requests_on_requested_at"
     t.index ["status"], name: "index_maintenance_requests_on_status"
+    t.index ["tenant_id", "created_at"], name: "index_maintenance_requests_on_tenant_and_created_at"
     t.index ["tenant_id"], name: "index_maintenance_requests_on_tenant_id"
   end
 
@@ -270,13 +358,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["due_date"], name: "index_payments_on_due_date"
+    t.index ["lease_agreement_id", "status"], name: "index_payments_on_lease_agreement_and_status"
     t.index ["lease_agreement_id"], name: "index_payments_on_lease_agreement_id"
     t.index ["paid_at"], name: "index_payments_on_paid_at"
     t.index ["payment_method_id"], name: "index_payments_on_payment_method_id"
     t.index ["payment_number"], name: "index_payments_on_payment_number", unique: true
     t.index ["payment_type"], name: "index_payments_on_payment_type"
+    t.index ["status", "due_date"], name: "index_payments_on_status_and_due_date"
     t.index ["status"], name: "index_payments_on_status"
     t.index ["stripe_payment_intent_id"], name: "index_payments_on_stripe_payment_intent_id", unique: true
+    t.index ["user_id", "status"], name: "index_payments_on_user_id_and_status"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
@@ -312,14 +403,36 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.integer "views_count", default: 0
     t.integer "applications_count", default: 0
     t.integer "favorites_count", default: 0
+    t.string "check_in_time", default: "3:00 PM"
+    t.string "check_out_time", default: "11:00 AM"
+    t.integer "max_guests", default: 4
+    t.boolean "smoking_allowed", default: false
+    t.boolean "parties_allowed", default: false
+    t.string "quiet_hours", default: "10:00 PM - 8:00 AM"
+    t.text "additional_rules"
+    t.integer "comments_count", default: 0, null: false
+    t.integer "reviews_count", default: 0, null: false
+    t.index "to_tsvector('english'::regconfig, (((((((COALESCE(title, ''::character varying))::text || ' '::text) || COALESCE(description, ''::text)) || ' '::text) || (COALESCE(address, ''::character varying))::text) || ' '::text) || (COALESCE(city, ''::character varying))::text))", name: "index_properties_full_text_search", using: :gin
+    t.index ["address"], name: "index_properties_on_address_gin", opclass: :gin_trgm_ops, using: :gin
     t.index ["availability_status"], name: "index_properties_on_availability_status"
+    t.index ["bedrooms", "bathrooms", "availability_status"], name: "index_properties_on_bed_bath_status"
+    t.index ["bedrooms", "bathrooms"], name: "index_properties_on_bedrooms_and_bathrooms"
+    t.index ["city", "availability_status"], name: "index_properties_on_city_and_status"
     t.index ["city", "property_type"], name: "index_properties_on_city_and_property_type"
     t.index ["city"], name: "index_properties_on_city"
+    t.index ["city"], name: "index_properties_on_city_gin", opclass: :gin_trgm_ops, using: :gin
+    t.index ["description"], name: "index_properties_on_description_gin", opclass: :gin_trgm_ops, using: :gin
+    t.index ["price", "availability_status"], name: "index_properties_on_price_and_status"
     t.index ["price", "bedrooms", "bathrooms"], name: "index_properties_on_price_and_bedrooms_and_bathrooms"
     t.index ["price"], name: "index_properties_on_price"
+    t.index ["property_type", "availability_status"], name: "index_properties_on_type_and_status"
     t.index ["property_type"], name: "index_properties_on_property_type"
     t.index ["score", "created_at"], name: "index_properties_on_score_and_created_at"
     t.index ["score"], name: "index_properties_on_score"
+    t.index ["status", "created_at"], name: "index_properties_on_status_and_created_at"
+    t.index ["title"], name: "index_properties_on_title_gin", opclass: :gin_trgm_ops, using: :gin
+    t.index ["user_id", "availability_status"], name: "index_properties_on_user_and_status"
+    t.index ["user_id", "status"], name: "index_properties_on_user_id_and_status"
     t.index ["user_id"], name: "index_properties_on_user_id"
   end
 
@@ -336,9 +449,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.datetime "flagged_at", precision: nil
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "replies_count", default: 0, null: false
     t.index ["flagged"], name: "index_property_comments_on_flagged"
     t.index ["parent_id"], name: "index_property_comments_on_parent_id"
     t.index ["property_id", "created_at"], name: "index_property_comments_on_property_id_and_created_at"
+    t.index ["property_id", "flagged", "created_at"], name: "index_property_comments_on_property_flagged_created"
+    t.index ["property_id", "parent_id"], name: "index_property_comments_on_property_and_parent"
+    t.index ["user_id", "created_at"], name: "index_property_comments_on_user_and_created"
     t.index ["user_id", "created_at"], name: "index_property_comments_on_user_id_and_created_at"
     t.check_constraint "length(content) >= 1 AND length(content) <= 2000", name: "content_length_check"
   end
@@ -349,6 +466,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["property_id"], name: "index_property_favorites_on_property_id"
+    t.index ["user_id", "created_at"], name: "index_property_favorites_on_user_and_created"
     t.index ["user_id", "property_id"], name: "index_property_favorites_on_user_id_and_property_id", unique: true
     t.index ["user_id"], name: "index_property_favorites_on_user_id"
   end
@@ -363,8 +481,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.integer "helpful_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["property_id", "rating"], name: "index_property_reviews_on_property_and_rating"
     t.index ["property_id", "rating"], name: "index_property_reviews_on_property_id_and_rating"
     t.index ["property_id"], name: "index_property_reviews_on_property_id"
+    t.index ["user_id", "created_at"], name: "index_property_reviews_on_user_and_created_at"
     t.index ["user_id", "property_id"], name: "index_property_reviews_on_user_id_and_property_id", unique: true
     t.index ["user_id"], name: "index_property_reviews_on_user_id"
     t.index ["verified"], name: "index_property_reviews_on_verified"
@@ -384,7 +504,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.integer "viewing_type"
     t.index ["property_id", "scheduled_at"], name: "index_property_viewings_on_property_id_and_scheduled_at"
     t.index ["property_id"], name: "index_property_viewings_on_property_id"
+    t.index ["scheduled_at"], name: "index_property_viewings_on_scheduled_at"
     t.index ["status"], name: "index_property_viewings_on_status"
+    t.index ["user_id", "property_id"], name: "index_property_viewings_on_user_and_property"
+    t.index ["user_id", "scheduled_at"], name: "index_property_viewings_on_user_and_scheduled"
     t.index ["user_id", "scheduled_at"], name: "index_property_viewings_on_user_id_and_scheduled_at"
     t.index ["user_id"], name: "index_property_viewings_on_user_id"
   end
@@ -458,17 +581,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_30_200013) do
     t.string "avatar"
     t.json "preferences"
     t.datetime "last_seen_at"
+    t.integer "properties_count", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["email_verification_token"], name: "index_users_on_email_verification_token", unique: true
     t.index ["last_seen_at"], name: "index_users_on_last_seen_at"
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["refresh_token"], name: "index_users_on_refresh_token", unique: true
+    t.index ["role"], name: "index_users_on_role"
     t.index ["stripe_customer_id"], name: "index_users_on_stripe_customer_id", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "batch_property_items", "batch_property_uploads"
+  add_foreign_key "batch_property_items", "properties"
+  add_foreign_key "batch_property_uploads", "users"
   add_foreign_key "bot_context_stores", "conversations"
   add_foreign_key "bot_context_stores", "users"
   add_foreign_key "bot_feedbacks", "messages"
