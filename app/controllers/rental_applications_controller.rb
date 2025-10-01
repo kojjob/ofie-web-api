@@ -155,7 +155,6 @@ class RentalApplicationsController < ApplicationController
     end
 
     @rental_application.reviewed_by = current_user
-    @rental_application.review_notes = params[:review_notes]
 
     respond_to do |format|
       if @rental_application.approve!
@@ -201,7 +200,6 @@ class RentalApplicationsController < ApplicationController
     end
 
     @rental_application.reviewed_by = current_user
-    @rental_application.review_notes = params[:review_notes]
 
     respond_to do |format|
       if @rental_application.reject!
@@ -247,7 +245,6 @@ class RentalApplicationsController < ApplicationController
     end
 
     @rental_application.reviewed_by = current_user
-    @rental_application.review_notes = params[:review_notes]
 
     respond_to do |format|
       if @rental_application.under_review!
@@ -408,19 +405,10 @@ class RentalApplicationsController < ApplicationController
 
     if include_details
       json.merge!({
-        employer_name: application.employer_name,
-        employment_duration: application.employment_duration,
         previous_address: application.previous_address,
-        previous_landlord_contact: application.previous_landlord_contact,
-        reason_for_moving: application.reason_for_moving,
         references_contact: application.references_contact,
         additional_notes: application.additional_notes,
-        pets_description: application.pets_description,
-        emergency_contact_name: application.emergency_contact_name,
-        emergency_contact_phone: application.emergency_contact_phone,
-        background_check_consent: application.background_check_consent,
-        credit_check_consent: application.credit_check_consent,
-        review_notes: application.review_notes,
+        credit_score: application.credit_score,
         reviewed_at: application.reviewed_at,
         reviewed_by: application.reviewed_by&.name,
         property: {
