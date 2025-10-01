@@ -93,6 +93,7 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
+    csv (3.3.5)
     date (3.4.1)
     debug (1.10.0)
       irb (~> 1.10)
@@ -105,6 +106,7 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
+    event_stream_parser (1.0.0)
     factory_bot (6.5.5)
       activesupport (>= 6.1.0)
     factory_bot_rails (6.5.1)
@@ -132,6 +134,10 @@ GEM
       activesupport (>= 6.1)
     hashdiff (1.2.1)
     hashie (5.0.0)
+    httparty (0.22.0)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     image_processing (1.14.0)
@@ -183,7 +189,12 @@ GEM
     letter_opener (1.10.0)
       launchy (>= 2.2, < 4)
     lint_roller (1.1.0)
-    logger (1.7.0)
+    llm_ruby (0.3.2)
+      event_stream_parser (~> 1.0.0)
+      httparty (~> 0.22.0)
+      logger (~> 1.6.0)
+      zeitwerk (~> 2.6.0)
+    logger (1.6.6)
     loofah (2.24.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -442,7 +453,7 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.7.3)
+    zeitwerk (2.6.18)
 
 PLATFORMS
   aarch64-linux
@@ -470,6 +481,7 @@ DEPENDENCIES
   kamal
   kaminari (~> 1.2)
   letter_opener
+  llm_ruby (~> 0.3.2)
   mail
   omniauth
   omniauth-facebook

@@ -300,8 +300,11 @@ Rails.application.routes.draw do
   # Rental Applications routes (Web)
   resources :rental_applications, only: [ :index, :show, :edit, :update, :destroy ] do
     member do
+      get :approve
       post :approve
+      get :reject
       post :reject
+      get :under_review
       post :under_review
     end
 
