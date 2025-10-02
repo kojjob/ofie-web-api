@@ -1,0 +1,53 @@
+<!-- Proty-Style Property Details Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div class="border-b border-gray-200 pb-4">
+    <div class="text-gray-600 text-sm mb-1">Property ID</div>
+    <div class="text-gray-900 font-semibold">#<%= @property.id %></div>
+  </div>
+
+  <div class="border-b border-gray-200 pb-4">
+    <div class="text-gray-600 text-sm mb-1">Price</div>
+    <div class="text-green-600 font-bold text-lg">$<%= number_with_delimiter(@property.price) %></div>
+  </div>
+
+  <div class="border-b border-gray-200 pb-4">
+    <div class="text-gray-600 text-sm mb-1">Property Size</div>
+    <div class="text-gray-900 font-semibold"><%= number_with_delimiter(@property.square_feet) %> Sqft</div>
+  </div>
+
+  <div class="border-b border-gray-200 pb-4">
+    <div class="text-gray-600 text-sm mb-1">Rooms</div>
+    <div class="text-gray-900 font-semibold"><%= @property.bedrooms %> Bed<%= @property.bedrooms != 1 ? 's' : '' %></div>
+  </div>
+
+  <div class="border-b border-gray-200 pb-4">
+    <div class="text-gray-600 text-sm mb-1">Bathrooms</div>
+    <div class="text-gray-900 font-semibold"><%= @property.bathrooms %></div>
+  </div>
+
+  <div class="border-b border-gray-200 pb-4">
+    <div class="text-gray-600 text-sm mb-1">Bedrooms</div>
+    <div class="text-gray-900 font-semibold"><%= @property.bedrooms %></div>
+  </div>
+
+  <div class="border-b border-gray-200 pb-4">
+    <div class="text-gray-600 text-sm mb-1">Type</div>
+    <div class="text-gray-900 font-semibold"><%= @property.property_type.titleize %></div>
+  </div>
+
+  <div class="border-b border-gray-200 pb-4">
+    <div class="text-gray-600 text-sm mb-1">Status</div>
+    <div class="text-gray-900 font-semibold">
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium <%= @property.available? ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+        <%= @property.availability_status.titleize %>
+      </span>
+    </div>
+  </div>
+
+  <% if @property.parking_available %>
+    <div class="border-b border-gray-200 pb-4">
+      <div class="text-gray-600 text-sm mb-1">Garage</div>
+      <div class="text-gray-900 font-semibold">Yes</div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,22 @@
+<div class="space-y-4">
+  <% facilities = [
+    { name: 'City center', distance: '4 km', icon: 'fa-city' },
+    { name: 'Hospital', distance: '2 km', icon: 'fa-hospital' },
+    { name: 'Shop', distance: '1.5 km', icon: 'fa-shopping-cart' },
+    { name: 'School', distance: '3 km', icon: 'fa-school' },
+    { name: 'Park', distance: '1 km', icon: 'fa-tree' },
+    { name: 'Restaurant', distance: '500 m', icon: 'fa-utensils' }
+  ] %>
+
+  <% facilities.each do |facility| %>
+    <div class="flex items-center justify-between py-3 border-b border-gray-100">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+          <i class="fas <%= facility[:icon] %> text-green-600"></i>
+        </div>
+        <span class="text-gray-900 font-medium"><%= facility[:name] %></span>
+      </div>
+      <span class="text-gray-600 font-semibold"><%= facility[:distance] %></span>
+    </div>
+  <% end %>
+</div>

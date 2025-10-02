@@ -1,0 +1,27 @@
+<div class="space-y-3">
+  <% if @property.attachments.any? %>
+    <% @property.attachments.each do |attachment| %>
+      <a href="<%= rails_blob_path(attachment, disposition: 'attachment') %>"
+         class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group">
+        <div class="flex items-center space-x-3">
+          <div class="flex-shrink-0">
+            <i class="fas fa-file-<%= attachment.content_type.include?('pdf') ? 'pdf' : 'download' %> text-2xl text-red-500"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-900 group-hover:text-green-600">
+              <%= attachment.filename %>
+            </p>
+            <p class="text-xs text-gray-500">
+              <%= number_to_human_size(attachment.byte_size) %>
+            </p>
+          </div>
+        </div>
+        <div>
+          <i class="fas fa-download text-gray-400 group-hover:text-green-600"></i>
+        </div>
+      </a>
+    <% end %>
+  <% else %>
+    <p class="text-gray-500 text-center py-4">No attachments available</p>
+  <% end %>
+</div>

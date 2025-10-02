@@ -1,0 +1,21 @@
+<!-- Proty-Style What's Nearby -->
+<div class="space-y-4">
+  <% nearby_amenities = [
+    { name: 'School', distance: '0.5 km', icon: 'graduation-cap' },
+    { name: 'University', distance: '1.2 km', icon: 'university' },
+    { name: 'Grocery Center', distance: '0.3 km', icon: 'shopping-cart' },
+    { name: 'Hospital', distance: '1.8 km', icon: 'hospital' }
+  ] %>
+
+  <% nearby_amenities.each do |amenity| %>
+    <div class="flex items-center justify-between py-3 border-b border-gray-200 last:border-0">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+          <i class="fas fa-<%= amenity[:icon] %> text-green-600"></i>
+        </div>
+        <span class="font-medium text-gray-900"><%= amenity[:name] %></span>
+      </div>
+      <span class="text-gray-600 text-sm"><%= amenity[:distance] %></span>
+    </div>
+  <% end %>
+</div>
