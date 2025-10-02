@@ -108,13 +108,13 @@
               <!-- Remove Button -->
               <%= button_tag type: "button",
                   class: "absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity z-10",
-                  onclick: "if(confirm('Remove this file?')) { document.getElementById('remove-media-#{attachment.id}').value = '1'; document.getElementById('media-attachment-#{attachment.id}').remove(); }" do %>
+                  onclick: "if(confirm('Remove this file?')) { document.getElementById('remove-media-#{attachment.id}').value = '#{attachment.id}'; document.getElementById('media-attachment-#{attachment.id}').remove(); }" do %>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
               <% end %>
 
-              <!-- Hidden field to mark for deletion -->
+              <!-- Hidden field to mark for deletion (will be populated with attachment.id when remove button is clicked) -->
               <%= hidden_field_tag "post[remove_media_ids][]", "", id: "remove-media-#{attachment.id}" %>
 
               <% if attachment.content_type&.start_with?('image/') %>

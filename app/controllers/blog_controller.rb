@@ -45,12 +45,14 @@ class BlogController < ApplicationController
   end
 
   def update
-    # Handle media attachment removals
-    if params[:post][:remove_media_ids].present?
+    # Handle media attachment removals BEFORE updating
+    if params[:post] && params[:post][:remove_media_ids].present?
       params[:post][:remove_media_ids].reject(&:blank?).each do |attachment_id|
         attachment = @post.media_attachments.find_by(id: attachment_id)
         attachment&.purge
       end
+      # Remove the remove_media_ids from params to avoid issues
+      params[:post].delete(:remove_media_ids)
     end
 
     if @post.update(post_params)
