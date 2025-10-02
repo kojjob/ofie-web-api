@@ -73,8 +73,8 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       if @message.save
-        # Check if bot should respond
-        bot_response = check_for_bot_response(@message)
+        # Bot auto-response disabled - should only be in dedicated bot interface
+        # bot_response = check_for_bot_response(@message)
 
         format.html { redirect_to @conversation, notice: "Message was successfully sent." }
         format.json do
@@ -93,19 +93,19 @@ class MessagesController < ApplicationController
             }
           }
 
-          # Include bot response if generated
-          if bot_response
-            response_data[:bot_response] = {
-              id: bot_response.id,
-              content: bot_response.content,
-              sender: {
-                id: bot_response.sender.id,
-                name: bot_response.sender.name,
-                role: bot_response.sender.role
-              },
-              created_at: bot_response.created_at
-            }
-          end
+          # Bot response logic removed - no longer auto-responding in conversations
+          # if bot_response
+          #   response_data[:bot_response] = {
+          #     id: bot_response.id,
+          #     content: bot_response.content,
+          #     sender: {
+          #       id: bot_response.sender.id,
+          #       name: bot_response.sender.name,
+          #       role: bot_response.sender.role
+          #     },
+          #     created_at: bot_response.created_at
+          #   }
+          # end
 
           render json: response_data, status: :created
         end
