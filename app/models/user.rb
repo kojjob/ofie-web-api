@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
   has_many :properties, dependent: :destroy
 
-  # New associations for property features
+  # New associations for property features with counter caches
   has_many :property_favorites, dependent: :destroy
   has_many :favorite_properties, through: :property_favorites, source: :property
   has_many :property_viewings, dependent: :destroy
@@ -199,7 +199,8 @@ class User < ApplicationRecord
   end
 
   def properties_count
-    properties.count
+    # Use counter cache if available, otherwise fall back to count
+    read_attribute(:properties_count) || properties.count
   end
 
   def reviews_count

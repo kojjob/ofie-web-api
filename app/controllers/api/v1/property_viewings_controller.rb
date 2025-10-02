@@ -5,7 +5,7 @@ class Api::V1::PropertyViewingsController < ApplicationController
 
   # GET /api/v1/property_viewings
   def index
-    @viewings = current_user.property_viewings.includes(:property)
+    @viewings = current_user.property_viewings.includes(property: :user)
 
     # Filter by status if provided
     @viewings = @viewings.by_status(params[:status]) if params[:status].present?
@@ -106,7 +106,7 @@ class Api::V1::PropertyViewingsController < ApplicationController
   end
 
   def viewing_json(viewing)
-    {
+    result = {
       id: viewing.id,
       scheduled_at: viewing.scheduled_at,
       status: viewing.status,
@@ -115,18 +115,24 @@ class Api::V1::PropertyViewingsController < ApplicationController
       contact_email: viewing.contact_email,
       created_at: viewing.created_at,
       updated_at: viewing.updated_at,
-      property: {
+      can_be_cancelled: viewing.can_be_cancelled?,
+      is_upcoming: viewing.upcoming?,
+      is_past: viewing.past?
+    }
+
+    # Only include property data if association is loaded to avoid N+1
+    if viewing.association(:property).loaded?
+      result[:property] = {
         id: viewing.property.id,
         title: viewing.property.title,
         address: viewing.property.address,
         city: viewing.property.city,
         state: viewing.property.state,
         price: viewing.property.price
-      },
-      can_be_cancelled: viewing.can_be_cancelled?,
-      is_upcoming: viewing.upcoming?,
-      is_past: viewing.past?
-    }
+      }
+    end
+
+    result
   end
 
   def pagination_meta(collection)

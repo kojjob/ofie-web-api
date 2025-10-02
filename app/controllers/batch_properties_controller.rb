@@ -518,7 +518,7 @@ class BatchPropertiesController < ApplicationController
     # Get property attributes dynamically from the Property model
     property_attributes = Property.column_names.reject do |attr|
       # Exclude system fields that shouldn't be in CSV
-      %w[id user_id created_at updated_at].include?(attr)
+      %w[id user_id created_at updated_at status latitude longitude score views_count applications_count favorites_count comments_count reviews_count].include?(attr)
     end
 
     # Add custom fields that aren't direct model attributes
@@ -539,10 +539,6 @@ class BatchPropertiesController < ApplicationController
         "123 Main Street, Unit 4B"
       when "city"
         "San Francisco"
-      when "state"
-        "CA"
-      when "zip_code"
-        "94102"
       when "price"
         "2800"
       when "bedrooms"
@@ -667,8 +663,9 @@ class BatchPropertiesController < ApplicationController
   end
 
   def sanitize_property_params(property_data)
-    # Convert string values to appropriate types
-    sanitized = property_data.dup
+    # Convert string values to appropriate types and filter valid attributes
+    valid_attributes = Property.column_names.map(&:to_sym) - [:id, :user_id, :created_at, :updated_at]
+    sanitized = property_data.slice(*valid_attributes)
 
     # Convert boolean fields (using actual Property model column names)
     boolean_fields = [ :parking_available, :pets_allowed, :furnished, :utilities_included,

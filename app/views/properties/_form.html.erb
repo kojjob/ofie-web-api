@@ -89,7 +89,7 @@
       </div>
       
       <!-- Existing Images (for edit) -->
-      <% if property.persisted? && property.photos.attached? %>
+      <% if property.persisted? && property.photos_attached_safe? %>
         <div>
           <h4 class="text-lg font-semibold text-gray-900 mb-4">Current Photos</h4>
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

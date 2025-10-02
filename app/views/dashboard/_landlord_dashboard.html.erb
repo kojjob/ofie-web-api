@@ -314,7 +314,7 @@
     <div class="p-8">
       <% if @properties.any? %>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <% @properties.limit(6).each do |property| %>
+          <% @properties_for_display.each do |property| %>
             <div class="group bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 transform hover:-translate-y-2">
               <div class="relative overflow-hidden">
                 <% if property.photos.attached? %>

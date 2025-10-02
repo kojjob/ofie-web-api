@@ -9,19 +9,26 @@ export default class extends Controller {
   ]
 
   connect() {
+    console.log('Batch upload controller connected')
     this.selectedFile = null
     this.maxFileSize = 10 * 1024 * 1024 // 10MB
     this.allowedTypes = ['.csv']
-    this.setupEventListeners()
-    this.initializeValidation()
+    try {
+      this.setupEventListeners()
+      this.initializeValidation()
+    } catch (error) {
+      console.error('Error during controller initialization:', error)
+    }
   }
 
   setupEventListeners() {
     // Prevent default drag behaviors
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      this.dropZoneTarget.addEventListener(eventName, this.preventDefaults, false)
-      document.body.addEventListener(eventName, this.preventDefaults, false)
-    })
+    if (this.hasDropZoneTarget) {
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        this.dropZoneTarget.addEventListener(eventName, this.preventDefaults.bind(this), false)
+        document.body.addEventListener(eventName, this.preventDefaults.bind(this), false)
+      })
+    }
   }
 
   initializeValidation() {
@@ -67,7 +74,13 @@ export default class extends Controller {
   }
 
   openFileDialog() {
-    this.fileInputTarget.click()
+    console.log('openFileDialog called')
+    console.log('fileInputTarget:', this.fileInputTarget)
+    if (this.fileInputTarget) {
+      this.fileInputTarget.click()
+    } else {
+      console.error('fileInputTarget not found')
+    }
   }
 
   handleFileSelect(e) {
@@ -271,15 +284,19 @@ export default class extends Controller {
       })
       
       xhr.addEventListener('load', () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          // Parse response as fetch-like object
+        try {
+          const data = JSON.parse(xhr.responseText)
           resolve({
-            ok: true,
+            ok: xhr.status >= 200 && xhr.status < 300,
             status: xhr.status,
-            json: () => Promise.resolve(JSON.parse(xhr.responseText))
+            json: () => Promise.resolve(data)
           })
-        } else {
-          reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`))
+        } catch (e) {
+          resolve({
+            ok: false,
+            status: xhr.status,
+            json: () => Promise.resolve({ error: 'Failed to parse response' })
+          })
         }
       })
       
@@ -432,7 +449,7 @@ export default class extends Controller {
           </a>
           
           ${summary.valid > 0 ? `
-            <button onclick="this.processProperties('${batchUpload.id}')"
+            <button onclick="window.processProperties('${batchUpload.id}')"
                     class="flex-1 bg-green-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-green-700 transition-colors duration-200">
               Process ${summary.valid} Properties
             </button>
@@ -548,8 +565,11 @@ export default class extends Controller {
 
 // Make processProperties available globally for the dynamic button
 window.processProperties = function(batchUploadId) {
-  const controller = document.querySelector('[data-controller="batch-upload"]')
-  if (controller && controller.batchUploadController) {
-    controller.batchUploadController.processProperties(batchUploadId)
+  const element = document.querySelector('[data-controller="batch-upload"]')
+  if (element) {
+    const controller = Stimulus.getControllerForElementAndIdentifier(element, 'batch-upload')
+    if (controller) {
+      controller.processProperties(batchUploadId)
+    }
   }
 }
