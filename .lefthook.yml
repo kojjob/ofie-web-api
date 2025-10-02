@@ -1,0 +1,54 @@
+# Lefthook configuration for pre-commit hooks
+pre-commit:
+  parallel: true
+  commands:
+    rubocop:
+      tags: backend style
+      glob: "*.{rb,rake}"
+      run: bundle exec rubocop --force-exclusion {staged_files}
+    
+    brakeman:
+      tags: backend security
+      run: bundle exec brakeman -q --no-pager --force
+    
+    eslint:
+      tags: frontend style
+      glob: "*.js"
+      run: npx eslint {staged_files}
+    
+    prettier:
+      tags: frontend style
+      glob: "*.{js,css,scss}"
+      run: npx prettier --check {staged_files}
+    
+    rspec:
+      tags: backend test
+      glob: "*.rb"
+      run: bundle exec rspec --fail-fast
+
+pre-push:
+  parallel: true
+  commands:
+    test:
+      tags: backend test
+      run: bundle exec rails test
+    
+    audit:
+      tags: backend security
+      run: bundle audit check --update
+
+commit-msg:
+  commands:
+    check-commit-message:
+      run: |
+        # Commit message format check
+        commit_regex='^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,100}$'
+        commit_message=$(cat {1})
+        
+        if ! echo "$commit_message" | grep -qE "$commit_regex"; then
+          echo "Invalid commit message format!"
+          echo "Format: <type>(<scope>): <subject>"
+          echo "Types: feat, fix, docs, style, refactor, test, chore"
+          echo "Example: feat(properties): add batch upload functionality"
+          exit 1
+        fi

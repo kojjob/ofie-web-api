@@ -1,17 +1,19 @@
 class Property < ApplicationRecord
-  belongs_to :user
+  include Cacheable
+
+  belongs_to :user, counter_cache: true
   has_many_attached :photos
 
   # Lease associations
   has_many :lease_agreements, dependent: :destroy
-  has_many :rental_applications, dependent: :destroy
+  has_many :rental_applications, dependent: :destroy, counter_cache: true
 
   # New associations for property features
-  has_many :property_favorites, dependent: :destroy
+  has_many :property_favorites, dependent: :destroy, counter_cache: :favorites_count
   has_many :favorited_by_users, through: :property_favorites, source: :user
-  has_many :property_viewings, dependent: :destroy
-  has_many :property_reviews, dependent: :destroy
-  has_many :property_comments, dependent: :destroy
+  has_many :property_viewings, dependent: :destroy, counter_cache: :views_count
+  has_many :property_reviews, dependent: :destroy, counter_cache: :reviews_count
+  has_many :property_comments, dependent: :destroy, counter_cache: :comments_count
   has_many :maintenance_requests, dependent: :destroy
   has_many :conversations, dependent: :destroy
 
@@ -58,7 +60,6 @@ class Property < ApplicationRecord
   # Scopes for filtering
   scope :available, -> { where(availability_status: :available) }
   scope :by_city, ->(city) { where(city: city) if city.present? }
-  scope :by_state, ->(state) { where(state: state) if state.present? }
   scope :by_property_type, ->(type) { where(property_type: type) if type.present? }
   scope :by_bedrooms, ->(count) { where(bedrooms: count) if count.present? }
   scope :by_bathrooms, ->(count) { where(bathrooms: count) if count.present? }
@@ -83,7 +84,8 @@ class Property < ApplicationRecord
   end
 
   def favorites_count
-    property_favorites.count
+    # Use counter cache if available, otherwise fall back to count
+    read_attribute(:favorites_count) || property_favorites.count
   end
 
   def average_rating
@@ -91,7 +93,8 @@ class Property < ApplicationRecord
   end
 
   def reviews_count
-    property_reviews.count
+    # Use counter cache if available, otherwise fall back to count
+    read_attribute(:reviews_count) || property_reviews.count
   end
 
   def available_for_applications?
@@ -123,10 +126,39 @@ class Property < ApplicationRecord
   end
 
   def comments_count
-    property_comments.not_flagged.count
+    # Use counter cache if available, otherwise fall back to count
+    read_attribute(:comments_count) || property_comments.not_flagged.count
   end
 
   def recent_comments(limit = 5)
     property_comments.not_flagged.includes(:user, :replies).top_level.recent.limit(limit)
+  end
+
+  # Helper method for full address
+  def full_address
+    parts = [address, city].compact.reject(&:blank?)
+    parts.join(", ")
+  end
+
+  # Check if property is available
+  def available?
+    availability_status == "available"
+  end
+
+  # Helper methods to avoid N+1 queries with photos
+  def has_photos_loaded?
+    association(:photos_attachments).loaded? && photos.any?
+  end
+
+  def photos_count_safe
+    association(:photos_attachments).loaded? ? photos.size : 0
+  end
+
+  def first_photo_safe
+    has_photos_loaded? ? photos.first : nil
+  end
+
+  def photos_attached_safe?
+    association(:photos_attachments).loaded? ? photos.any? : photos.attached?
   end
 end

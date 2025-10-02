@@ -1,0 +1,74 @@
+<%# Pagination Component for Batch Properties %>
+<%# Uses Stimulus controller for proper separation of concerns %>
+
+<% if items.respond_to?(:total_pages) && items.total_pages > 1 %>
+  <div class="px-8 py-6 border-t border-gray-200" 
+       data-batch-properties-target="paginationContainer">
+    
+    <div class="flex items-center justify-between">
+      <!-- Results Information -->
+      <div class="text-sm text-gray-700">
+        Showing <%= items.offset_value + 1 %> to <%= [items.offset_value + items.limit_value, items.total_count].min %> of <%= items.total_count %> results
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="flex items-center space-x-2">
+        <!-- Previous Button -->
+        <% if items.prev_page %>
+          <button type="button"
+                  data-action="click->batch-properties#handlePaginationClick"
+                  data-page="<%= items.prev_page %>"
+                  class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md transition-colors duration-200"
+                  title="Previous page">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Previous
+          </button>
+        <% end %>
+
+        <!-- Page Numbers -->
+        <% page_range = (items.current_page - 2..items.current_page + 2) %>
+        <% page_range.each do |page| %>
+          <% if page > 0 && page <= items.total_pages %>
+            <% if page == items.current_page %>
+              <!-- Current Page -->
+              <span class="relative inline-flex items-center px-4 py-2 border border-blue-500 bg-blue-50 text-sm font-medium text-blue-600 rounded-md"
+                    aria-current="page">
+                <%= page %>
+              </span>
+            <% else %>
+              <!-- Other Pages -->
+              <button type="button"
+                      data-action="click->batch-properties#handlePaginationClick"
+                      data-page="<%= page %>"
+                      class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md transition-colors duration-200"
+                      title="Go to page <%= page %>">
+                <%= page %>
+              </button>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <!-- Next Button -->
+        <% if items.next_page %>
+          <button type="button"
+                  data-action="click->batch-properties#handlePaginationClick"
+                  data-page="<%= items.next_page %>"
+                  class="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 rounded-md transition-colors duration-200"
+                  title="Next page">
+            Next
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Page Information (optional, for accessibility) -->
+    <div class="sr-only" aria-live="polite" aria-atomic="true">
+      Page <%= items.current_page %> of <%= items.total_pages %>
+    </div>
+  </div>
+<% end %>

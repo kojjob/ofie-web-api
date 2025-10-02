@@ -1,185 +1,586 @@
-<div class="bg-gradient-to-b from-blue-50 to-white min-h-screen">
-  <!-- Hero Section -->
-  <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-20">
-    <div class="container mx-auto px-4">
-      <h1 class="text-5xl font-bold mb-6">Explore Neighborhoods</h1>
-      <p class="text-xl text-blue-100 max-w-3xl">Discover the perfect neighborhood for your next home with detailed insights on available rentals, pricing, and community features</p>
+<% content_for :title, @page_title %>
+<% content_for :description, @page_description %>
+<% content_for :keywords, "neighborhoods, area guides, local amenities, community features, rental areas, location guides" %>
+
+<!-- Hero Section -->
+<section class="relative min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 text-white overflow-hidden">
+  <!-- Advanced Background Layers -->
+  <div class="absolute inset-0">
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-emerald-900/80 to-slate-900/90"></div>
+    <div class="absolute inset-0 opacity-20">
+      <div class="absolute inset-0 bg-gradient-to-r from-emerald-600/20 via-teal-600/30 to-blue-600/20 animate-pulse"></div>
+      <div class="absolute top-1/4 right-1/6 w-96 h-96 bg-gradient-to-br from-emerald-400/10 to-teal-400/10 rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-1/4 left-1/6 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-emerald-400/10 rounded-full blur-3xl animate-float-delayed"></div>
     </div>
   </div>
 
-  <!-- Search and Filter Section -->
-  <div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-      <div class="bg-white rounded-lg shadow-lg p-6">
-        <form class="flex gap-4">
-          <div class="flex-1">
-            <input type="text"
-                   id="neighborhood-search"
-                   placeholder="Search by city..."
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                   onkeyup="filterNeighborhoods()">
-          </div>
-          <button type="button"
-                  class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
-            Search
-          </button>
-        </form>
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+    <!-- Header Badge -->
+    <div class="text-center mb-16">
+      <div class="inline-flex items-center space-x-3 bg-gradient-to-r from-slate-800/80 to-emerald-800/80 backdrop-blur-xl px-6 py-3 mb-8 border border-white/10" style="border-radius: var(--radius-2xl);">
+        <div class="w-8 h-8 bg-gradient-to-r from-emerald-400 to-teal-400 flex items-center justify-center" style="border-radius: var(--radius-lg);">
+          <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12,2L13.09,8.26L20,9L13.09,9.74L12,16L10.91,9.74L4,9L10.91,8.26L12,2M12,21C15.5,17 20,13 20,10A8,8 0 0,0 4,10C4,13 8.5,17 12,21Z"/>
+          </svg>
+        </div>
+        <div class="text-left">
+          <div class="text-sm font-medium text-white/90">Discover Your Perfect</div>
+          <div class="text-xs text-white/60">Neighborhood Match</div>
+        </div>
+      </div>
+      
+      <!-- Hero Title -->
+      <h1 class="text-6xl lg:text-8xl font-light text-white mb-8 tracking-tight">
+        <span class="block">Explore</span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-blue-400 font-medium">
+          Neighborhoods
+        </span>
+      </h1>
+      <p class="text-xl text-slate-300 max-w-4xl mx-auto leading-relaxed font-light">
+        Discover the perfect community for your lifestyle with our comprehensive neighborhood guides, 
+        local insights, and community features.
+      </p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+      <div class="text-center">
+        <div class="w-16 h-16 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 flex items-center justify-center mx-auto mb-4 backdrop-blur-sm border border-white/10" style="border-radius: var(--radius-lg);">
+          <svg class="w-8 h-8 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12,2L13.09,8.26L20,9L13.09,9.74L12,16L10.91,9.74L4,9L10.91,8.26L12,2Z"/>
+          </svg>
+        </div>
+        <div class="text-3xl font-bold text-white mb-2">50+</div>
+        <div class="text-slate-400">Neighborhoods</div>
+      </div>
+      
+      <div class="text-center">
+        <div class="w-16 h-16 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 flex items-center justify-center mx-auto mb-4 backdrop-blur-sm border border-white/10" style="border-radius: var(--radius-lg);">
+          <svg class="w-8 h-8 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19,7H18V6A2,2 0 0,0 16,4H8A2,2 0 0,0 6,6V7H5A1,1 0 0,0 4,8V19A1,1 0 0,0 5,20H19A1,1 0 0,0 20,19V8A1,1 0 0,0 19,7M8,6H16V7H8V6Z"/>
+          </svg>
+        </div>
+        <div class="text-3xl font-bold text-white mb-2">1000+</div>
+        <div class="text-slate-400">Local Amenities</div>
+      </div>
+      
+      <div class="text-center">
+        <div class="w-16 h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 flex items-center justify-center mx-auto mb-4 backdrop-blur-sm border border-white/10" style="border-radius: var(--radius-lg);">
+          <svg class="w-8 h-8 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
+          </svg>
+        </div>
+        <div class="text-3xl font-bold text-white mb-2">95%</div>
+        <div class="text-slate-400">Satisfaction Rate</div>
+      </div>
+      
+      <div class="text-center">
+        <div class="w-16 h-16 bg-gradient-to-r from-orange-500/20 to-red-500/20 flex items-center justify-center mx-auto mb-4 backdrop-blur-sm border border-white/10" style="border-radius: var(--radius-lg);">
+          <svg class="w-8 h-8 text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M14.5,8A1.5,1.5 0 0,1 13,6.5A1.5,1.5 0 0,1 14.5,5A1.5,1.5 0 0,1 16,6.5A1.5,1.5 0 0,1 14.5,8M9.5,8A1.5,1.5 0 0,1 8,6.5A1.5,1.5 0 0,1 9.5,5A1.5,1.5 0 0,1 11,6.5A1.5,1.5 0 0,1 9.5,8M6.5,12A1.5,1.5 0 0,1 5,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,12M12,3L2,12H5V20H19V12H22M7,18V12H9V18H7M11,18V12H13V18H11M15,18V12H17V18H15Z"/>
+          </svg>
+        </div>
+        <div class="text-3xl font-bold text-white mb-2">24/7</div>
+        <div class="text-slate-400">Community Support</div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Neighborhoods Grid -->
-  <div class="container mx-auto px-4 py-12">
-    <% if @neighborhoods.any? %>
-      <div class="max-w-7xl mx-auto">
-        <div class="mb-8">
-          <h2 class="text-3xl font-bold text-gray-800 mb-2">Featured Neighborhoods</h2>
-          <p class="text-gray-600">Browse <%= @neighborhoods.length %> neighborhoods with available rental properties</p>
+<!-- Neighborhood Search -->
+<section class="py-24 bg-gradient-to-br from-white via-slate-50/50 to-emerald-50/30 relative overflow-hidden">
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-48 -right-48 w-96 h-96 bg-gradient-to-br from-emerald-100/40 to-teal-100/40 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-48 -left-48 w-96 h-96 bg-gradient-to-br from-blue-100/40 to-emerald-100/40 rounded-full blur-3xl"></div>
+  </div>
+  
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <div class="inline-flex items-center space-x-3 bg-gradient-to-r from-slate-50 to-white rounded-full px-6 py-3 mb-8 border border-slate-200 shadow-sm">
+        <div class="w-2 h-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full animate-pulse"></div>
+        <span class="text-sm font-medium text-slate-700">Find Your Perfect Area</span>
+      </div>
+      
+      <h2 class="text-5xl lg:text-7xl font-light text-slate-900 mb-8 tracking-tight">
+        <span class="block">Search by</span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-700 via-emerald-600 to-teal-600 font-medium">
+          Lifestyle
+        </span>
+      </h2>
+      <p class="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-light">
+        Filter neighborhoods by your preferences, commute needs, and lifestyle requirements
+      </p>
+    </div>
+
+    <!-- Search Filters -->
+    <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-12 mb-16">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Price Range -->
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-4">Price Range</label>
+          <select class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
+            <option>Any Budget</option>
+            <option>Under $1,500</option>
+            <option>$1,500 - $2,500</option>
+            <option>$2,500 - $4,000</option>
+            <option>$4,000+</option>
+          </select>
         </div>
 
-        <div id="neighborhoods-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <% @neighborhoods.each do |neighborhood| %>
-            <div class="neighborhood-card bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-                 data-city="<%= neighborhood.city.downcase %>">
-              <!-- Neighborhood Header -->
-              <div class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-6">
-                <div class="flex items-center justify-between mb-2">
-                  <h3 class="text-2xl font-bold"><%= neighborhood.city %></h3>
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                  </svg>
-                </div>
-              </div>
+        <!-- Commute -->
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-4">Commute Time</label>
+          <select class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
+            <option>Any Distance</option>
+            <option>Under 15 min</option>
+            <option>15-30 min</option>
+            <option>30-45 min</option>
+            <option>45+ min</option>
+          </select>
+        </div>
 
-              <!-- Neighborhood Stats -->
-              <div class="p-6">
-                <div class="space-y-4">
-                  <!-- Available Properties -->
-                  <div class="flex items-center justify-between pb-3 border-b border-gray-200">
-                    <div class="flex items-center">
-                      <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                      </svg>
-                      <span class="text-sm font-medium text-gray-700">Available Properties</span>
-                    </div>
-                    <span class="text-lg font-bold text-blue-600"><%= neighborhood.property_count %></span>
-                  </div>
+        <!-- Lifestyle -->
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-4">Lifestyle</label>
+          <select class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors">
+            <option>Any Style</option>
+            <option>Urban Living</option>
+            <option>Suburban Family</option>
+            <option>Young Professional</option>
+            <option>Quiet Residential</option>
+          </select>
+        </div>
 
-                  <!-- Average Rent -->
-                  <div class="flex items-center justify-between pb-3 border-b border-gray-200">
-                    <div class="flex items-center">
-                      <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                      </svg>
-                      <span class="text-sm font-medium text-gray-700">Average Rent</span>
-                    </div>
-                    <span class="text-lg font-bold text-green-600">
-                      $<%= number_with_delimiter(neighborhood.avg_rent.to_i) %>/mo
-                    </span>
-                  </div>
+        <!-- Search Button -->
+        <div class="flex items-end">
+          <button class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+            Find Neighborhoods
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-                  <!-- Rent Range -->
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                      <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
-                      </svg>
-                      <span class="text-sm font-medium text-gray-700">Rent Range</span>
-                    </div>
-                    <span class="text-sm font-semibold text-gray-800">
-                      $<%= number_with_delimiter(neighborhood.min_rent.to_i) %> - $<%= number_with_delimiter(neighborhood.max_rent.to_i) %>
-                    </span>
-                  </div>
-                </div>
+<!-- Featured Neighborhoods -->
+<section class="py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 relative overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="absolute inset-0 bg-gradient-to-r from-emerald-900/20 via-teal-900/20 to-slate-900/20"></div>
+    <div class="absolute top-1/4 left-1/6 w-96 h-96 bg-gradient-to-br from-emerald-400/5 to-teal-400/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-br from-blue-400/5 to-emerald-400/5 rounded-full blur-3xl"></div>
+  </div>
+  
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-20">
+      <div class="inline-flex items-center space-x-3 bg-gradient-to-r from-slate-800/80 to-emerald-800/80 backdrop-blur-xl rounded-full px-6 py-3 mb-8 border border-white/10">
+        <div class="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full animate-pulse"></div>
+        <span class="text-sm font-medium text-white/90">Most Popular Areas</span>
+      </div>
+      
+      <h2 class="text-5xl lg:text-7xl font-light text-white mb-8 tracking-tight">
+        <span class="block">Featured</span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-blue-400 font-medium">
+          Communities
+        </span>
+      </h2>
+      <p class="text-xl text-slate-300 max-w-4xl mx-auto leading-relaxed font-light">
+        Explore our most sought-after neighborhoods with detailed guides and local insights
+      </p>
+    </div>
 
-                <!-- View Properties Button -->
-                <div class="mt-6">
-                  <%= link_to "View Properties",
-                      properties_path(city: neighborhood.city),
-                      class: "block w-full bg-blue-600 text-white text-center py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold" %>
-                </div>
-              </div>
+    <!-- Neighborhood Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+      <!-- Neighborhood 1 -->
+      <div class="group bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 overflow-hidden hover:bg-white/20 transition-all duration-500">
+        <div class="relative h-64 bg-gradient-to-br from-emerald-500 to-teal-600">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6">
+            <h3 class="text-2xl font-bold text-white mb-2">Downtown District</h3>
+            <p class="text-emerald-100">Urban lifestyle, walkable, vibrant nightlife</p>
+          </div>
+        </div>
+        <div class="p-8">
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-white mb-1">$2,800</div>
+              <div class="text-sm text-slate-400">Avg. Rent</div>
             </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-white mb-1">8.5/10</div>
+              <div class="text-sm text-slate-400">Walkability</div>
+            </div>
+          </div>
+          <div class="space-y-3 mb-6">
+            <div class="flex items-center text-sm text-slate-300">
+              <svg class="w-4 h-4 mr-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Metro access within 5 minutes
+            </div>
+            <div class="flex items-center text-sm text-slate-300">
+              <svg class="w-4 h-4 mr-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              50+ restaurants and cafes
+            </div>
+            <div class="flex items-center text-sm text-slate-300">
+              <svg class="w-4 h-4 mr-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Active nightlife scene
+            </div>
+          </div>
+          <%= link_to properties_path, class: "block w-full text-center bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300" do %>
+            View Properties
           <% end %>
         </div>
       </div>
-    <% else %>
-      <!-- Empty State -->
-      <div class="max-w-2xl mx-auto text-center py-16">
-        <svg class="w-24 h-24 text-gray-400 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+
+      <!-- Neighborhood 2 -->
+      <div class="group bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 overflow-hidden hover:bg-white/20 transition-all duration-500">
+        <div class="relative h-64 bg-gradient-to-br from-blue-500 to-indigo-600">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6">
+            <h3 class="text-2xl font-bold text-white mb-2">Riverside Heights</h3>
+            <p class="text-blue-100">Family-friendly, parks, excellent schools</p>
+          </div>
+        </div>
+        <div class="p-8">
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-white mb-1">$2,200</div>
+              <div class="text-sm text-slate-400">Avg. Rent</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-white mb-1">9.2/10</div>
+              <div class="text-sm text-slate-400">Safety Score</div>
+            </div>
+          </div>
+          <div class="space-y-3 mb-6">
+            <div class="flex items-center text-sm text-slate-300">
+              <svg class="w-4 h-4 mr-3 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Top-rated schools nearby
+            </div>
+            <div class="flex items-center text-sm text-slate-300">
+              <svg class="w-4 h-4 mr-3 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Multiple parks and playgrounds
+            </div>
+            <div class="flex items-center text-sm text-slate-300">
+              <svg class="w-4 h-4 mr-3 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Low crime rate
+            </div>
+          </div>
+          <%= link_to properties_path, class: "block w-full text-center bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300" do %>
+            View Properties
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Neighborhood 3 -->
+      <div class="group bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 overflow-hidden hover:bg-white/20 transition-all duration-500">
+        <div class="relative h-64 bg-gradient-to-br from-purple-500 to-pink-600">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+          <div class="absolute bottom-6 left-6 right-6">
+            <h3 class="text-2xl font-bold text-white mb-2">Tech Corridor</h3>
+            <p class="text-purple-100">Modern, tech hub, young professionals</p>
+          </div>
+        </div>
+        <div class="p-8">
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-white mb-1">$3,200</div>
+              <div class="text-sm text-slate-400">Avg. Rent</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-white mb-1">25-35</div>
+              <div class="text-sm text-slate-400">Avg. Age</div>
+            </div>
+          </div>
+          <div class="space-y-3 mb-6">
+            <div class="flex items-center text-sm text-slate-300">
+              <svg class="w-4 h-4 mr-3 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Major tech companies nearby
+            </div>
+            <div class="flex items-center text-sm text-slate-300">
+              <svg class="w-4 h-4 mr-3 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              High-speed internet everywhere
+            </div>
+            <div class="flex items-center text-sm text-slate-300">
+              <svg class="w-4 h-4 mr-3 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              Modern amenities
+            </div>
+          </div>
+          <%= link_to properties_path, class: "block w-full text-center bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300" do %>
+            View Properties
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- View All Button -->
+    <div class="text-center">
+      <%= link_to properties_path, class: "inline-flex items-center bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+        Explore All Neighborhoods
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
         </svg>
-        <h2 class="text-3xl font-bold text-gray-800 mb-4">No Neighborhoods Available</h2>
-        <p class="text-gray-600 mb-8">We're currently adding new neighborhoods. Check back soon for available rental properties in your area.</p>
-        <%= link_to "Browse All Properties", properties_path, class: "inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold" %>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   </div>
+</section>
 
-  <!-- Info Section -->
-  <div class="bg-gradient-to-r from-blue-100 to-cyan-100 py-16">
-    <div class="container mx-auto px-4 max-w-6xl">
-      <h2 class="text-3xl font-bold text-gray-800 mb-12 text-center">Why Choose Your Neighborhood Wisely?</h2>
+<!-- Neighborhood Features -->
+<section class="py-24 bg-gradient-to-br from-white via-slate-50/50 to-blue-50/30 relative overflow-hidden">
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -top-48 -right-48 w-96 h-96 bg-gradient-to-br from-blue-100/40 to-indigo-100/40 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-48 -left-48 w-96 h-96 bg-gradient-to-br from-emerald-100/40 to-blue-100/40 rounded-full blur-3xl"></div>
+  </div>
+  
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-20">
+      <div class="inline-flex items-center space-x-3 bg-gradient-to-r from-slate-50 to-white rounded-full px-6 py-3 mb-8 border border-slate-200 shadow-sm">
+        <div class="w-2 h-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full animate-pulse"></div>
+        <span class="text-sm font-medium text-slate-700">What Matters Most</span>
+      </div>
+      
+      <h2 class="text-5xl lg:text-7xl font-light text-slate-900 mb-8 tracking-tight">
+        <span class="block">Key</span>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-slate-700 via-blue-600 to-indigo-600 font-medium">
+          Features
+        </span>
+      </h2>
+      <p class="text-xl text-slate-600 max-w-4xl mx-auto leading-relaxed font-light">
+        The amenities and features that make each neighborhood unique and livable
+      </p>
+    </div>
 
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-white rounded-lg p-8 shadow-lg">
-          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-3">Commute & Work</h3>
-          <p class="text-gray-600">Consider proximity to your workplace, public transportation options, and average commute times to ensure work-life balance.</p>
+    <!-- Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Transportation -->
+      <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12,2A8,8 0 0,1 20,10C20,14.4 16.4,18 12,18C7.6,18 4,14.4 4,10C4,5.6 7.6,2 12,2M12,4A6,6 0 0,0 6,10C6,13.3 9,16 12,16C15,16 18,13.3 18,10A6,6 0 0,0 12,4M12,6A4,4 0 0,1 16,10C16,12.2 14.2,14 12,14C9.8,14 8,12.2 8,10A4,4 0 0,1 12,6M12,8A2,2 0 0,0 10,10C10,11.1 10.9,12 12,12C13.1,12 14,11.1 14,10A2,2 0 0,0 12,8Z"/>
+          </svg>
         </div>
-
-        <div class="bg-white rounded-lg p-8 shadow-lg">
-          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Transportation</h3>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Metro access, bus routes, bike lanes, and walkability scores for easy commuting.
+        </p>
+        <div class="space-y-2">
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
+            Metro stations within walking distance
           </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-3">Amenities & Lifestyle</h3>
-          <p class="text-gray-600">Look for neighborhoods with shopping, dining, entertainment, parks, and recreational facilities that match your lifestyle.</p>
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Bike-friendly infrastructure
+          </div>
         </div>
+      </div>
 
-        <div class="bg-white rounded-lg p-8 shadow-lg">
-          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+      <!-- Schools & Education -->
+      <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="w-16 h-16 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12,3L1,9L12,15L21,10.09V17H23V9M5,13.18V17.18L12,21L19,17.18V13.18L12,17L5,13.18Z"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Schools & Education</h3>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Highly-rated schools, universities, libraries, and educational facilities nearby.
+        </p>
+        <div class="space-y-2">
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
+            Top-rated elementary & high schools
           </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-3">Safety & Community</h3>
-          <p class="text-gray-600">Research neighborhood safety ratings, community engagement, and the overall atmosphere to find where you'll feel at home.</p>
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Public libraries and study spaces
+          </div>
+        </div>
+      </div>
+
+      <!-- Shopping & Dining -->
+      <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19,7H18V6A2,2 0 0,0 16,4H8A2,2 0 0,0 6,6V7H5A1,1 0 0,0 4,8V19A1,1 0 0,0 5,20H19A1,1 0 0,0 20,19V8A1,1 0 0,0 19,7M8,6H16V7H8V6Z"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Shopping & Dining</h3>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Local markets, restaurants, cafes, and shopping centers within walking distance.
+        </p>
+        <div class="space-y-2">
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Diverse dining options
+          </div>
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Local farmers markets
+          </div>
+        </div>
+      </div>
+
+      <!-- Recreation & Parks -->
+      <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M14.5,8A1.5,1.5 0 0,1 13,6.5A1.5,1.5 0 0,1 14.5,5A1.5,1.5 0 0,1 16,6.5A1.5,1.5 0 0,1 14.5,8M9.5,8A1.5,1.5 0 0,1 8,6.5A1.5,1.5 0 0,1 9.5,5A1.5,1.5 0 0,1 11,6.5A1.5,1.5 0 0,1 9.5,8M6.5,12A1.5,1.5 0 0,1 5,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,12M12,3L2,12H5V20H19V12H22M7,18V12H9V18H7M11,18V12H13V18H11M15,18V12H17V18H15Z"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Recreation & Parks</h3>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Green spaces, recreational facilities, gyms, and outdoor activities for active living.
+        </p>
+        <div class="space-y-2">
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Multiple parks and trails
+          </div>
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Fitness centers and sports facilities
+          </div>
+        </div>
+      </div>
+
+      <!-- Safety & Security -->
+      <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-600 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,11.9 16,12.4 16,13V16C16,17.1 15.1,18 14,18H10C8.9,18 8,17.1 8,16V13C8,12.4 8.4,11.9 9,11.5V10C9,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.2,9.2 10.2,10V11.5H13.8V10C13.8,9.2 12.8,8.2 12,8.2Z"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Safety & Security</h3>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Crime rates, police presence, well-lit streets, and community safety programs.
+        </p>
+        <div class="space-y-2">
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Low crime rates
+          </div>
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Well-lit streets and sidewalks
+          </div>
+        </div>
+      </div>
+
+      <!-- Healthcare -->
+      <div class="group bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-gray-200/50 border border-white/20 p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
+        <div class="w-16 h-16 bg-gradient-to-r from-teal-500 to-cyan-600 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M17,13H13V17H11V13H7V11H11V7H13V11H17V13Z"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Healthcare</h3>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Hospitals, clinics, pharmacies, and medical facilities within convenient reach.
+        </p>
+        <div class="space-y-2">
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Major hospitals nearby
+          </div>
+          <div class="flex items-center text-sm text-gray-500">
+            <svg class="w-4 h-4 mr-2 text-teal-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Walk-in clinics and pharmacies
+          </div>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- Call to Action -->
-  <div class="container mx-auto px-4 py-16">
-    <div class="max-w-4xl mx-auto text-center bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl p-12 text-white">
-      <h2 class="text-3xl font-bold mb-4">Ready to Find Your Perfect Neighborhood?</h2>
-      <p class="text-xl text-blue-100 mb-8">Browse thousands of available rental properties in neighborhoods across the country</p>
-      <%= link_to "Explore All Properties", properties_path, class: "inline-block bg-white text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-50 transition-colors font-semibold text-lg" %>
+<!-- Get Started CTA -->
+<section class="py-24 bg-gradient-to-br from-emerald-900 via-teal-800 to-slate-900 relative overflow-hidden">
+  <div class="absolute inset-0">
+    <div class="absolute inset-0 bg-gradient-to-r from-emerald-900/90 via-teal-900/80 to-slate-900/90"></div>
+    <div class="absolute top-1/4 left-1/6 w-96 h-96 bg-gradient-to-br from-emerald-400/10 to-teal-400/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-br from-blue-400/10 to-emerald-400/10 rounded-full blur-3xl"></div>
+  </div>
+  
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+      <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12,2L13.09,8.26L20,9L13.09,9.74L12,16L10.91,9.74L4,9L10.91,8.26L12,2M12,21C15.5,17 20,13 20,10A8,8 0 0,0 4,10C4,13 8.5,17 12,21Z"/>
+      </svg>
+    </div>
+    <h2 class="text-4xl lg:text-6xl font-bold text-white mb-6">
+      Ready to Find Your Perfect Neighborhood?
+    </h2>
+    <p class="text-xl text-emerald-100 mb-8 max-w-3xl mx-auto">
+      Start exploring properties in the neighborhoods that match your lifestyle and preferences.
+    </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+      <%= link_to properties_path, class: "bg-white text-emerald-600 hover:bg-emerald-50 px-8 py-4 rounded-2xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" do %>
+        Browse Properties
+      <% end %>
+      <%= link_to contact_path, class: "border-2 border-white text-white hover:bg-white hover:text-emerald-600 px-8 py-4 rounded-2xl font-bold transition-all duration-300 transform hover:-translate-y-0.5" do %>
+        Get Personal Recommendations
+      <% end %>
     </div>
   </div>
-</div>
+</section>
 
-<script>
-  function filterNeighborhoods() {
-    const searchTerm = document.getElementById('neighborhood-search').value.toLowerCase();
-    const cards = document.querySelectorAll('.neighborhood-card');
-
-    cards.forEach(card => {
-      const city = card.dataset.city;
-
-      if (city.includes(searchTerm)) {
-        card.style.display = 'block';
-      } else {
-        card.style.display = 'none';
-      }
-    });
+<!-- Custom CSS for animations -->
+<style>
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
   }
-</script>
+  
+  @keyframes float-delayed {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(-180deg); }
+  }
+  
+  .animate-float {
+    animation: float 20s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: float-delayed 25s ease-in-out infinite;
+  }
+</style>

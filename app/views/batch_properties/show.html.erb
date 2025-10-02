@@ -1,0 +1,213 @@
+<% content_for :title, "Batch Upload Details" %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Batch Upload Details</h1>
+        <p class="mt-2 text-sm text-gray-600">
+          <%= @batch_upload.filename %> • Uploaded <%= time_ago_in_words(@batch_upload.created_at) %> ago
+        </p>
+      </div>
+      <div class="flex items-center space-x-4">
+        <%= link_to batch_properties_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+          <svg class="mr-2 -ml-1 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          Back to Uploads
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Card -->
+  <div class="bg-white shadow rounded-lg p-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Status -->
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Status</dt>
+        <dd class="mt-1">
+          <%= render partial: 'batch_properties/status_badge_enhanced', locals: { upload: @batch_upload } %>
+        </dd>
+      </div>
+
+      <!-- Total Items -->
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Total Items</dt>
+        <dd class="mt-1 text-2xl font-semibold text-gray-900">
+          <%= @batch_upload.total_items || 0 %>
+        </dd>
+      </div>
+
+      <!-- Success Rate -->
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Success Rate</dt>
+        <dd class="mt-1">
+          <% if @batch_upload.total_items && @batch_upload.total_items > 0 %>
+            <div class="flex items-center">
+              <span class="text-2xl font-semibold text-gray-900">
+                <%= ((@batch_upload.successful_items || 0).to_f / @batch_upload.total_items * 100).round(1) %>%
+              </span>
+              <span class="ml-2 text-sm text-gray-500">
+                (<%= @batch_upload.successful_items || 0 %>/<%= @batch_upload.total_items %>)
+              </span>
+            </div>
+          <% else %>
+            <span class="text-2xl font-semibold text-gray-400">N/A</span>
+          <% end %>
+        </dd>
+      </div>
+
+      <!-- Failed Items -->
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Failed Items</dt>
+        <dd class="mt-1">
+          <% if @batch_upload.failed_items && @batch_upload.failed_items > 0 %>
+            <span class="text-2xl font-semibold text-red-600">
+              <%= @batch_upload.failed_items %>
+            </span>
+          <% else %>
+            <span class="text-2xl font-semibold text-green-600">0</span>
+          <% end %>
+        </dd>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <% if @batch_upload.processing? || @batch_upload.validated? %>
+      <div class="mt-6">
+        <div class="flex justify-between text-sm text-gray-600 mb-1">
+          <span>Processing Progress</span>
+          <span><%= @batch_upload.progress_percentage %>%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2">
+          <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+               style="width: <%= @batch_upload.progress_percentage %>%"></div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Action Buttons -->
+    <% if @batch_upload.completed_with_errors? || (@batch_upload.failed_items && @batch_upload.failed_items > 0) %>
+      <div class="mt-6 flex items-center space-x-4">
+        <%= button_to "Retry Failed Items", 
+                      retry_failed_batch_property_path(@batch_upload),
+                      method: :post,
+                      remote: true,
+                      class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500",
+                      data: { turbo: false } %>
+        
+        <%= link_to "Download Results", 
+                    results_batch_property_path(@batch_upload, format: :csv),
+                    class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Items List -->
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-medium text-gray-900">Batch Items</h2>
+    </div>
+
+    <% if @batch_items.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Row #
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Title
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Property
+              </th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Error
+              </th>
+              <th class="relative px-6 py-3">
+                <span class="sr-only">Actions</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @batch_items.each do |item| %>
+              <% property_data = JSON.parse(item.property_data) rescue {} %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= item.row_number %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <%= property_data['title'] || 'N/A' %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full
+                    <%= case item.status
+                        when 'completed', 'success'
+                          'bg-green-100 text-green-800'
+                        when 'failed'
+                          'bg-red-100 text-red-800'
+                        when 'processing'
+                          'bg-blue-100 text-blue-800'
+                        else
+                          'bg-gray-100 text-gray-800'
+                        end %>">
+                    <%= item.status.humanize %>
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <% if item.property_id %>
+                    <%= link_to "View", property_path(item.property_id), 
+                                class: "text-blue-600 hover:text-blue-900" %>
+                  <% else %>
+                    <span class="text-gray-400">-</span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 text-sm text-red-600">
+                  <%= truncate(item.error_message, length: 50) if item.error_message %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <% if item.failed? %>
+                    <%= button_to "Retry", 
+                                  retry_item_batch_property_path(@batch_upload, item_id: item.id),
+                                  method: :post,
+                                  remote: true,
+                                  class: "text-blue-600 hover:text-blue-900",
+                                  data: { turbo: false } %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <% if @batch_items.total_pages > 1 %>
+        <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+          <%= paginate @batch_items %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="px-6 py-12 text-center">
+        <p class="text-gray-500">No items found in this batch upload.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Auto-refresh for processing batches -->
+<% if @batch_upload.processing? || @batch_upload.validated? %>
+  <script>
+    // Auto-refresh page every 5 seconds while processing
+    setTimeout(function() {
+      window.location.reload();
+    }, 5000);
+  </script>
+<% end %>

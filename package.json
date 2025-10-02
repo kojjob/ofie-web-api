@@ -1,0 +1,36 @@
+{
+  "name": "ofie-web-api",
+  "version": "1.0.0",
+  "description": "OFIE Real Estate Platform",
+  "private": true,
+  "scripts": {
+    "lint": "eslint app/javascript/**/*.js",
+    "lint:fix": "eslint app/javascript/**/*.js --fix",
+    "format": "prettier --write 'app/javascript/**/*.{js,css,scss}'",
+    "format:check": "prettier --check 'app/javascript/**/*.{js,css,scss}'",
+    "precommit": "lint-staged"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-stimulus": "^1.0.0",
+    "prettier": "^3.2.5",
+    "lint-staged": "^15.2.2",
+    "husky": "^9.0.11",
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.0"
+  },
+  "lint-staged": {
+    "app/javascript/**/*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "app/assets/stylesheets/**/*.{css,scss}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

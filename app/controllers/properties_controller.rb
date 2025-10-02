@@ -7,7 +7,6 @@ class PropertiesController < ApplicationController
   # GET /properties
   def index
     @properties = Property.available
-                         .includes(:user, photos_attachments: :blob)
                          .by_city(params[:city])
                          .by_property_type(params[:property_type])
                          .by_bedrooms(params[:bedrooms])
@@ -25,11 +24,18 @@ class PropertiesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html # Render the HTML view
+      format.html do
+        # Only eager load what's needed for the properties grid view
+        @properties = @properties.includes(photos_attachments: :blob)
+      end
       format.json do
         if request.xhr?
+          # For AJAX requests (properties grid), only load photos
+          @properties = @properties.includes(photos_attachments: :blob)
           render partial: "properties_grid", locals: { properties: @properties }
         else
+          # For JSON API, include user data for property_json serialization
+          @properties = @properties.includes(:user, photos_attachments: :blob)
           render json: {
             properties: @properties.map { |property| property_json(property) },
             meta: {
@@ -51,7 +57,8 @@ class PropertiesController < ApplicationController
     else
       search_term = "%#{query}%"
       @properties = Property.available
-                           .includes(:user, photos_attachments: :blob)
+                           .includes(:user)
+                           .with_attached_photos
                            .where(
                              "title ILIKE ? OR description ILIKE ? OR address ILIKE ? OR city ILIKE ?",
                              search_term, search_term, search_term, search_term
@@ -83,6 +90,16 @@ class PropertiesController < ApplicationController
 
   # GET /properties/:id
   def show
+    # Load data needed for the show page
+    @related_properties = Property.where.not(id: @property.id)
+                                  .available
+                                  .includes(photos_attachments: :blob)
+                                  .limit(4)
+
+    # Load recent reviews and comments for the show page
+    @recent_reviews = @property.property_reviews.includes(:user).recent.limit(5)
+    @recent_comments = @property.recent_comments(10)
+
     respond_to do |format|
       format.html # Render the HTML view
       format.json {
@@ -183,12 +200,17 @@ class PropertiesController < ApplicationController
   def my_properties
     authorize_landlord
     @properties = current_user.properties
-                             .includes(photos_attachments: :blob)
-                             .order(created_at: :desc)
+                              .includes(photos_attachments: :blob)
+                              .order(created_at: :desc)
 
-    render json: {
-      properties: @properties.map { |property| property_json(property, include_stats: true) }
-    }
+    respond_to do |format|
+      format.html # Render the HTML view for landlord property management
+      format.json do
+        render json: {
+          properties: @properties.map { |property| property_json(property, include_stats: true) }
+        }
+      end
+    end
   end
 
   private
@@ -202,9 +224,26 @@ class PropertiesController < ApplicationController
   end
 
   def set_property
-    @property = Property.find(params[:id])
+    # Only eager load what's actually used in the views
+    case action_name
+    when 'show'
+      # For show page, we need user and photos, comments are loaded separately
+      @property = Property.includes(:user, photos_attachments: :blob).find(params[:id])
+    when 'edit'
+      # For edit page, we only need photos
+      @property = Property.includes(photos_attachments: :blob).find(params[:id])
+    else
+      # For other actions, minimal loading
+      @property = Property.find(params[:id])
+    end
   rescue ActiveRecord::RecordNotFound
-    render json: { error: "Property not found" }, status: :not_found
+    respond_to do |format|
+      format.html {
+        flash[:error] = "Property not found"
+        redirect_to properties_path
+      }
+      format.json { render json: { error: "Property not found" }, status: :not_found }
+    end
   end
 
   def authorize_landlord
@@ -258,10 +297,17 @@ class PropertiesController < ApplicationController
       photos: property.photos.attached? ? property.photos.map { |photo| rails_blob_url(photo) } : []
     }
 
-    if options[:include_contact]
+    if options[:include_contact] && property.association(:user).loaded?
       json[:landlord] = {
         id: property.user.id,
         email: property.user.email
+      }
+    elsif options[:include_contact]
+      # If user isn't loaded, load it to avoid N+1
+      user = property.user
+      json[:landlord] = {
+        id: user.id,
+        email: user.email
       }
     end
 

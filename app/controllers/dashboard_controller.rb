@@ -12,12 +12,18 @@ class DashboardController < ApplicationController
   end
 
   def landlord_dashboard
-    @properties = current_user.properties.with_attached_photos
+    # Eager load all necessary associations to avoid N+1 queries
+    @properties = current_user.properties.includes(photos_attachments: :blob)
+    # Create a separate limited collection for the dashboard view
+    @properties_for_display = @properties.limit(6)
+
+    # Use more efficient queries for stats calculation
+    properties_scope = current_user.properties
     @stats = {
-      total_properties: @properties.count,
-      available_properties: @properties.where(availability_status: "available").count,
+      total_properties: properties_scope.count,
+      available_properties: properties_scope.where(availability_status: "available").count,
       total_revenue: calculate_total_revenue,
-      pending_applications: RentalApplication.joins(:property).where(properties: { user_id: current_user.id }, status: "pending").count
+      pending_applications: current_user.properties.joins(:rental_applications).where(rental_applications: { status: "pending" }).count
     }
     @recent_applications = RentalApplication.joins(:property)
                                           .where(properties: { user_id: current_user.id })
@@ -38,7 +44,7 @@ class DashboardController < ApplicationController
   end
 
   def tenant_dashboard
-    @lease_agreements = current_user.tenant_lease_agreements.includes(property: { photos_attachments: :blob })
+    @lease_agreements = current_user.tenant_lease_agreements.includes(property: [:user, photos_attachments: :blob])
     @stats = {
       active_leases: @lease_agreements.where(status: "active").count,
       applications_submitted: current_user.tenant_rental_applications.count,
@@ -86,7 +92,7 @@ class DashboardController < ApplicationController
     # Properties management page for landlords
     authorize_landlord!
 
-    @properties = current_user.properties.with_attached_photos.order(created_at: :desc)
+    @properties = current_user.properties.includes(photos_attachments: :blob).order(created_at: :desc)
     @stats = {
       total_properties: @properties.count,
       available_properties: @properties.where(availability_status: "available").count,

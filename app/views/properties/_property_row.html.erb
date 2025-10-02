@@ -1,0 +1,126 @@
+<%# Responsive Property Row Component %>
+<tr class="hover:bg-gray-50 transition-colors duration-200" 
+    data-property-row
+    data-title="<%= property.title %>"
+    data-address="<%= property.address %>"
+    data-city="<%= property.city %>"
+    data-status="<%= property.availability_status %>">
+  
+  <!-- Property Info (Mobile: Full width, Desktop: Property column) -->
+  <td class="px-4 sm:px-6 py-4">
+    <div class="flex items-center">
+      <!-- Property Image/Thumbnail -->
+      <div class="flex-shrink-0 h-12 w-12 sm:h-16 sm:w-16">
+        <% if property.photos.attached? && property.photos.any? %>
+          <%= image_tag property.photos.first, 
+                       alt: property.title,
+                       class: "h-12 w-12 sm:h-16 sm:w-16 rounded-xl object-cover" %>
+        <% else %>
+          <div class="h-12 w-12 sm:h-16 sm:w-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Property Details -->
+      <div class="ml-3 sm:ml-4 flex-1 min-w-0">
+        <div class="text-sm sm:text-base font-medium text-gray-900 truncate">
+          <%= link_to property.title, property_path(property), 
+                      class: "hover:text-blue-600 transition-colors duration-200" %>
+        </div>
+        <div class="text-xs sm:text-sm text-gray-500 flex items-center mt-1">
+          <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <span class="truncate"><%= property.address %>, <%= property.city %></span>
+        </div>
+        
+        <!-- Mobile: Show additional info inline -->
+        <div class="flex items-center space-x-3 mt-2 sm:hidden">
+          <div class="flex items-center text-xs text-gray-600">
+            <svg class="w-3 h-3 mr-1 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+            </svg>
+            <%= property.bedrooms %>bd
+          </div>
+          <div class="flex items-center text-xs text-gray-600">
+            <svg class="w-3 h-3 mr-1 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <%= property.bathrooms %>ba
+          </div>
+          <div class="text-xs text-gray-500">
+            <%= property.property_type&.humanize %>
+          </div>
+        </div>
+        
+        <!-- Mobile: Show price and status -->
+        <div class="flex items-center justify-between mt-2 sm:hidden">
+          <div class="text-sm font-medium text-gray-900">
+            $<%= number_with_delimiter(property.price) %>/mo
+          </div>
+          <%= render 'properties/status_badge', property: property %>
+        </div>
+      </div>
+    </div>
+  </td>
+  
+  <!-- Details (Hidden on mobile) -->
+  <td class="hidden sm:table-cell px-6 py-4">
+    <div class="flex items-center space-x-4 text-sm text-gray-600">
+      <div class="flex items-center">
+        <svg class="w-4 h-4 mr-1 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+        </svg>
+        <%= property.bedrooms %>bd
+      </div>
+      <div class="flex items-center">
+        <svg class="w-4 h-4 mr-1 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+        </svg>
+        <%= property.bathrooms %>ba
+      </div>
+      <div class="text-gray-500">
+        <%= property.property_type&.humanize %>
+      </div>
+    </div>
+  </td>
+  
+  <!-- Status (Hidden on mobile) -->
+  <td class="hidden sm:table-cell px-6 py-4">
+    <%= render 'properties/status_badge', property: property %>
+  </td>
+  
+  <!-- Price (Hidden on mobile) -->
+  <td class="hidden sm:table-cell px-6 py-4 text-sm font-medium text-gray-900">
+    $<%= number_with_delimiter(property.price) %>/month
+  </td>
+  
+  <!-- Created (Hidden on mobile and tablet) -->
+  <td class="hidden lg:table-cell px-6 py-4 text-sm text-gray-500">
+    <%= time_ago_in_words(property.created_at) %> ago
+  </td>
+  
+  <!-- Actions -->
+  <td class="px-4 sm:px-6 py-4 text-right">
+    <div class="flex items-center justify-end">
+      <!-- 3-Dots Menu with Dropdown -->
+      <div class="relative">
+        <button type="button"
+                class="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-2 rounded-full hover:bg-gray-100"
+                data-action="click->properties#toggleDropdown"
+                title="Property Actions">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+          </svg>
+        </button>
+        
+        <!-- Dropdown Menu -->
+        <%= render 'properties/actions_dropdown', property: property %>
+      </div>
+    </div>
+  </td>
+</tr>

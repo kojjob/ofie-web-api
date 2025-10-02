@@ -30,6 +30,9 @@ gem "omniauth-rails_csrf_protection"
 # Token generation for password reset and email verification
 gem "securerandom"
 
+# CSV processing for batch property uploads
+gem "csv"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mswin mswin64 mingw x64_mingw jruby ]
 
@@ -84,7 +87,6 @@ gem "sentry-rails"
 
 # API versioning
 gem "versionist"
-
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ], require: "debug/prelude"
@@ -97,11 +99,6 @@ group :development, :test do
 
   # Test fixtures replacement with a straightforward definition syntax
   gem "factory_bot_rails", "~> 6.4"
-end
-
-group :test do
-  # Code coverage analysis
-  gem "simplecov", require: false
 
   # Test data faker for generating realistic test data
   gem "faker", "~> 3.2"
@@ -111,6 +108,11 @@ group :test do
 
   # Record and replay HTTP interactions for tests
   gem "vcr", "~> 6.2"
+end
+
+group :test do
+  # Code coverage analysis
+  gem "simplecov", require: false
 
   # Clean database between tests
   gem "database_cleaner-active_record"
@@ -150,8 +152,5 @@ group :development do
 end
 
 gem "kaminari", "~> 1.2"
-
-# CSV processing for batch property uploads
-gem "csv"
 
 gem "dockerfile-rails", ">= 1.7", group: :development

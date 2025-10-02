@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+public/assets/
+public/packs/
+tmp/
+log/
+
+# Rails generated files
+db/schema.rb
+db/structure.sql
+
+# Coverage reports
+coverage/
+
+# IDE files
+.idea/
+.vscode/
+
+# System files
+.DS_Store
+
+# Test files
+test/fixtures/
+spec/fixtures/

@@ -65,8 +65,30 @@ export default class extends Controller {
 
   adjustInputHeight() {
     const input = this.inputTarget
-    input.style.height = 'auto'
-    input.style.height = Math.min(input.scrollHeight, 120) + 'px'
+    // Reset height to auto to get accurate scrollHeight
+    input.classList.remove('h-10', 'h-12', 'h-14', 'h-16', 'h-20', 'h-24', 'h-28', 'h-32')
+    
+    // Calculate appropriate height class based on content
+    const scrollHeight = input.scrollHeight
+    if (scrollHeight <= 40) {
+      input.classList.add('h-10')
+    } else if (scrollHeight <= 48) {
+      input.classList.add('h-12')
+    } else if (scrollHeight <= 56) {
+      input.classList.add('h-14')
+    } else if (scrollHeight <= 64) {
+      input.classList.add('h-16')
+    } else if (scrollHeight <= 80) {
+      input.classList.add('h-20')
+    } else if (scrollHeight <= 96) {
+      input.classList.add('h-24')
+    } else if (scrollHeight <= 112) {
+      input.classList.add('h-28')
+    } else {
+      input.classList.add('h-32') // Max height
+    }
+    
+    input.classList.add('transition-height')
   }
 
   async loadInitialGreeting() {
@@ -230,9 +252,9 @@ export default class extends Controller {
         <div class="flex items-center space-x-1">
           <div class="w-4 h-4 bg-gradient-to-r from-slate-600 to-slate-700 rounded-full mr-2"></div>
           <div class="flex space-x-1">
-            <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
-            <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
-            <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
           </div>
         </div>
       </div>

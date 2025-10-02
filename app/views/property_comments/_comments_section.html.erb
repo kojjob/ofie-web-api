@@ -59,7 +59,7 @@
                     Cancel
                   </button>
                   <%= form.submit "Post Comment",
-                                  class: "px-6 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" %>
+                                  class: "px-6 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" %>
                 </div>
               </div>
             </div>
@@ -83,8 +83,8 @@
 
   <!-- Comments List -->
   <div class="space-y-6" data-comments-target="commentsList">
-    <% if @property.property_comments.not_flagged.any? %>
-      <% @property.recent_comments(10).each do |comment| %>
+    <% if @recent_comments.any? %>
+      <% @recent_comments.each do |comment| %>
         <%= render 'property_comments/comment', comment: comment %>
       <% end %>
       

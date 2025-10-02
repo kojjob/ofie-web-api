@@ -6,13 +6,20 @@ export default class extends Controller {
 
   connect() {
     this.isOpen = false;
+    this.boundClickHandler = null;
     this.setupKeyboardNavigation();
-    this.setupOutsideClickListener();
+    // Don't set up outside click listener here - only when opening
+    console.log('Dropdown controller connected:', this.element);
   }
 
   toggle(event) {
     event.preventDefault();
     event.stopPropagation();
+    
+    console.log('Toggle clicked, currently open:', this.isOpen);
+    
+    // Close any other open dropdowns first
+    this.closeOtherDropdowns();
     
     if (this.isOpen) {
       this.close();
@@ -22,24 +29,37 @@ export default class extends Controller {
   }
 
   open() {
+    console.log('Opening dropdown');
     this.menuTarget.classList.remove('hidden');
-    this.element.querySelector('button').setAttribute('aria-expanded', 'true');
+    const button = this.element.querySelector('button');
+    if (button) {
+      button.setAttribute('aria-expanded', 'true');
+    }
     this.isOpen = true;
     
-    // Focus first menu item
-    const firstMenuItem = this.menuTarget.querySelector('a');
+    // Set up outside click listener when opening
+    this.setupOutsideClickListener();
+    
+    // Focus first menu item for better accessibility
+    const firstMenuItem = this.menuTarget.querySelector('a, button');
     if (firstMenuItem) {
-      firstMenuItem.focus();
+      setTimeout(() => firstMenuItem.focus(), 50);
     }
   }
 
   close() {
+    console.log('Closing dropdown');
     this.menuTarget.classList.add('hidden');
-    this.element.querySelector('button').setAttribute('aria-expanded', 'false');
+    const button = this.element.querySelector('button');
+    if (button) {
+      button.setAttribute('aria-expanded', 'false');
+      // Return focus to button
+      button.focus();
+    }
     this.isOpen = false;
     
-    // Return focus to button
-    this.element.querySelector('button').focus();
+    // Remove outside click listener when closing
+    this.removeOutsideClickListener();
   }
 
   setupKeyboardNavigation() {
@@ -61,18 +81,47 @@ export default class extends Controller {
   }
 
   setupOutsideClickListener() {
+    // Remove any existing listener first
+    this.removeOutsideClickListener();
+    
+    // Create the click handler
     this.boundClickHandler = (event) => {
-      if (this.isOpen && !this.element.contains(event.target)) {
+      // Check if click is outside the dropdown
+      if (!this.element.contains(event.target)) {
         this.close();
       }
     };
-    document.addEventListener('click', this.boundClickHandler);
+    
+    // Use a longer timeout to ensure the opening click is not caught
+    setTimeout(() => {
+      if (this.isOpen) {  // Double-check dropdown is still open
+        document.addEventListener('click', this.boundClickHandler);
+      }
+    }, 10);
+  }
+  
+  removeOutsideClickListener() {
+    if (this.boundClickHandler) {
+      document.removeEventListener('click', this.boundClickHandler);
+      this.boundClickHandler = null;
+    }
+  }
+
+  closeOtherDropdowns() {
+    // Find all other dropdown controllers and close them
+    const otherDropdowns = document.querySelectorAll('[data-controller*="dropdown"]');
+    otherDropdowns.forEach(dropdown => {
+      if (dropdown !== this.element) {
+        const controller = this.application.getControllerForElementAndIdentifier(dropdown, 'dropdown');
+        if (controller && controller.isOpen) {
+          controller.close();
+        }
+      }
+    });
   }
 
   disconnect() {
-    if (this.boundClickHandler) {
-      document.removeEventListener('click', this.boundClickHandler);
-    }
+    this.removeOutsideClickListener();
   }
 
   navigateMenu(direction) {

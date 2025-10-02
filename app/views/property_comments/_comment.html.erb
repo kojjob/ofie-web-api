@@ -14,9 +14,9 @@
             <%= comment.user.name || comment.user.email.split('@').first.capitalize %>
           </h4>
           <% if comment.user == @property.user %>
-            <span class="inline-flex items-center px-2 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs font-bold rounded-xl border border-blue-200">
+            <span class="inline-flex items-center px-2 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs font-bold rounded-lg border border-blue-200">
               <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                <pathclade stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
               </svg>
               Property Owner
             </span>
@@ -33,7 +33,7 @@
         <div class="flex items-center space-x-2">
           <% if user_signed_in? %>
             <!-- Like Button -->
-            <button class="group flex items-center space-x-1 px-3 py-1 rounded-xl transition-all duration-200 <%= comment.liked_by?(current_user) ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-600' %>"
+            <button class="group flex items-center space-x-1 px-3 py-1 rounded-lg transition-all duration-200 <%= comment.liked_by?(current_user) ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-red-600' %>"
                     onclick="toggleLike('<%= comment.id %>', '<%= toggle_like_property_comment_path(comment) %>')">
               <svg class="w-4 h-4 group-hover:scale-110 transition-transform duration-200" fill="<%= comment.liked_by?(current_user) ? 'currentColor' : 'none' %>" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
@@ -42,7 +42,7 @@
             </button>
             
             <!-- Reply Button -->
-            <button class="flex items-center space-x-1 px-3 py-1 bg-gray-100 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all duration-200"
+            <button class="flex items-center space-x-1 px-3 py-1 bg-gray-100 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200"
                     onclick="toggleReplyForm('<%= comment.id %>')">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
@@ -59,10 +59,10 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
                   </svg>
                 </button>
-                <div id="dropdown-<%= comment.id %>" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
+                <div id="dropdown-<%= comment.id %>" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
                   <% if comment.can_be_edited_by?(current_user) %>
-                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-xl"
-                            onclick="startEditComment('<%= comment.id %>')">
+                    <button class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg"
+                            onclick="startEditComment('<%= comment.id %>')">>
                       Edit Comment
                     </button>
                   <% end %>
@@ -117,7 +117,7 @@
                   Cancel
                 </button>
                 <button type="button"
-                        class="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                        class="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                         onclick="saveEditComment('<%= comment.id %>', '<%= property_comment_path(comment) %>')">
                   Save Changes
                 </button>
@@ -133,18 +133,18 @@
           <%= form_with model: [@property, PropertyComment.new],
                         url: property_property_comments_path(@property),
                         local: false,
-                        class: "bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-200 reply-form",
+                        class: "bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200 reply-form",
                         data: { comment_id: comment.id } do |form| %>
             <%= form.hidden_field :parent_id, value: comment.id %>
             <div class="flex items-start space-x-3">
-              <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+              <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                 <%= (current_user.name || current_user.email).first.upcase %>
               </div>
               <div class="flex-1">
                 <%= form.text_area :content, 
                                    placeholder: "Write a reply...",
                                    rows: 2,
-                                   class: "w-full px-3 py-2 border border-blue-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-500 text-sm" %>
+                                   class: "w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-500 text-sm" %>
                 <div class="flex justify-end space-x-2 mt-2">
                   <button type="button" 
                           class="px-3 py-1 text-sm text-gray-600 hover:text-gray-800 transition-colors"

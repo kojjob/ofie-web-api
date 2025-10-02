@@ -1,0 +1,129 @@
+<!-- Property Search Form with Stimulus Integration -->
+<div data-controller="property-search" 
+     data-property-search-url-value="<%= search_properties_path %>"
+     data-property-search-delay-value="300"
+     class="property-search-container">
+  
+  <!-- Search Input -->
+  <div class="search-bar mb-4">
+    <input type="text"
+           data-property-search-target="input"
+           data-action="input->property-search#search"
+           placeholder="Search by location, title, or description..."
+           class="form-control form-control-lg"
+           value="<%= params[:q] %>">
+  </div>
+
+  <!-- Filters Section -->
+  <div data-property-search-target="filters" class="filters-section mb-4">
+    <div class="row">
+      <!-- Price Range -->
+      <div class="col-md-3">
+        <label class="form-label">Min Price</label>
+        <input type="number"
+               name="min_price"
+               data-action="change->property-search#filterChanged"
+               class="form-control"
+               placeholder="Min price"
+               value="<%= params[:min_price] %>">
+      </div>
+      
+      <div class="col-md-3">
+        <label class="form-label">Max Price</label>
+        <input type="number"
+               name="max_price"
+               data-action="change->property-search#filterChanged"
+               class="form-control"
+               placeholder="Max price"
+               value="<%= params[:max_price] %>">
+      </div>
+
+      <!-- Bedrooms -->
+      <div class="col-md-2">
+        <label class="form-label">Bedrooms</label>
+        <select name="bedrooms"
+                data-action="change->property-search#filterChanged"
+                class="form-select">
+          <option value="">Any</option>
+          <% (1..5).each do |num| %>
+            <option value="<%= num %>" <%= 'selected' if params[:bedrooms].to_i == num %>><%= num %>+</option>
+          <% end %>
+        </select>
+      </div>
+
+      <!-- Bathrooms -->
+      <div class="col-md-2">
+        <label class="form-label">Bathrooms</label>
+        <select name="bathrooms"
+                data-action="change->property-search#filterChanged"
+                class="form-select">
+          <option value="">Any</option>
+          <% (1..4).each do |num| %>
+            <option value="<%= num %>" <%= 'selected' if params[:bathrooms].to_i == num %>><%= num %>+</option>
+          <% end %>
+        </select>
+      </div>
+
+      <!-- Property Type -->
+      <div class="col-md-2">
+        <label class="form-label">Type</label>
+        <select name="property_type"
+                data-action="change->property-search#filterChanged"
+                class="form-select">
+          <option value="">All Types</option>
+          <option value="apartment">Apartment</option>
+          <option value="house">House</option>
+          <option value="condo">Condo</option>
+          <option value="townhouse">Townhouse</option>
+          <option value="studio">Studio</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Additional Filters -->
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <div class="form-check form-check-inline">
+          <input type="checkbox"
+                 name="pet_friendly"
+                 value="true"
+                 data-action="change->property-search#filterChanged"
+                 class="form-check-input"
+                 id="petFriendly">
+          <label class="form-check-label" for="petFriendly">Pet Friendly</label>
+        </div>
+        
+        <div class="form-check form-check-inline">
+          <input type="checkbox"
+                 name="parking"
+                 value="true"
+                 data-action="change->property-search#filterChanged"
+                 class="form-check-input"
+                 id="parking">
+          <label class="form-check-label" for="parking">Parking Available</label>
+        </div>
+
+        <button type="button"
+                data-action="click->property-search#clearFilters"
+                class="btn btn-link">
+          Clear Filters
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div data-property-search-target="loading" class="text-center py-4 hidden">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <!-- Results Count -->
+  <div data-property-search-target="count" class="results-count mb-3"></div>
+
+  <!-- Results Container -->
+  <div data-property-search-target="results" class="results-container">
+    <!-- Results will be dynamically loaded here -->
+  </div>
+</div>

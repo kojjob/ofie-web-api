@@ -338,7 +338,7 @@ class RentalApplicationsController < ApplicationController
     @approved_applications = RentalApplication.joins(:property)
                                              .includes(:property, :tenant)
                                              .where(properties: { user_id: current_user.id })
-                                             .where(status: 'approved')
+                                             .where(status: "approved")
                                              .where.missing(:lease_agreement)
                                              .order(created_at: :desc)
 

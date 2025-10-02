@@ -10,20 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_31_172054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
-  enable_extension "pgcrypto"
-
-  create_table "action_text_rich_texts", force: :cascade do |t|
-    t.string "name", null: false
-    t.text "body"
-    t.string "record_type", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "record_id"
-  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -188,56 +178,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
     t.json "additional_terms"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "ai_generated", default: false
-    t.string "llm_provider"
-    t.string "llm_model"
-    t.jsonb "generation_metadata", default: {}
-    t.decimal "generation_cost", precision: 10, scale: 4
-    t.boolean "reviewed_by_landlord", default: false
-    t.text "landlord_review_notes"
-    t.index ["ai_generated"], name: "index_lease_agreements_on_ai_generated"
     t.index ["landlord_id", "status"], name: "index_lease_agreements_on_landlord_and_status"
     t.index ["landlord_id"], name: "index_lease_agreements_on_landlord_id"
     t.index ["lease_end_date"], name: "index_lease_agreements_on_lease_end_date"
     t.index ["lease_number"], name: "index_lease_agreements_on_lease_number", unique: true
     t.index ["lease_start_date", "lease_end_date"], name: "index_lease_agreements_on_dates"
     t.index ["lease_start_date"], name: "index_lease_agreements_on_lease_start_date"
-    t.index ["llm_provider"], name: "index_lease_agreements_on_llm_provider"
     t.index ["property_id", "status"], name: "index_lease_agreements_on_property_and_status"
     t.index ["property_id"], name: "index_lease_agreements_on_property_id"
     t.index ["rental_application_id"], name: "index_lease_agreements_on_rental_application_id", unique: true
-    t.index ["reviewed_by_landlord"], name: "index_lease_agreements_on_reviewed_by_landlord"
     t.index ["status"], name: "index_lease_agreements_on_status"
     t.index ["tenant_id", "status"], name: "index_lease_agreements_on_tenant_and_status"
     t.index ["tenant_id"], name: "index_lease_agreements_on_tenant_id"
-  end
-
-  create_table "lease_clauses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "category", null: false
-    t.string "jurisdiction"
-    t.text "clause_text", null: false
-    t.boolean "required", default: false
-    t.jsonb "variables", default: {}
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["category", "jurisdiction"], name: "index_lease_clauses_on_category_and_jurisdiction"
-    t.index ["category"], name: "index_lease_clauses_on_category"
-    t.index ["jurisdiction"], name: "index_lease_clauses_on_jurisdiction"
-    t.index ["required"], name: "index_lease_clauses_on_required"
-  end
-
-  create_table "lease_templates", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name", null: false
-    t.string "jurisdiction", null: false
-    t.text "template_content"
-    t.jsonb "required_clauses", default: []
-    t.jsonb "optional_clauses", default: []
-    t.boolean "active", default: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["active"], name: "index_lease_templates_on_active"
-    t.index ["jurisdiction", "active"], name: "index_lease_templates_on_jurisdiction_and_active"
-    t.index ["jurisdiction"], name: "index_lease_templates_on_jurisdiction"
   end
 
   create_table "maintenance_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -379,27 +331,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
     t.index ["stripe_payment_intent_id"], name: "index_payments_on_stripe_payment_intent_id", unique: true
     t.index ["user_id", "status"], name: "index_payments_on_user_id_and_status"
     t.index ["user_id"], name: "index_payments_on_user_id"
-  end
-
-  create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "title", null: false
-    t.string "slug", null: false
-    t.text "content"
-    t.text "excerpt"
-    t.uuid "author_id", null: false
-    t.string "category"
-    t.text "tags"
-    t.boolean "published", default: false
-    t.datetime "published_at"
-    t.integer "views_count", default: 0
-    t.integer "comments_count", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["author_id"], name: "index_posts_on_author_id"
-    t.index ["category"], name: "index_posts_on_category"
-    t.index ["published"], name: "index_posts_on_published"
-    t.index ["published_at"], name: "index_posts_on_published_at"
-    t.index ["slug"], name: "index_posts_on_slug", unique: true
   end
 
   create_table "properties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -654,7 +585,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
   add_foreign_key "payments", "lease_agreements"
   add_foreign_key "payments", "payment_methods"
   add_foreign_key "payments", "users"
-  add_foreign_key "posts", "users", column: "author_id"
   add_foreign_key "properties", "users"
   add_foreign_key "property_comments", "properties", name: "property_comments_property_id_fkey"
   add_foreign_key "property_comments", "property_comments", column: "parent_id", name: "property_comments_parent_id_fkey"

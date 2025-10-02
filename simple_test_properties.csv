@@ -1,0 +1,4 @@
+title,description,address,city,price,bedrooms,bathrooms,square_feet,property_type,availability_status,parking_available,pets_allowed,furnished,utilities_included,laundry,gym,pool,balcony,air_conditioning,heating,internet_included,photo_filenames
+"Test Apartment 1","A nice 2-bedroom apartment for testing","123 Test Street","Test City",2000.00,2,2.0,1000,apartment,0,true,false,false,true,true,false,false,false,true,true,true,"test1.jpg,test2.jpg"
+"Test House 1","A family house for testing","456 Test Avenue","Test Town",2500.00,3,2.5,1500,house,0,true,true,false,false,true,false,false,true,true,true,false,"house_test.jpg"
+"Test Studio 1","A small studio for testing","789 Test Road","Test Village",1200.00,0,1.0,600,studio,0,false,true,true,false,true,false,false,false,true,true,true,"studio_test.jpg"
