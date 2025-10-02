@@ -1,227 +1,40 @@
-<!-- Enhanced Flash Messages -->
-<div id="flash-container" class="flash-container">
-  <% flash.each do |type, message| %>
-    <% next if message.blank? %>
+<% flash.each do |type, message| %>
+  <% next if message.blank? %>
 
-    <div class="flash-message-wrapper flash-message <%= type %>"
-         data-controller="flash"
-         data-flash-type-value="<%= type %>"
-         data-flash-duration-value="5000"
-         data-flash-position-value="inline"
-         data-flash-animation-value="slide"
-         data-flash-dismissible-value="true"
-         data-action="mouseenter->flash#pauseAutoHide mouseleave->flash#resumeAutoHide">
+  <%
+    color_classes = case type.to_s
+    when 'notice', 'success'
+      'bg-green-50 border-green-200 text-green-800'
+    when 'alert', 'error'
+      'bg-red-50 border-red-200 text-red-800'
+    when 'warning'
+      'bg-yellow-50 border-yellow-200 text-yellow-800'
+    else
+      'bg-blue-50 border-blue-200 text-blue-800'
+    end
+  %>
 
-      <div class="flash-content bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl shadow-gray-200/50 border border-white/20 p-4 mx-4 my-2 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-        <div class="flex items-center space-x-3">
-          <div class="flex-shrink-0">
-            <% case type.to_s %>
-            <% when 'success' %>
-              <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-              </div>
-            <% when 'error' %>
-              <div class="w-8 h-8 bg-gradient-to-r from-red-500 to-pink-600 rounded-xl flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </div>
-            <% when 'warning' %>
-              <div class="w-8 h-8 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                </svg>
-              </div>
-            <% else %>
-              <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-              </div>
-            <% end %>
-          </div>
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-900"><%= message %></p>
-          </div>
-          <button type="button" class="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors duration-200" data-action="click->flash#dismiss">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
+  <div class="max-w-7xl mx-auto px-4 py-3" data-flash-message>
+    <div class="<%= color_classes %> border rounded-lg p-4 flex items-center justify-between">
+      <p class="text-sm font-medium"><%= message %></p>
+      <button type="button" class="ml-4 text-current opacity-50 hover:opacity-100" onclick="this.closest('[data-flash-message]').remove()">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
-  <% end %>
-</div>
-
-<!-- Toast Container for Programmatic Messages -->
-<div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2">
-  <!-- Toasts will be dynamically added here -->
-</div>
-
-<style>
-  .flash-container {
-    position: relative;
-    z-index: 40;
-  }
-  
-  .flash-message-wrapper {
-    margin: 1rem;
-    margin-top: 0.5rem;
-  }
-  
-  /* Custom animations for different message types */
-  .flash-message.success {
-    animation: successPulse 0.6s ease-out;
-  }
-  
-  .flash-message.error {
-    animation: errorShake 0.6s ease-out;
-  }
-  
-  .flash-message.warning {
-    animation: warningBounce 0.6s ease-out;
-  }
-  
-  .flash-message.info {
-    animation: infoSlide 0.4s ease-out;
-  }
-  
-  @keyframes successPulse {
-    0% { transform: scale(0.95); opacity: 0; }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  
-  @keyframes errorShake {
-    0%, 100% { transform: translateX(0); opacity: 0; }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
-    20%, 40%, 60%, 80% { transform: translateX(2px); }
-    100% { opacity: 1; }
-  }
-  
-  @keyframes warningBounce {
-    0% { transform: translateY(-20px); opacity: 0; }
-    60% { transform: translateY(5px); }
-    100% { transform: translateY(0); opacity: 1; }
-  }
-  
-  @keyframes infoSlide {
-    0% { transform: translateX(-100%); opacity: 0; }
-    100% { transform: translateX(0); opacity: 1; }
-  }
-  
-  /* Hover effects */
-  .flash-message:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  }
-  
-  /* Mobile responsiveness */
-  @media (max-width: 640px) {
-    .flash-message-wrapper {
-      margin: 0.5rem;
-    }
-    
-    #toast-container {
-      top: 1rem;
-      right: 1rem;
-      left: 1rem;
-    }
-  }
-</style>
+  </div>
+<% end %>
 
 <script>
-  // Enhanced flash message functionality
+  // Auto-hide flash messages after 5 seconds
   document.addEventListener('DOMContentLoaded', function() {
-    // Auto-hide flash messages after delay
-    const flashMessages = document.querySelectorAll('[data-controller="flash"]');
-    
-    flashMessages.forEach(function(message) {
-      const duration = parseInt(message.dataset.flashDurationValue) || 5000;
-      
-      if (duration > 0) {
-        setTimeout(function() {
-          if (message.parentNode) {
-            message.style.transition = 'all 0.3s ease-out';
-            message.style.transform = 'translateX(100%)';
-            message.style.opacity = '0';
-            
-            setTimeout(function() {
-              if (message.parentNode) {
-                message.remove();
-              }
-            }, 300);
-          }
-        }, duration);
-      }
+    document.querySelectorAll('[data-flash-message]').forEach(function(el) {
+      setTimeout(function() {
+        el.style.transition = 'opacity 0.3s';
+        el.style.opacity = '0';
+        setTimeout(function() { el.remove(); }, 300);
+      }, 5000);
     });
-  });
-  
-  // Global function to show toast messages
-  window.showToast = function(message, type = 'info', options = {}) {
-    const toastContainer = document.getElementById('toast-container');
-    if (!toastContainer) return;
-    
-    const toast = document.createElement('div');
-    toast.setAttribute('data-controller', 'flash');
-    toast.setAttribute('data-flash-type-value', type);
-    toast.setAttribute('data-flash-duration-value', options.duration || 4000);
-    toast.setAttribute('data-flash-position-value', 'top-right');
-    toast.setAttribute('data-flash-animation-value', options.animation || 'slide');
-    toast.setAttribute('data-flash-dismissible-value', options.dismissible !== false);
-    
-    const toastContent = document.createElement('div');
-    toastContent.className = 'flash-content';
-    toastContent.innerHTML = message;
-    
-    toast.appendChild(toastContent);
-    toastContainer.appendChild(toast);
-    
-    return toast;
-  };
-  
-  // Global functions for different message types
-  window.showSuccess = function(message, options = {}) {
-    return window.showToast(message, 'success', options);
-  };
-  
-  window.showError = function(message, options = {}) {
-    return window.showToast(message, 'error', options);
-  };
-  
-  window.showWarning = function(message, options = {}) {
-    return window.showToast(message, 'warning', options);
-  };
-  
-  window.showInfo = function(message, options = {}) {
-    return window.showToast(message, 'info', options);
-  };
-  
-  // Listen for custom events to show toasts
-  document.addEventListener('flash:show', function(event) {
-    const { message, type, options } = event.detail;
-    window.showToast(message, type, options);
-  });
-  
-  // AJAX success/error handlers
-  document.addEventListener('ajax:success', function(event) {
-    const response = event.detail[0];
-    if (response && response.flash) {
-      Object.keys(response.flash).forEach(function(type) {
-        window.showToast(response.flash[type], type);
-      });
-    }
-  });
-  
-  document.addEventListener('ajax:error', function(event) {
-    const response = event.detail[0];
-    if (response && response.responseJSON && response.responseJSON.error) {
-      window.showError(response.responseJSON.error);
-    } else {
-      window.showError('An error occurred. Please try again.');
-    }
   });
 </script>
