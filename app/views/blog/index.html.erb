@@ -153,11 +153,57 @@
         </div>
 
         <!-- Pagination -->
-        <div class="flex justify-center">
-          <%= paginate @posts, theme: 'twitter-bootstrap-4',
-              nav_class: 'flex space-x-2',
-              pagination_class: 'flex items-center space-x-1' %>
-        </div>
+        <% if @posts.total_pages > 1 %>
+          <div class="flex justify-center mt-12">
+            <nav class="inline-flex rounded-lg shadow-sm" aria-label="Pagination">
+              <% if @posts.first_page? %>
+                <span class="relative inline-flex items-center px-4 py-2 rounded-l-lg border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                </span>
+              <% else %>
+                <%= link_to blog_index_path(page: @posts.prev_page, category: params[:category], search: params[:search]),
+                    class: "relative inline-flex items-center px-4 py-2 rounded-l-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors" do %>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                  </svg>
+                <% end %>
+              <% end %>
+
+              <% @posts.total_pages.times do |i| %>
+                <% page_num = i + 1 %>
+                <% if page_num == @posts.current_page %>
+                  <span class="relative inline-flex items-center px-4 py-2 border border-emerald-500 bg-emerald-600 text-sm font-semibold text-white">
+                    <%= page_num %>
+                  </span>
+                <% elsif (page_num - @posts.current_page).abs <= 2 || page_num == 1 || page_num == @posts.total_pages %>
+                  <%= link_to page_num, blog_index_path(page: page_num, category: params[:category], search: params[:search]),
+                      class: "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors" %>
+                <% elsif (page_num - @posts.current_page).abs == 3 %>
+                  <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500">
+                    ...
+                  </span>
+                <% end %>
+              <% end %>
+
+              <% if @posts.last_page? %>
+                <span class="relative inline-flex items-center px-4 py-2 rounded-r-lg border border-gray-300 bg-gray-100 text-sm font-medium text-gray-400 cursor-not-allowed">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </span>
+              <% else %>
+                <%= link_to blog_index_path(page: @posts.next_page, category: params[:category], search: params[:search]),
+                    class: "relative inline-flex items-center px-4 py-2 rounded-r-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors" do %>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                <% end %>
+              <% end %>
+            </nav>
+          </div>
+        <% end %>
       <% else %>
         <!-- Empty State -->
         <div class="bg-white rounded-2xl shadow-lg p-16 text-center">
