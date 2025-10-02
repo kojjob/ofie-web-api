@@ -204,10 +204,9 @@
                   <% end %>
                   
                   <% if current_user.landlord? && lease.status == 'signed' %>
-                    <%= link_to activate_lease_agreement_path(lease), 
-                                method: :post,
+                    <%= link_to activate_lease_agreement_path(lease),
                                 class: "inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-all duration-200",
-                                data: { confirm: "Activate this lease?" } do %>
+                                data: { turbo_method: :post, confirm: "Activate this lease?" } do %>
                       Activate
                     <% end %>
                   <% end %>
@@ -215,17 +214,15 @@
                   <!-- Sign buttons for pending signatures -->
                   <% if lease.status == 'pending_signatures' %>
                     <% if current_user == lease.tenant && lease.tenant_signed_at.blank? %>
-                      <%= link_to sign_tenant_lease_agreement_path(lease), 
-                                  method: :post,
+                      <%= link_to sign_tenant_lease_agreement_path(lease),
                                   class: "inline-flex items-center px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-medium transition-all duration-200",
-                                  data: { confirm: "Sign this lease?" } do %>
+                                  data: { turbo_method: :post, confirm: "Sign this lease?" } do %>
                         Sign
                       <% end %>
                     <% elsif current_user == lease.landlord && lease.landlord_signed_at.blank? %>
-                      <%= link_to sign_landlord_lease_agreement_path(lease), 
-                                  method: :post,
+                      <%= link_to sign_landlord_lease_agreement_path(lease),
                                   class: "inline-flex items-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all duration-200",
-                                  data: { confirm: "Sign this lease?" } do %>
+                                  data: { turbo_method: :post, confirm: "Sign this lease?" } do %>
                         Sign
                       <% end %>
                     <% end %>

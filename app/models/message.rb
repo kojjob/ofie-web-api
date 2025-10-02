@@ -28,7 +28,7 @@ class Message < ApplicationRecord
   end
 
   def create_notification
-    Notification.create_message_notification(recipient, sender, content)
+    Notification.create_message_notification(recipient, sender, content, conversation)
   rescue => e
     Rails.logger.error "Failed to create message notification: #{e.message}"
   end
