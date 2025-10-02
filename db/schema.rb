@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_01_223806) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
+  enable_extension "pgcrypto"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "record_id"
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -371,6 +381,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_223806) do
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
+  create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug", null: false
+    t.text "content"
+    t.text "excerpt"
+    t.uuid "author_id", null: false
+    t.string "category"
+    t.text "tags"
+    t.boolean "published", default: false
+    t.datetime "published_at"
+    t.integer "views_count", default: 0
+    t.integer "comments_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_posts_on_author_id"
+    t.index ["category"], name: "index_posts_on_category"
+    t.index ["published"], name: "index_posts_on_published"
+    t.index ["published_at"], name: "index_posts_on_published_at"
+    t.index ["slug"], name: "index_posts_on_slug", unique: true
+  end
+
   create_table "properties", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
@@ -623,6 +654,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_01_223806) do
   add_foreign_key "payments", "lease_agreements"
   add_foreign_key "payments", "payment_methods"
   add_foreign_key "payments", "users"
+  add_foreign_key "posts", "users", column: "author_id"
   add_foreign_key "properties", "users"
   add_foreign_key "property_comments", "properties", name: "property_comments_property_id_fkey"
   add_foreign_key "property_comments", "property_comments", column: "parent_id", name: "property_comments_parent_id_fkey"
