@@ -70,6 +70,21 @@ gem "rack-cors"
 # AI integration for lease generation with multiple LLM providers
 gem "llm_ruby", "~> 0.3.2"
 
+# Security enhancements
+gem "rack-attack"
+gem "secure_headers"
+
+# API documentation
+gem "rswag-api"
+gem "rswag-ui"
+
+# Application monitoring
+gem "sentry-ruby"
+gem "sentry-rails"
+
+# API versioning
+gem "versionist"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ], require: "debug/prelude"
@@ -96,11 +111,47 @@ group :test do
 
   # Record and replay HTTP interactions for tests
   gem "vcr", "~> 6.2"
+
+  # Clean database between tests
+  gem "database_cleaner-active_record"
+
+  # Time travel for testing
+  gem "timecop"
+
+  # Better test assertions
+  gem "shoulda-matchers"
+
+  # Capybara for integration tests
+  gem "capybara"
+  gem "selenium-webdriver"
 end
 
 group :development do
   # Preview emails in browser during development
   gem "letter_opener"
+
+  # N+1 query detection
+  gem "bullet"
+
+  # Better error pages
+  gem "better_errors"
+  gem "binding_of_caller"
+
+  # Performance profiling
+  gem "rack-mini-profiler"
+  gem "memory_profiler"
+  gem "stackprof"
+
+  # Git hooks
+  gem "lefthook"
+
+  # Security audit
+  gem "bundler-audit"
 end
 
 gem "kaminari", "~> 1.2"
+
+# CSV processing for batch property uploads
+gem "csv"
+
+gem "dockerfile-rails", ">= 1.7", group: :development
