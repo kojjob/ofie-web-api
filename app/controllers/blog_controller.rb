@@ -45,6 +45,12 @@ class BlogController < ApplicationController
   end
 
   def update
+    # Handle featured image removal BEFORE updating
+    if params[:post] && params[:post][:remove_featured_image] == '1'
+      @post.featured_image.purge if @post.featured_image.attached?
+      params[:post].delete(:remove_featured_image)
+    end
+
     # Handle media attachment removals BEFORE updating
     if params[:post] && params[:post][:remove_media_ids].present?
       params[:post][:remove_media_ids].reject(&:blank?).each do |attachment_id|
