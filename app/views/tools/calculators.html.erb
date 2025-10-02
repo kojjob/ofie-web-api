@@ -1,0 +1,362 @@
+<div class="bg-gradient-to-b from-indigo-50 to-white min-h-screen">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20">
+    <div class="container mx-auto px-4">
+      <h1 class="text-5xl font-bold mb-6">Rental Property Calculators</h1>
+      <p class="text-xl text-indigo-100 max-w-3xl">Make informed investment decisions with our comprehensive suite of rental property calculators</p>
+    </div>
+  </div>
+
+  <!-- Calculators Grid -->
+  <div class="container mx-auto px-4 py-12">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+
+      <!-- Rental Yield Calculator -->
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <div class="flex items-center mb-4">
+          <svg class="w-8 h-8 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+          </svg>
+          <h2 class="text-2xl font-bold text-gray-800">Rental Yield</h2>
+        </div>
+        <p class="text-gray-600 mb-6">Calculate the return on your property investment</p>
+
+        <form onsubmit="calculateRentalYield(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Property Value ($)</label>
+            <input type="number" id="property-value" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="500000">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Rent ($)</label>
+            <input type="number" id="monthly-rent" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="2500">
+          </div>
+
+          <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold">
+            Calculate Yield
+          </button>
+
+          <div id="yield-result" class="hidden mt-4 p-4 bg-green-50 rounded-lg">
+            <p class="text-sm font-medium text-gray-700">Annual Rental Yield</p>
+            <p class="text-3xl font-bold text-green-600"></p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Mortgage Payment Calculator -->
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <div class="flex items-center mb-4">
+          <svg class="w-8 h-8 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+          </svg>
+          <h2 class="text-2xl font-bold text-gray-800">Mortgage Payment</h2>
+        </div>
+        <p class="text-gray-600 mb-6">Estimate your monthly mortgage payment</p>
+
+        <form onsubmit="calculateMortgage(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Loan Amount ($)</label>
+            <input type="number" id="loan-amount" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="400000">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Interest Rate (%)</label>
+            <input type="number" step="0.01" id="interest-rate" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="4.5">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Loan Term (years)</label>
+            <input type="number" id="loan-term" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="30">
+          </div>
+
+          <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold">
+            Calculate Payment
+          </button>
+
+          <div id="mortgage-result" class="hidden mt-4 p-4 bg-blue-50 rounded-lg">
+            <p class="text-sm font-medium text-gray-700">Monthly Payment</p>
+            <p class="text-3xl font-bold text-blue-600"></p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Cash Flow Calculator -->
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <div class="flex items-center mb-4">
+          <svg class="w-8 h-8 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h2 class="text-2xl font-bold text-gray-800">Cash Flow</h2>
+        </div>
+        <p class="text-gray-600 mb-6">Calculate your monthly rental cash flow</p>
+
+        <form onsubmit="calculateCashFlow(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Rental Income ($)</label>
+            <input type="number" id="rental-income" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="2500">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Expenses ($)</label>
+            <input type="number" id="monthly-expenses" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="1800">
+          </div>
+
+          <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold">
+            Calculate Cash Flow
+          </button>
+
+          <div id="cashflow-result" class="hidden mt-4 p-4 rounded-lg">
+            <p class="text-sm font-medium text-gray-700">Net Monthly Cash Flow</p>
+            <p class="text-3xl font-bold"></p>
+          </div>
+        </form>
+      </div>
+
+      <!-- ROI Calculator -->
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <div class="flex items-center mb-4">
+          <svg class="w-8 h-8 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+          <h2 class="text-2xl font-bold text-gray-800">ROI Calculator</h2>
+        </div>
+        <p class="text-gray-600 mb-6">Calculate return on investment</p>
+
+        <form onsubmit="calculateROI(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Initial Investment ($)</label>
+            <input type="number" id="initial-investment" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="100000">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Annual Profit ($)</label>
+            <input type="number" id="annual-profit" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="12000">
+          </div>
+
+          <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold">
+            Calculate ROI
+          </button>
+
+          <div id="roi-result" class="hidden mt-4 p-4 bg-purple-50 rounded-lg">
+            <p class="text-sm font-medium text-gray-700">Annual ROI</p>
+            <p class="text-3xl font-bold text-purple-600"></p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Cap Rate Calculator -->
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <div class="flex items-center mb-4">
+          <svg class="w-8 h-8 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          <h2 class="text-2xl font-bold text-gray-800">Cap Rate</h2>
+        </div>
+        <p class="text-gray-600 mb-6">Calculate capitalization rate</p>
+
+        <form onsubmit="calculateCapRate(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Property Value ($)</label>
+            <input type="number" id="cap-property-value" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="500000">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Net Operating Income ($)</label>
+            <input type="number" id="noi" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="30000">
+          </div>
+
+          <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold">
+            Calculate Cap Rate
+          </button>
+
+          <div id="caprate-result" class="hidden mt-4 p-4 bg-indigo-50 rounded-lg">
+            <p class="text-sm font-medium text-gray-700">Capitalization Rate</p>
+            <p class="text-3xl font-bold text-indigo-600"></p>
+          </div>
+        </form>
+      </div>
+
+      <!-- Break-Even Analysis -->
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+        <div class="flex items-center mb-4">
+          <svg class="w-8 h-8 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+          </svg>
+          <h2 class="text-2xl font-bold text-gray-800">Break-Even</h2>
+        </div>
+        <p class="text-gray-600 mb-6">Determine break-even occupancy</p>
+
+        <form onsubmit="calculateBreakEven(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Fixed Costs ($)</label>
+            <input type="number" id="fixed-costs" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="1500">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Rent per Unit ($)</label>
+            <input type="number" id="rent-per-unit" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="1200">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Variable Cost per Unit ($)</label>
+            <input type="number" id="variable-cost" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                   placeholder="200">
+          </div>
+
+          <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition-colors font-semibold">
+            Calculate Break-Even
+          </button>
+
+          <div id="breakeven-result" class="hidden mt-4 p-4 bg-orange-50 rounded-lg">
+            <p class="text-sm font-medium text-gray-700">Break-Even Units</p>
+            <p class="text-3xl font-bold text-orange-600"></p>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Educational Section -->
+  <div class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Understanding Your Calculations</h2>
+
+      <div class="space-y-6">
+        <div class="bg-white rounded-lg p-6 shadow">
+          <h3 class="text-xl font-bold text-indigo-600 mb-3">Rental Yield</h3>
+          <p class="text-gray-700">The rental yield shows the annual return on your property investment as a percentage. A higher yield indicates better returns relative to the property value.</p>
+        </div>
+
+        <div class="bg-white rounded-lg p-6 shadow">
+          <h3 class="text-xl font-bold text-indigo-600 mb-3">Cap Rate</h3>
+          <p class="text-gray-700">The capitalization rate measures the profitability of a real estate investment, calculated as Net Operating Income divided by property value. It helps compare different investment opportunities.</p>
+        </div>
+
+        <div class="bg-white rounded-lg p-6 shadow">
+          <h3 class="text-xl font-bold text-indigo-600 mb-3">Cash Flow</h3>
+          <p class="text-gray-700">Positive cash flow means your rental income exceeds your expenses, which is crucial for sustainable property investment and wealth building.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function calculateRentalYield(e) {
+    e.preventDefault();
+    const propertyValue = parseFloat(document.getElementById('property-value').value);
+    const monthlyRent = parseFloat(document.getElementById('monthly-rent').value);
+    const annualRent = monthlyRent * 12;
+    const yield = (annualRent / propertyValue) * 100;
+
+    const resultDiv = document.getElementById('yield-result');
+    resultDiv.classList.remove('hidden');
+    resultDiv.querySelector('.text-3xl').textContent = yield.toFixed(2) + '%';
+  }
+
+  function calculateMortgage(e) {
+    e.preventDefault();
+    const principal = parseFloat(document.getElementById('loan-amount').value);
+    const annualRate = parseFloat(document.getElementById('interest-rate').value);
+    const years = parseFloat(document.getElementById('loan-term').value);
+
+    const monthlyRate = (annualRate / 100) / 12;
+    const numberOfPayments = years * 12;
+
+    const monthlyPayment = principal *
+      (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) /
+      (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+
+    const resultDiv = document.getElementById('mortgage-result');
+    resultDiv.classList.remove('hidden');
+    resultDiv.querySelector('.text-3xl').textContent = '$' + monthlyPayment.toFixed(2);
+  }
+
+  function calculateCashFlow(e) {
+    e.preventDefault();
+    const income = parseFloat(document.getElementById('rental-income').value);
+    const expenses = parseFloat(document.getElementById('monthly-expenses').value);
+    const cashFlow = income - expenses;
+
+    const resultDiv = document.getElementById('cashflow-result');
+    resultDiv.classList.remove('hidden');
+
+    if (cashFlow >= 0) {
+      resultDiv.classList.add('bg-green-50');
+      resultDiv.classList.remove('bg-red-50');
+      resultDiv.querySelector('.text-3xl').classList.add('text-green-600');
+      resultDiv.querySelector('.text-3xl').classList.remove('text-red-600');
+    } else {
+      resultDiv.classList.add('bg-red-50');
+      resultDiv.classList.remove('bg-green-50');
+      resultDiv.querySelector('.text-3xl').classList.add('text-red-600');
+      resultDiv.querySelector('.text-3xl').classList.remove('text-green-600');
+    }
+
+    resultDiv.querySelector('.text-3xl').textContent = '$' + Math.abs(cashFlow).toFixed(2) +
+      (cashFlow >= 0 ? ' (Positive)' : ' (Negative)');
+  }
+
+  function calculateROI(e) {
+    e.preventDefault();
+    const investment = parseFloat(document.getElementById('initial-investment').value);
+    const profit = parseFloat(document.getElementById('annual-profit').value);
+    const roi = (profit / investment) * 100;
+
+    const resultDiv = document.getElementById('roi-result');
+    resultDiv.classList.remove('hidden');
+    resultDiv.querySelector('.text-3xl').textContent = roi.toFixed(2) + '%';
+  }
+
+  function calculateCapRate(e) {
+    e.preventDefault();
+    const propertyValue = parseFloat(document.getElementById('cap-property-value').value);
+    const noi = parseFloat(document.getElementById('noi').value);
+    const capRate = (noi / propertyValue) * 100;
+
+    const resultDiv = document.getElementById('caprate-result');
+    resultDiv.classList.remove('hidden');
+    resultDiv.querySelector('.text-3xl').textContent = capRate.toFixed(2) + '%';
+  }
+
+  function calculateBreakEven(e) {
+    e.preventDefault();
+    const fixedCosts = parseFloat(document.getElementById('fixed-costs').value);
+    const rentPerUnit = parseFloat(document.getElementById('rent-per-unit').value);
+    const variableCost = parseFloat(document.getElementById('variable-cost').value);
+
+    const breakEvenUnits = Math.ceil(fixedCosts / (rentPerUnit - variableCost));
+
+    const resultDiv = document.getElementById('breakeven-result');
+    resultDiv.classList.remove('hidden');
+    resultDiv.querySelector('.text-3xl').textContent = breakEvenUnits + ' units';
+  }
+</script>
