@@ -50,13 +50,13 @@ class Notification < ApplicationRecord
       )
     end
 
-    def create_message_notification(recipient, sender, message_content)
+    def create_message_notification(recipient, sender, message_content, conversation)
       create!(
         user: recipient,
         title: "New Message",
         message: "#{sender.name || sender.email}: #{message_content.truncate(50)}",
         notification_type: "message",
-        url: "/messages"
+        url: "/conversations/#{conversation.id}"
       )
     end
 
