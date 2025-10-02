@@ -1,0 +1,222 @@
+<div class="bg-white rounded-2xl shadow-lg p-8">
+  <%= form_with(model: post, url: post.persisted? ? blog_post_path(post.slug) : blog_index_path, method: post.persisted? ? :patch : :post, local: true, class: "space-y-6") do |form| %>
+    <% if post.errors.any? %>
+      <div class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+        <h3 class="text-red-800 font-semibold mb-2 flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:
+        </h3>
+        <ul class="list-disc list-inside text-red-700 space-y-1">
+          <% post.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Title -->
+    <div>
+      <%= form.label :title, class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <%= form.text_field :title,
+          class: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent",
+          placeholder: "Enter a compelling title..." %>
+    </div>
+
+    <!-- Slug (optional, auto-generated from title) -->
+    <div>
+      <%= form.label :slug, "URL Slug (leave blank for auto-generation)", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <%= form.text_field :slug,
+          class: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent",
+          placeholder: "my-blog-post-url" %>
+      <p class="mt-1 text-sm text-gray-500">If left blank, will be auto-generated from the title</p>
+    </div>
+
+    <!-- Category -->
+    <div>
+      <%= form.label :category, class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <%= form.select :category,
+          options_for_select([
+            ['Real Estate Tips', 'real-estate-tips'],
+            ['Market Insights', 'market-insights'],
+            ['Property Management', 'property-management'],
+            ['Investment Strategies', 'investment-strategies'],
+            ['Tenant Resources', 'tenant-resources'],
+            ['Landlord Guide', 'landlord-guide'],
+            ['Home Improvement', 'home-improvement'],
+            ['Legal Advice', 'legal-advice'],
+            ['Technology', 'technology'],
+            ['News & Updates', 'news-updates']
+          ], post.category),
+          { include_blank: 'Select a category' },
+          class: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" %>
+    </div>
+
+    <!-- Excerpt -->
+    <div>
+      <%= form.label :excerpt, "Short Excerpt", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <%= form.text_area :excerpt,
+          rows: 3,
+          class: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent",
+          placeholder: "Write a brief summary of your post (max 500 characters)...",
+          maxlength: 500 %>
+      <p class="mt-1 text-sm text-gray-500">This will appear in blog listings and social media shares</p>
+    </div>
+
+    <!-- Featured Image -->
+    <div>
+      <%= form.label :featured_image, "Featured Image", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <div class="flex items-center space-x-4">
+        <% if post.featured_image.attached? %>
+          <div class="relative">
+            <%= image_tag post.featured_image.variant(resize_to_fill: [200, 150]),
+                class: "w-48 h-36 object-cover rounded-lg border border-gray-200" %>
+            <button type="button"
+                    onclick="if(confirm('Remove image?')) { document.getElementById('remove-featured-image').value = '1'; this.parentElement.remove(); }"
+                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        <% end %>
+        <%= form.file_field :featured_image,
+            accept: 'image/*',
+            class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer" %>
+      </div>
+      <p class="mt-1 text-sm text-gray-500">Recommended size: 1200x600px (JPG, PNG, or WebP)</p>
+    </div>
+
+    <!-- Content (Rich Text Editor) -->
+    <div>
+      <%= form.label :content, "Post Content", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <%= form.rich_text_area :content,
+          class: "w-full border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" %>
+      <p class="mt-1 text-sm text-gray-500">Use the editor toolbar to format your content</p>
+    </div>
+
+    <!-- Media Attachments (Images, Videos, PDFs, Audio) -->
+    <div>
+      <%= form.label :media_attachments, "Media Gallery (Images, Videos, PDFs, Audio)", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+
+      <!-- Existing Attachments -->
+      <% if post.media_attachments.attached? %>
+        <div class="mb-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <% post.media_attachments.each_with_index do |attachment, index| %>
+            <div class="relative group border-2 border-gray-200 rounded-lg p-2 hover:border-emerald-500 transition-colors" id="media-attachment-<%= attachment.id %>">
+              <!-- Remove Button -->
+              <%= button_tag type: "button",
+                  class: "absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity z-10",
+                  onclick: "if(confirm('Remove this file?')) { document.getElementById('remove-media-#{attachment.id}').value = '1'; document.getElementById('media-attachment-#{attachment.id}').remove(); }" do %>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              <% end %>
+
+              <!-- Hidden field to mark for deletion -->
+              <%= hidden_field_tag "post[remove_media_ids][]", "", id: "remove-media-#{attachment.id}" %>
+
+              <% if attachment.content_type&.start_with?('image/') %>
+                <%= image_tag attachment.variant(resize_to_limit: [200, 200]),
+                    class: "w-full h-32 object-cover rounded-lg" %>
+              <% elsif attachment.content_type&.start_with?('video/') %>
+                <div class="w-full h-32 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
+                  </svg>
+                </div>
+              <% elsif attachment.content_type == 'application/pdf' %>
+                <div class="w-full h-32 bg-red-50 rounded-lg flex items-center justify-center">
+                  <svg class="w-12 h-12 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+              <% elsif attachment.content_type&.start_with?('audio/') %>
+                <div class="w-full h-32 bg-purple-50 rounded-lg flex items-center justify-center">
+                  <svg class="w-12 h-12 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path>
+                  </svg>
+                </div>
+              <% else %>
+                <div class="w-full h-32 bg-gray-50 rounded-lg flex items-center justify-center">
+                  <svg class="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+              <% end %>
+              <p class="text-xs text-gray-600 mt-1 truncate"><%= attachment.filename %></p>
+              <div class="text-xs text-gray-500"><%= number_to_human_size(attachment.byte_size) %></div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Upload New Files -->
+      <div class="flex items-center space-x-4">
+        <%= form.file_field :media_attachments,
+            multiple: true,
+            accept: 'image/*,video/*,audio/*,application/pdf',
+            class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer",
+            data: { controller: "media-upload", action: "change->media-upload#preview" } %>
+      </div>
+      <p class="mt-2 text-sm text-gray-500">
+        <strong>Supported formats:</strong> Images (JPG, PNG, GIF, WebP), Videos (MP4, WebM), Audio (MP3, WAV, OGG), Documents (PDF)
+      </p>
+      <p class="mt-1 text-sm text-gray-500">
+        You can upload multiple files at once. Maximum file size: 100MB per file.
+      </p>
+    </div>
+
+    <!-- Tags -->
+    <div>
+      <%= form.label :tags, "Tags (comma-separated)", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+      <%= form.text_field :tags,
+          class: "w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent",
+          placeholder: "real estate, property, investment, tips" %>
+      <p class="mt-1 text-sm text-gray-500">Separate tags with commas (e.g., real estate, property, investment)</p>
+    </div>
+
+    <!-- Publishing Options -->
+    <div class="bg-gray-50 rounded-xl p-6 space-y-4">
+      <h3 class="font-semibold text-gray-900 flex items-center">
+        <svg class="w-5 h-5 text-emerald-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+        </svg>
+        Publishing Settings
+      </h3>
+
+      <!-- Published Status -->
+      <div class="flex items-center space-x-3">
+        <%= form.check_box :published,
+            class: "w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500" %>
+        <%= form.label :published, "Publish this post immediately", class: "text-sm font-medium text-gray-700" %>
+      </div>
+
+      <!-- Published Date/Time -->
+      <div>
+        <%= form.label :published_at, "Publish Date & Time (optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= form.datetime_local_field :published_at,
+            value: post.published_at&.strftime("%Y-%m-%dT%H:%M"),
+            class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent" %>
+        <p class="mt-1 text-sm text-gray-500">Leave blank to use current time when published</p>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+      <%= link_to "Cancel", post.persisted? ? blog_post_path(post.slug) : blog_index_path,
+          class: "px-6 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-colors" %>
+
+      <div class="flex space-x-3">
+        <% if post.persisted? %>
+          <%= form.submit "Save as Draft",
+              name: 'draft',
+              class: "px-6 py-3 bg-gray-600 text-white rounded-xl font-semibold hover:bg-gray-700 transition-colors cursor-pointer" %>
+        <% end %>
+        <%= form.submit post.persisted? ? "Update Post" : "Publish Post",
+            class: "px-8 py-3 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition-colors shadow-lg hover:shadow-xl cursor-pointer" %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,261 @@
+<!-- Blog Header Section -->
+<div class="bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white py-20">
+  <div class="container mx-auto px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+        Deep dive into real estate tips and stories
+      </h1>
+      <p class="text-xl text-emerald-100 mb-8 max-w-2xl mx-auto">
+        Discover insights, guides, and expert advice to navigate your real estate journey with confidence.
+      </p>
+
+      <!-- Search Bar -->
+      <div class="max-w-2xl mx-auto">
+        <%= form_with url: blog_index_path, method: :get, class: "flex gap-2" do |f| %>
+          <div class="flex-1 relative">
+            <%= f.text_field :search,
+                value: params[:search],
+                placeholder: "Search articles...",
+                class: "w-full px-6 py-4 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-400" %>
+            <svg class="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <%= f.submit "Search", class: "bg-white text-emerald-600 px-8 py-4 rounded-xl font-semibold hover:bg-emerald-50 transition-colors cursor-pointer" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Breadcrumb -->
+<div class="bg-gray-50 border-b border-gray-200">
+  <div class="container mx-auto px-4 py-4">
+    <nav class="flex items-center space-x-2 text-sm">
+      <%= link_to "Home", root_path, class: "text-gray-600 hover:text-emerald-600" %>
+      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+      <span class="text-gray-900 font-medium">Blog</span>
+      <% if params[:category].present? %>
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+        <span class="text-emerald-600"><%= params[:category].titleize %></span>
+      <% end %>
+    </nav>
+  </div>
+</div>
+
+<div class="container mx-auto px-4 py-12">
+  <div class="flex flex-col lg:flex-row gap-8">
+    <!-- Main Content -->
+    <div class="flex-1">
+      <!-- Category Filter Pills -->
+      <div class="mb-8 flex flex-wrap gap-3">
+        <%= link_to "All Posts", blog_index_path,
+            class: "px-6 py-2 rounded-full font-medium transition-colors #{params[:category].blank? ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" %>
+        <% @categories.each do |category| %>
+          <%= link_to category.titleize, blog_index_path(category: category),
+              class: "px-6 py-2 rounded-full font-medium transition-colors #{params[:category] == category ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" %>
+        <% end %>
+      </div>
+
+      <!-- Blog Posts Grid -->
+      <% if @posts.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <% @posts.each do |post| %>
+            <article class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <!-- Featured Image -->
+              <div class="relative h-56 bg-gray-200 overflow-hidden">
+                <% if post.featured_image.attached? %>
+                  <%= image_tag post.featured_image.variant(resize_to_fill: [800, 500]),
+                      class: "w-full h-full object-cover transition-transform duration-300 hover:scale-110",
+                      alt: post.title %>
+                <% else %>
+                  <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-emerald-100 to-teal-100">
+                    <svg class="w-20 h-20 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                    </svg>
+                  </div>
+                <% end %>
+
+                <!-- Category Badge -->
+                <div class="absolute top-4 left-4">
+                  <span class="bg-emerald-600 text-white px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider">
+                    <%= post.category %>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Post Content -->
+              <div class="p-6">
+                <!-- Meta Info -->
+                <div class="flex items-center justify-between mb-3 text-sm text-gray-500">
+                  <time datetime="<%= post.published_at %>">
+                    <%= post.published_at.strftime("%b %d, %Y") %>
+                  </time>
+                  <div class="flex items-center space-x-4">
+                    <span class="flex items-center">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                      </svg>
+                      <%= post.views_count %>
+                    </span>
+                    <span class="flex items-center">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                      </svg>
+                      <%= post.comments_count %>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Title -->
+                <h3 class="font-bold text-xl mb-3 text-gray-900 leading-tight hover:text-emerald-600 transition-colors">
+                  <%= link_to post.title, blog_post_path(post.slug) %>
+                </h3>
+
+                <!-- Excerpt -->
+                <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                  <%= post.excerpt || truncate(strip_tags(post.content.to_s), length: 150) %>
+                </p>
+
+                <!-- Author & Read More -->
+                <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div class="flex items-center space-x-2">
+                    <% if post.author.avatar.attached? %>
+                      <%= image_tag post.author.avatar.variant(resize_to_fill: [40, 40]),
+                          class: "w-10 h-10 rounded-full object-cover",
+                          alt: post.author.name %>
+                    <% else %>
+                      <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <span class="text-emerald-600 font-semibold text-sm">
+                          <%= post.author.name.first %>
+                        </span>
+                      </div>
+                    <% end %>
+                    <div class="text-sm">
+                      <p class="font-medium text-gray-900"><%= post.author.name %></p>
+                    </div>
+                  </div>
+                  <%= link_to blog_post_path(post.slug), class: "text-emerald-600 hover:text-emerald-700 font-medium text-sm flex items-center group" do %>
+                    Read More
+                    <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  <% end %>
+                </div>
+              </div>
+            </article>
+          <% end %>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center">
+          <%= paginate @posts, theme: 'twitter-bootstrap-4',
+              nav_class: 'flex space-x-2',
+              pagination_class: 'flex items-center space-x-1' %>
+        </div>
+      <% else %>
+        <!-- Empty State -->
+        <div class="bg-white rounded-2xl shadow-lg p-16 text-center">
+          <svg class="w-24 h-24 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+          </svg>
+          <h3 class="text-2xl font-bold text-gray-900 mb-2">No Posts Yet</h3>
+          <p class="text-gray-600 mb-6">
+            <% if params[:category].present? %>
+              No posts found in this category. Try browsing other categories.
+            <% elsif params[:search].present? %>
+              No posts match your search. Try different keywords.
+            <% else %>
+              Be the first to share your insights and stories!
+            <% end %>
+          </p>
+          <% if current_user %>
+            <%= link_to "Write Your First Post", new_blog_post_path,
+                class: "inline-block bg-emerald-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-emerald-700 transition-colors" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="lg:w-80">
+      <!-- Write Post Button (if logged in) -->
+      <% if current_user %>
+        <%= link_to new_blog_post_path,
+            class: "block w-full bg-emerald-600 text-white text-center px-6 py-4 rounded-xl font-semibold hover:bg-emerald-700 transition-colors mb-6 shadow-lg" do %>
+          <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+          </svg>
+          Write a Post
+        <% end %>
+      <% end %>
+
+      <!-- Popular Posts -->
+      <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+          <svg class="w-5 h-5 text-emerald-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+          Popular Posts
+        </h3>
+        <div class="space-y-4">
+          <% Post.published.popular.limit(5).each do |popular_post| %>
+            <div class="flex items-start space-x-3 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+              <% if popular_post.featured_image.attached? %>
+                <%= image_tag popular_post.featured_image.variant(resize_to_fill: [80, 80]),
+                    class: "w-16 h-16 rounded-lg object-cover flex-shrink-0",
+                    alt: popular_post.title %>
+              <% else %>
+                <div class="w-16 h-16 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                  <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                  </svg>
+                </div>
+              <% end %>
+              <div class="flex-1 min-w-0">
+                <%= link_to popular_post.title, blog_post_path(popular_post.slug),
+                    class: "font-medium text-sm text-gray-900 hover:text-emerald-600 line-clamp-2 block mb-1" %>
+                <div class="flex items-center text-xs text-gray-500">
+                  <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                  </svg>
+                  <%= popular_post.views_count %> views
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Categories Widget -->
+      <div class="bg-white rounded-2xl shadow-lg p-6">
+        <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+          <svg class="w-5 h-5 text-emerald-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+          </svg>
+          Categories
+        </h3>
+        <div class="space-y-2">
+          <% @categories.each do |category| %>
+            <% count = Post.published.by_category(category).count %>
+            <%= link_to blog_index_path(category: category),
+                class: "flex items-center justify-between p-3 rounded-lg hover:bg-emerald-50 transition-colors group" do %>
+              <span class="text-gray-700 group-hover:text-emerald-600 font-medium">
+                <%= category.titleize %>
+              </span>
+              <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm group-hover:bg-emerald-100 group-hover:text-emerald-600">
+                <%= count %>
+              </span>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

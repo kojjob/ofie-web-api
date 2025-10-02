@@ -360,6 +360,15 @@ Rails.application.routes.draw do
   get "/careers", to: "home#careers", as: "careers"
   get "/press", to: "home#press", as: "press"
 
+  # Blog routes
+  get "/blog", to: "blog#index", as: "blog_index"
+  get "/blog/new", to: "blog#new", as: "new_blog_post"
+  post "/blog", to: "blog#create"
+  get "/blog/:slug", to: "blog#show", as: "blog_post"
+  get "/blog/:slug/edit", to: "blog#edit", as: "edit_blog_post"
+  patch "/blog/:slug", to: "blog#update"
+  delete "/blog/:slug", to: "blog#destroy", as: "destroy_blog_post"
+
   # Defines the root path route ("/")
   root "home#index"
 end
