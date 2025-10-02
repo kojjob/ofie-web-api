@@ -63,6 +63,16 @@ class HomeController < ApplicationController
   def neighborhoods
     @page_title = "Neighborhood Guides"
     @page_description = "Explore different neighborhoods and find the perfect area for your next home."
+
+    # Get all cities with property counts
+    @neighborhoods = Property.where(availability_status: "available")
+                             .group(:city)
+                             .select("city, COUNT(*) as property_count,
+                                     AVG(price) as avg_rent,
+                                     MIN(price) as min_rent,
+                                     MAX(price) as max_rent")
+                             .having("city IS NOT NULL")
+                             .order("property_count DESC")
   end
 
   def renter_resources
