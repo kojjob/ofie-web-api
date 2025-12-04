@@ -31,7 +31,7 @@ class LeaseClause < ApplicationRecord
   scope :required, -> { where(required: true) }
   scope :optional, -> { where(required: false) }
   scope :by_category, ->(category) { where(category: category) }
-  scope :for_jurisdiction, ->(jurisdiction) { where(jurisdiction: [nil, jurisdiction]) }
+  scope :for_jurisdiction, ->(jurisdiction) { where(jurisdiction: [ nil, jurisdiction ]) }
   scope :recent, -> { order(created_at: :desc) }
 
   # Validations
@@ -41,7 +41,7 @@ class LeaseClause < ApplicationRecord
   def self.find_for_category_and_jurisdiction(category, jurisdiction)
     by_category(category)
       .for_jurisdiction(jurisdiction)
-      .order('jurisdiction DESC NULLS LAST') # Prefer jurisdiction-specific over generic
+      .order("jurisdiction DESC NULLS LAST") # Prefer jurisdiction-specific over generic
       .first
   end
 

@@ -53,7 +53,7 @@ class AiLeaseGeneratorService
   end
 
   def property_has_location?
-    @property.address.present? && (@property.city.present? || @property.state.present?)
+    @property.address.present? && @property.city.present?
   end
 
   # Create initial lease agreement record
@@ -64,9 +64,9 @@ class AiLeaseGeneratorService
       landlord: @landlord,
       tenant: @tenant,
       status: "draft",
-      lease_start_date: @rental_application.desired_move_in_date || 30.days.from_now,
+      lease_start_date: @rental_application.move_in_date || 30.days.from_now,
       lease_end_date: calculate_lease_end_date,
-      monthly_rent: @rental_application.proposed_rent || @property.rent_amount,
+      monthly_rent: @property.price,
       security_deposit_amount: calculate_security_deposit,
       ai_generated: true,
       reviewed_by_landlord: false
@@ -78,14 +78,13 @@ class AiLeaseGeneratorService
   end
 
   def calculate_lease_end_date
-    start_date = @rental_application.desired_move_in_date || 30.days.from_now
-    lease_duration = @rental_application.lease_duration_months || 12
+    start_date = @rental_application.move_in_date || 30.days.from_now
+    lease_duration = 12 # Default to 12 months lease
     start_date + lease_duration.months
   end
 
   def calculate_security_deposit
-    monthly_rent = @rental_application.proposed_rent || @property.rent_amount
-    monthly_rent # Default to one month's rent
+    @property.price # Default to one month's rent
   end
 
   # Try to generate lease using AI with provider fallback
@@ -184,7 +183,7 @@ class AiLeaseGeneratorService
       - End Date: #{lease_agreement.lease_end_date.strftime('%B %d, %Y')}
       - Monthly Rent: $#{lease_agreement.monthly_rent}
       - Security Deposit: $#{lease_agreement.security_deposit_amount}
-      - Jurisdiction: #{@property.state || @property.city}
+      - Jurisdiction: #{@property.city}
 
       ADDITIONAL DETAILS:
       #{additional_property_details}
@@ -211,9 +210,7 @@ class AiLeaseGeneratorService
   def additional_property_details
     details = []
     details << "- Pets Allowed: #{@property.pets_allowed? ? 'Yes' : 'No'}"
-    details << "- Pet Deposit: $#{@property.pet_deposit}" if @property.pet_deposit.present?
-    details << "- Laundry: #{@property.laundry_type}" if @property.laundry_type.present?
-    details << "- Utilities Included: #{@property.utilities_included}" if @property.utilities_included.present?
+    details << "- Utilities Included: #{@property.utilities_included? ? 'Yes' : 'No'}"
     details << "- Additional Notes: #{@property.description}" if @property.description.present?
     details.join("\n")
   end

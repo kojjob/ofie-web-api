@@ -1,5 +1,5 @@
 class Post < ApplicationRecord
-  belongs_to :author, class_name: 'User'
+  belongs_to :author, class_name: "User"
   has_one_attached :featured_image
   has_rich_text :content
 
@@ -17,7 +17,7 @@ class Post < ApplicationRecord
   before_create :set_published_at, if: :published?
 
   # Scopes
-  scope :published, -> { where(published: true).where('published_at <= ?', Time.current) }
+  scope :published, -> { where(published: true).where("published_at <= ?", Time.current) }
   scope :draft, -> { where(published: false) }
   scope :by_category, ->(category) { where(category: category) }
   scope :recent, -> { order(published_at: :desc) }
@@ -25,11 +25,11 @@ class Post < ApplicationRecord
 
   # Instance methods
   def tags_array
-    tags.to_s.split(',').map(&:strip)
+    tags.to_s.split(",").map(&:strip)
   end
 
   def tags_array=(array)
-    self.tags = array.join(', ')
+    self.tags = array.join(", ")
   end
 
   def increment_views!
@@ -44,25 +44,25 @@ class Post < ApplicationRecord
 
   # Media helper methods
   def images
-    media_attachments.select { |attachment| attachment.content_type&.start_with?('image/') }
+    media_attachments.select { |attachment| attachment.content_type&.start_with?("image/") }
   end
 
   def videos
-    media_attachments.select { |attachment| attachment.content_type&.start_with?('video/') }
+    media_attachments.select { |attachment| attachment.content_type&.start_with?("video/") }
   end
 
   def pdfs
-    media_attachments.select { |attachment| attachment.content_type == 'application/pdf' }
+    media_attachments.select { |attachment| attachment.content_type == "application/pdf" }
   end
 
   def audio_files
-    media_attachments.select { |attachment| attachment.content_type&.start_with?('audio/') }
+    media_attachments.select { |attachment| attachment.content_type&.start_with?("audio/") }
   end
 
   def other_files
     media_attachments.reject do |attachment|
-      attachment.content_type&.start_with?('image/', 'video/', 'audio/') ||
-      attachment.content_type == 'application/pdf'
+      attachment.content_type&.start_with?("image/", "video/", "audio/") ||
+      attachment.content_type == "application/pdf"
     end
   end
 

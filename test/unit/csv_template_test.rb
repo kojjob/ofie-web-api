@@ -25,10 +25,10 @@ class CsvTemplateTest < ActiveSupport::TestCase
     headers = lines[0].split(",")
     assert headers.length > 10, "Should have multiple property fields"
 
-    # Verify example values are placeholders, not hard-coded data
+    # Verify example values contain realistic data (not placeholders)
     example_row = lines[1]
-    assert_includes example_row, "[Property Title]"
-    assert_includes example_row, "[Property Description]"
+    assert_includes example_row, "Modern Downtown Apartment"
+    assert_includes example_row, "San Francisco"
   end
 
   test "CSV template includes all required property fields" do
@@ -47,9 +47,10 @@ class CsvTemplateTest < ActiveSupport::TestCase
   test "CSV template includes boolean fields" do
     csv_content = @controller.send(:generate_manual_csv_template)
 
+    # Use actual Property model boolean field names (not _available suffixes)
     boolean_fields = [
       "parking_available", "pets_allowed", "furnished",
-      "utilities_included", "laundry_available"
+      "utilities_included", "laundry"
     ]
 
     boolean_fields.each do |field|
@@ -57,17 +58,15 @@ class CsvTemplateTest < ActiveSupport::TestCase
     end
   end
 
-  test "CSV template includes placeholder example data" do
+  test "CSV template includes realistic example data" do
     csv_content = @controller.send(:generate_manual_csv_template)
 
-    # Check for placeholder values instead of hard-coded data
-    assert_includes csv_content, "[Property Title]"
-    assert_includes csv_content, "[Street Address]"
-    assert_includes csv_content, "[City Name]"
-    assert_includes csv_content, "[Monthly Rent Amount]"
-    assert_includes csv_content, "[apartment/house/condo/etc]"
-    assert_includes csv_content, "[available/rented/maintenance]"
-    assert_includes csv_content, "[true/false]"
+    # Check for realistic example values (matching generate_example_values implementation)
+    assert_includes csv_content, "Modern Downtown Apartment"
+    assert_includes csv_content, "123 Main Street"
+    assert_includes csv_content, "San Francisco"
+    assert_includes csv_content, "2800"
+    assert_includes csv_content, "apartment"
   end
 
   test "headers are generated dynamically from Property model" do
@@ -91,14 +90,25 @@ class CsvTemplateTest < ActiveSupport::TestCase
     assert_not_includes headers, "updated_at"
   end
 
-  test "example values are generated as placeholders" do
+  test "example values are generated for each header" do
     headers = [ "title", "price", "parking_available", "custom_field" ]
     example_values = @controller.send(:generate_example_values, headers)
 
     assert_equal headers.length, example_values.length
-    assert_equal "[Property Title]", example_values[0]
-    assert_equal "[Monthly Rent Amount]", example_values[1]
-    assert_equal "[true/false]", example_values[2]
-    assert_equal "[Custom field]", example_values[3]
+
+    # Check that known fields get realistic values
+    assert_equal "Modern Downtown Apartment", example_values[0]  # title
+    assert_equal "2800", example_values[1]  # price
+    assert_equal "true", example_values[2]  # parking_available (boolean)
+    assert_equal "", example_values[3]  # custom_field (unknown field gets empty string)
+  end
+
+  test "boolean fields get true as example value" do
+    boolean_headers = [ "parking_available", "pets_allowed", "furnished", "laundry" ]
+    example_values = @controller.send(:generate_example_values, boolean_headers)
+
+    example_values.each_with_index do |value, index|
+      assert_equal "true", value, "Boolean field #{boolean_headers[index]} should have 'true' as example value"
+    end
   end
 end

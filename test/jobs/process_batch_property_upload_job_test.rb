@@ -2,7 +2,7 @@ require "test_helper"
 
 class ProcessBatchPropertyUploadJobTest < ActiveJob::TestCase
   setup do
-    @user = users(:landlord)
+    @user = create(:user, :landlord, :verified)
     @upload = BatchPropertyUpload.create!(
       user: @user,
       file_name: "test.csv",

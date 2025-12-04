@@ -94,9 +94,24 @@ Rails.application.configure do
     Bullet.rails_logger = true
     Bullet.add_footer = true
 
-    # Bullet whitelist
+    # Bullet whitelist - Safelists for ActiveStorage and model associations
+    # User profile image (not always displayed but loaded for availability check)
     Bullet.add_safelist type: :unused_eager_loading, class_name: "User", association: :profile_image_attachment
+
+    # Property photos N+1 prevention
     Bullet.add_safelist type: :n_plus_one_query, class_name: "Property", association: :photos_attachments
+
+    # ActiveStorage associations - Rails' with_attached_* scope loads these internally
+    # These are false positives because Rails loads them to generate URLs/variants
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "ActiveStorage::Attachment", association: :blob
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "ActiveStorage::Blob", association: :variant_records
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "ActiveStorage::Blob", association: :preview_image_attachment
+
+    # Property associations that may be loaded but not always used in all contexts
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "Property", association: :user
+
+    # PropertyComment replies - loaded for display but not always shown
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "PropertyComment", association: :replies
   end
 
   # Rack Mini Profiler configuration

@@ -185,6 +185,16 @@ class User < ApplicationRecord
     user.role == "tenant"
   end
 
+  # Display name for lease agreements and other documents
+  def full_name
+    name
+  end
+
+  # Alias for contact information
+  def phone_number
+    phone
+  end
+
   # Helper methods for profile display
   def recent_reviews(limit = 5)
     property_reviews.includes(:property).order(created_at: :desc).limit(limit)

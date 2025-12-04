@@ -2,10 +2,12 @@ require "test_helper"
 
 class MessageTest < ActiveSupport::TestCase
   def setup
-    @conversation = conversations(:conversation_one)
-    @sender = users(:landlord)
-    @recipient = users(:tenant)
-    @message = messages(:message_one)
+    @landlord = create(:user, :landlord, :verified)
+    @tenant = create(:user, :tenant, :verified)
+    @property = create(:property, user: @landlord)
+    @conversation = create(:conversation, landlord: @landlord, tenant: @tenant, property: @property)
+    @sender = @landlord
+    @recipient = @tenant
   end
 
   test "should be valid with valid attributes" do
@@ -181,7 +183,10 @@ class MessageTest < ActiveSupport::TestCase
   end
 
   test "for_conversation scope should return messages for specific conversation" do
-    other_conversation = conversations(:conversation_two)
+    other_landlord = create(:user, :landlord, :verified)
+    other_tenant = create(:user, :tenant, :verified)
+    other_property = create(:property, user: other_landlord)
+    other_conversation = create(:conversation, landlord: other_landlord, tenant: other_tenant, property: other_property)
 
     message_in_conversation = Message.create!(
       conversation: @conversation,
@@ -191,7 +196,7 @@ class MessageTest < ActiveSupport::TestCase
 
     message_in_other = Message.create!(
       conversation: other_conversation,
-      sender: users(:another_landlord),
+      sender: other_landlord,
       content: "Message in other conversation"
     )
 

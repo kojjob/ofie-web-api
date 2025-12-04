@@ -14,7 +14,7 @@ class MessagingServiceTest < ActiveSupport::TestCase
   # ============================================================================
 
   test "should create new conversation with initial message" do
-    assert_difference ["Conversation.count", "Message.count"], 1 do
+    assert_difference [ "Conversation.count", "Message.count" ], 1 do
       result = MessagingService.create_conversation(
         landlord: @landlord,
         tenant: @tenant,
@@ -247,7 +247,7 @@ class MessagingServiceTest < ActiveSupport::TestCase
     result = MessagingService.mark_messages_as_read(
       conversation: conversation,
       user: @tenant,
-      message_ids: [message1.id]
+      message_ids: [ message1.id ]
     )
 
     assert result[:success]

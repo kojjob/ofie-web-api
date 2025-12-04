@@ -664,7 +664,7 @@ class BatchPropertiesController < ApplicationController
 
   def sanitize_property_params(property_data)
     # Convert string values to appropriate types and filter valid attributes
-    valid_attributes = Property.column_names.map(&:to_sym) - [:id, :user_id, :created_at, :updated_at]
+    valid_attributes = Property.column_names.map(&:to_sym) - [ :id, :user_id, :created_at, :updated_at ]
     sanitized = property_data.slice(*valid_attributes)
 
     # Convert boolean fields (using actual Property model column names)

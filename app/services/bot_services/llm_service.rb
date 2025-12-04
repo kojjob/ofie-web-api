@@ -15,7 +15,7 @@ module BotServices
     REQUEST_TIMEOUT = 10.seconds
 
     # Provider fallback order
-    PROVIDER_ORDER = [:anthropic, :openai, :google].freeze
+    PROVIDER_ORDER = [ :anthropic, :openai, :google ].freeze
 
     def initialize(user:, query:, conversation: nil, context: {}, streaming: false)
       @user = user
@@ -141,7 +141,7 @@ module BotServices
       response = client.generate_content(
         model: "gemini-pro",
         contents: [
-          { role: "user", parts: [{ text: "#{system_prompt}\n\n#{build_prompt}" }] }
+          { role: "user", parts: [ { text: "#{system_prompt}\n\n#{build_prompt}" } ] }
         ],
         generation_config: {
           max_output_tokens: MAX_RESPONSE_TOKENS,
@@ -160,7 +160,7 @@ module BotServices
 
       client.chat_stream(
         model: "claude-3-5-sonnet-20241022",
-        messages: [{ role: "user", content: build_prompt }],
+        messages: [ { role: "user", content: build_prompt } ],
         system: system_prompt,
         max_tokens: MAX_RESPONSE_TOKENS
       ) do |chunk|
@@ -255,7 +255,7 @@ module BotServices
     # Format user preferences
     def format_user_preferences
       prefs = context[:user_preferences]
-      parts = ["User's preferences:"]
+      parts = [ "User's preferences:" ]
 
       parts << "- Budget: up to $#{prefs[:budget_max]}" if prefs[:budget_max]
       parts << "- Preferred amenities: #{prefs[:preferred_amenities].join(', ')}" if prefs[:preferred_amenities]&.any?

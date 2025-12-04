@@ -2,10 +2,10 @@ require "test_helper"
 
 class Api::BotControllerTest < ActionDispatch::IntegrationTest
   def setup
-    @user = users(:tenant_user)
-    @landlord = users(:landlord_user)
-    @property = properties(:sample_property)
-    @conversation = conversations(:sample_conversation)
+    @user = create(:user, :tenant, :verified)
+    @landlord = create(:user, :landlord, :verified)
+    @property = create(:property, user: @landlord)
+    @conversation = create(:conversation, landlord: @landlord, tenant: @user, property: @property)
     @bot = Bot.create!(
       name: "Test Bot",
       email: "testbot@example.com",

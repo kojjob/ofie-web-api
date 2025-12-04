@@ -367,7 +367,7 @@ class PropertySearchService
   end
 
   def track_search_analytics
-    return unless @user
+    nil unless @user
 
     # SearchAnalytics model doesn't exist yet - skip for now
     # SearchAnalytics.create!(
@@ -556,7 +556,7 @@ class PropertySearchService
 
     # Amenity matching
     if search_params[:amenities].present?
-      amenities = search_params[:amenities].is_a?(Array) ? search_params[:amenities] : [search_params[:amenities]]
+      amenities = search_params[:amenities].is_a?(Array) ? search_params[:amenities] : [ search_params[:amenities] ]
       amenities.each do |amenity|
         score += 2 if property.send(amenity) rescue 0
       end

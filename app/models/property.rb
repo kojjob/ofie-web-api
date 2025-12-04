@@ -136,7 +136,7 @@ class Property < ApplicationRecord
 
   # Helper method for full address
   def full_address
-    parts = [address, city].compact.reject(&:blank?)
+    parts = [ address, city ].compact.reject(&:blank?)
     parts.join(", ")
   end
 

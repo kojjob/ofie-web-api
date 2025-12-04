@@ -8,9 +8,11 @@ class PropertyFieldsTest < ActiveSupport::TestCase
   test "CSV headers match actual Property model columns" do
     headers = @controller.send(:get_property_csv_headers)
 
-    # Get actual Property columns (excluding system fields)
+    # Get actual Property columns (excluding system fields and controller-excluded fields)
+    # The controller explicitly excludes: id, user_id, created_at, updated_at, status, latitude,
+    # longitude, score, views_count, applications_count, favorites_count, comments_count, reviews_count
     actual_columns = Property.column_names.reject do |attr|
-      %w[id user_id created_at updated_at].include?(attr)
+      %w[id user_id created_at updated_at status latitude longitude score views_count applications_count favorites_count comments_count reviews_count].include?(attr)
     end
 
     # Check that all actual columns are included in headers

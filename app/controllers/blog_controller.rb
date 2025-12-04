@@ -1,7 +1,7 @@
 class BlogController < ApplicationController
-  before_action :authenticate_request, except: [:index, :show]
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_author!, only: [:edit, :update, :destroy]
+  before_action :authenticate_request, except: [ :index, :show ]
+  before_action :set_post, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_author!, only: [ :edit, :update, :destroy ]
 
   def index
     @posts = Post.published.recent.includes(:author).with_attached_featured_image
@@ -35,7 +35,7 @@ class BlogController < ApplicationController
     @post = current_user.posts.build(post_params)
 
     if @post.save
-      redirect_to blog_post_path(@post.slug), notice: 'Post was successfully created.'
+      redirect_to blog_post_path(@post.slug), notice: "Post was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -46,7 +46,7 @@ class BlogController < ApplicationController
 
   def update
     # Handle featured image removal BEFORE updating
-    if params[:post] && params[:post][:remove_featured_image] == '1'
+    if params[:post] && params[:post][:remove_featured_image] == "1"
       @post.featured_image.purge if @post.featured_image.attached?
       params[:post].delete(:remove_featured_image)
     end
@@ -62,7 +62,7 @@ class BlogController < ApplicationController
     end
 
     if @post.update(post_params)
-      redirect_to blog_post_path(@post.slug), notice: 'Post was successfully updated.'
+      redirect_to blog_post_path(@post.slug), notice: "Post was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -70,7 +70,7 @@ class BlogController < ApplicationController
 
   def destroy
     @post.destroy
-    redirect_to blog_index_path, notice: 'Post was successfully deleted.'
+    redirect_to blog_index_path, notice: "Post was successfully deleted."
   end
 
   private
@@ -80,7 +80,7 @@ class BlogController < ApplicationController
   end
 
   def authorize_author!
-    redirect_to blog_index_path, alert: 'Not authorized' unless @post.author == current_user || current_user.landlord?
+    redirect_to blog_index_path, alert: "Not authorized" unless @post.author == current_user || current_user.landlord?
   end
 
   def post_params

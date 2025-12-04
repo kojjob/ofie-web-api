@@ -151,7 +151,7 @@ class LeaseTemplateServiceTest < ActiveSupport::TestCase
       required: true,
       variables: { "monthly_rent" => "Monthly Rent Amount" }
     )
-    @template.update!(required_clauses: [rent_clause.id])
+    @template.update!(required_clauses: [ rent_clause.id ])
 
     result = @service.generate
 
@@ -166,7 +166,7 @@ class LeaseTemplateServiceTest < ActiveSupport::TestCase
       clause_text: "Pets are allowed with a non-refundable pet deposit.",
       required: false
     )
-    @template.update!(optional_clauses: [pet_clause.id])
+    @template.update!(optional_clauses: [ pet_clause.id ])
 
     result = @service.generate
 
@@ -218,7 +218,7 @@ class LeaseTemplateServiceTest < ActiveSupport::TestCase
       required: true
     )
 
-    clause_ids = [rent_clause.id, maintenance_clause.id]
+    clause_ids = [ rent_clause.id, maintenance_clause.id ]
     result = @service.send(:render_clauses, clause_ids, required: true)
 
     assert_includes result, "## Rent Payment"
@@ -235,7 +235,7 @@ class LeaseTemplateServiceTest < ActiveSupport::TestCase
       required: false
     )
 
-    clause_ids = [utilities_clause.id]
+    clause_ids = [ utilities_clause.id ]
     result = @service.send(:render_clauses, clause_ids, required: false)
 
     assert_includes result, "## Utilities"
@@ -256,7 +256,7 @@ class LeaseTemplateServiceTest < ActiveSupport::TestCase
       variables: { "monthly_rent" => "Monthly Rent Amount" }
     )
 
-    result = @service.send(:render_clauses, [clause_with_var.id], required: true)
+    result = @service.send(:render_clauses, [ clause_with_var.id ], required: true)
 
     assert_includes result, "Late fee of 5% of $2500.00"
   end
@@ -277,7 +277,7 @@ class LeaseTemplateServiceTest < ActiveSupport::TestCase
   end
 
   test "handles missing clauses gracefully" do
-    @template.update!(required_clauses: ["non-existent-uuid"])
+    @template.update!(required_clauses: [ "non-existent-uuid" ])
 
     result = @service.generate
 

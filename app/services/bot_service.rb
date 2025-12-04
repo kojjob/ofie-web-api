@@ -369,8 +369,8 @@ class BotService
 
   def extract_all_entities
     {
-      bedrooms: extract_number_before(["bedroom", "bed", "br"]),
-      bathrooms: extract_number_before(["bathroom", "bath", "ba"]),
+      bedrooms: extract_number_before([ "bedroom", "bed", "br" ]),
+      bathrooms: extract_number_before([ "bathroom", "bath", "ba" ]),
       max_price: extract_price,
       property_type: extract_property_type
     }.compact

@@ -254,15 +254,25 @@ class AuthController < ApplicationController
 
   def user_params
     # Handle both nested user params and flat params from forms
+    # Note: :role is NOT permitted directly to prevent privilege escalation
+    # Only :user_type is allowed and mapped to safe roles (tenant/landlord)
     if params[:user].present?
-      params.require(:user).permit(:name, :email, :password, :password_confirmation, :role, :user_type)
+      permitted = params.require(:user).permit(:name, :email, :password, :password_confirmation, :user_type)
+      map_user_type_to_role(permitted)
     else
       # Handle flat params from HTML forms
       permitted_params = params.permit(:name, :email, :password, :password_confirmation, :user_type)
-      # Map user_type to role for consistency
-      permitted_params[:role] = permitted_params.delete(:user_type) if permitted_params[:user_type]
-      permitted_params
+      map_user_type_to_role(permitted_params)
     end
+  end
+
+  def map_user_type_to_role(permitted_params)
+    if permitted_params[:user_type].present?
+      # Only allow safe user-selectable roles
+      user_type = permitted_params.delete(:user_type)
+      permitted_params[:role] = user_type if %w[tenant landlord].include?(user_type)
+    end
+    permitted_params
   end
 
   def handle_oauth_callback
