@@ -5,7 +5,8 @@ class MaintenanceRequestsController < ApplicationController
   # GET /maintenance_requests
   def index
     @maintenance_requests = current_user_maintenance_requests
-                           .includes(:property, :tenant, :landlord, :assigned_to, photos_attachments: :blob)
+                           .includes(:property, :tenant, :landlord, :assigned_to)
+                           .with_attached_photos
                            .order(requested_at: :desc)
                            .page(params[:page])
                            .per(20)

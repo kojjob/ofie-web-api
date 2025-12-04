@@ -65,7 +65,8 @@ module Api
       def show
         # Cache individual property
         @property = Rails.cache.fetch([ "property", params[:id] ], expires_in: 1.hour) do
-          Property.includes(:user, :property_reviews, images_attachments: :blob)
+          Property.includes(:user, :property_reviews)
+                  .with_attached_photos
                   .find(params[:id])
         end
 

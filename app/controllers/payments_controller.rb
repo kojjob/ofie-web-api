@@ -27,6 +27,8 @@ class PaymentsController < ApplicationController
   def show
     @lease_agreement = @payment.lease_agreement
     @property = @lease_agreement.property
+    # Ensure photos are loaded to avoid N+1 queries in views
+    @property = Property.with_attached_photos.find(@property.id) unless @property.association(:photos_attachments).loaded?
     @can_pay = can_pay_payment?(@payment)
     @can_refund = can_refund_payment?(@payment)
   end

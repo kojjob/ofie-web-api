@@ -32,7 +32,7 @@ class HomeController < ApplicationController
 
     # Featured properties for the landing page
     @featured_properties = Property.where(availability_status: "available")
-                                  .includes(:photos_attachments)
+                                  .with_attached_photos
                                   .limit(6)
                                   .order(created_at: :desc)
 

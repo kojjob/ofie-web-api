@@ -18,7 +18,8 @@ class Api::V1::MaintenanceRequestsController < ApplicationController
 
     # Apply filters
     @maintenance_requests = apply_filters(@maintenance_requests)
-    @maintenance_requests = @maintenance_requests.includes(:property, :tenant, :landlord, :assigned_to, photos_attachments: :blob)
+    @maintenance_requests = @maintenance_requests.includes(:property, :tenant, :landlord, :assigned_to)
+                                                 .with_attached_photos
                                                  .order(requested_at: :desc)
                                                  .page(params[:page])
                                                  .per(params[:per_page] || 20)

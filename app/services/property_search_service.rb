@@ -45,7 +45,8 @@ class PropertySearchService
   def build_base_query
     Property.status_active
             .available
-            .includes(:user, :property_favorites, :property_reviews, photos_attachments: :blob)
+            .includes(:user, :property_favorites, :property_reviews)
+            .with_attached_photos
   end
 
   def apply_search_filters(query)

@@ -6,7 +6,8 @@ class LeaseAgreementsController < ApplicationController
   # GET /lease_agreements
   def index
     @lease_agreements = current_user_leases
-                       .includes(:property, :tenant, :landlord, :rental_application)
+                       .includes(property: { photos_attachments: :blob })
+                       .includes(:tenant, :landlord, :rental_application)
                        .order(created_at: :desc)
                        .page(params[:page])
                        .per(20)
@@ -20,7 +21,7 @@ class LeaseAgreementsController < ApplicationController
 
   # GET /lease_agreements/:id
   def show
-    @property = @lease_agreement.property
+    @property = Property.with_attached_photos.find(@lease_agreement.property_id)
     @can_manage = can_manage_lease?(@lease_agreement)
     @can_sign = can_sign_lease?(@lease_agreement)
   end

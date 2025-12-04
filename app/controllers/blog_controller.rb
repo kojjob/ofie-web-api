@@ -4,7 +4,7 @@ class BlogController < ApplicationController
   before_action :authorize_author!, only: [:edit, :update, :destroy]
 
   def index
-    @posts = Post.published.recent.includes(:author, featured_image_attachment: :blob)
+    @posts = Post.published.recent.includes(:author).with_attached_featured_image
 
     # Filter by category if provided
     @posts = @posts.by_category(params[:category]) if params[:category].present?
