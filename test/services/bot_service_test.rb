@@ -107,7 +107,7 @@ class BotServiceTest < ActiveSupport::TestCase
   # ============================================================================
 
   test "classifies property_search intent" do
-    queries = ["find apartment", "search for house", "looking for 2 bedroom", "rent property"]
+    queries = [ "find apartment", "search for house", "looking for 2 bedroom", "rent property" ]
 
     queries.each do |query|
       bot_service = BotService.new(user: @tenant, query: query, conversation: @conversation)
@@ -118,7 +118,7 @@ class BotServiceTest < ActiveSupport::TestCase
   end
 
   test "classifies property_details intent" do
-    queries = ["what amenities", "tell me about this", "information about features"]
+    queries = [ "what amenities", "tell me about this", "information about features" ]
 
     queries.each do |query|
       bot_service = BotService.new(user: @tenant, query: query, conversation: @conversation)
@@ -129,7 +129,7 @@ class BotServiceTest < ActiveSupport::TestCase
   end
 
   test "classifies application_help intent" do
-    queries = ["how to apply", "documents needed for application", "application process"]
+    queries = [ "how to apply", "documents needed for application", "application process" ]
 
     queries.each do |query|
       bot_service = BotService.new(user: @tenant, query: query, conversation: @conversation)
@@ -140,7 +140,7 @@ class BotServiceTest < ActiveSupport::TestCase
   end
 
   test "classifies maintenance_help intent" do
-    queries = ["sink is broken", "not working", "need repair", "fix problem"]
+    queries = [ "sink is broken", "not working", "need repair", "fix problem" ]
 
     queries.each do |query|
       bot_service = BotService.new(user: @tenant, query: query, conversation: @conversation)
@@ -151,7 +151,7 @@ class BotServiceTest < ActiveSupport::TestCase
   end
 
   test "classifies payment_help intent" do
-    queries = ["payment methods", "how to pay"]
+    queries = [ "payment methods", "how to pay" ]
 
     queries.each do |query|
       bot_service = BotService.new(user: @tenant, query: query, conversation: @conversation)
@@ -162,7 +162,7 @@ class BotServiceTest < ActiveSupport::TestCase
   end
 
   test "classifies viewing_request intent" do
-    queries = ["schedule viewing", "tour", "visit", "schedule appointment"]
+    queries = [ "schedule viewing", "tour", "visit", "schedule appointment" ]
 
     queries.each do |query|
       bot_service = BotService.new(user: @tenant, query: query, conversation: @conversation)
@@ -173,7 +173,7 @@ class BotServiceTest < ActiveSupport::TestCase
   end
 
   test "classifies lease_questions intent" do
-    queries = ["lease terms", "agreement", "signing"]
+    queries = [ "lease terms", "agreement", "signing" ]
 
     queries.each do |query|
       bot_service = BotService.new(user: @tenant, query: query, conversation: @conversation)
@@ -184,7 +184,7 @@ class BotServiceTest < ActiveSupport::TestCase
   end
 
   test "classifies account_help intent" do
-    queries = ["help with account", "update profile", "password reset", "login help"]
+    queries = [ "help with account", "update profile", "password reset", "login help" ]
 
     queries.each do |query|
       bot_service = BotService.new(user: @tenant, query: query, conversation: @conversation)
@@ -195,7 +195,7 @@ class BotServiceTest < ActiveSupport::TestCase
   end
 
   test "classifies contact_info intent" do
-    queries = ["contact support", "email address", "phone number", "speak to someone"]
+    queries = [ "contact support", "email address", "phone number", "speak to someone" ]
 
     queries.each do |query|
       bot_service = BotService.new(user: @tenant, query: query, conversation: @conversation)
@@ -206,7 +206,7 @@ class BotServiceTest < ActiveSupport::TestCase
   end
 
   test "classifies unknown intent" do
-    queries = ["xyzabc", "random nonsense", "gibberish"]
+    queries = [ "xyzabc", "random nonsense", "gibberish" ]
 
     queries.each do |query|
       bot_service = BotService.new(user: @tenant, query: query, conversation: @conversation)
@@ -223,14 +223,14 @@ class BotServiceTest < ActiveSupport::TestCase
   test "extract_number_before extracts number from query" do
     bot_service = BotService.new(user: @tenant, query: "find 3 bedroom apartment", conversation: @conversation)
 
-    number = bot_service.send(:extract_number_before, ["bedroom", "bed"])
+    number = bot_service.send(:extract_number_before, [ "bedroom", "bed" ])
     assert_equal 3, number
   end
 
   test "extract_number_before returns nil when no number found" do
     bot_service = BotService.new(user: @tenant, query: "find apartment", conversation: @conversation)
 
-    number = bot_service.send(:extract_number_before, ["bedroom", "bed"])
+    number = bot_service.send(:extract_number_before, [ "bedroom", "bed" ])
     assert_nil number
   end
 

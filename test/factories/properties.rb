@@ -14,17 +14,17 @@ FactoryBot.define do
     status { :active }
 
     # Amenities
-    parking_available { [true, false].sample }
-    pets_allowed { [true, false].sample }
-    furnished { [true, false].sample }
-    utilities_included { [true, false].sample }
-    laundry { [true, false].sample }
-    gym { [true, false].sample }
-    pool { [true, false].sample }
-    balcony { [true, false].sample }
+    parking_available { [ true, false ].sample }
+    pets_allowed { [ true, false ].sample }
+    furnished { [ true, false ].sample }
+    utilities_included { [ true, false ].sample }
+    laundry { [ true, false ].sample }
+    gym { [ true, false ].sample }
+    pool { [ true, false ].sample }
+    balcony { [ true, false ].sample }
     air_conditioning { true }
     heating { true }
-    internet_included { [true, false].sample }
+    internet_included { [ true, false ].sample }
 
     # Location
     latitude { Faker::Address.latitude }

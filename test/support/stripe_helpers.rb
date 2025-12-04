@@ -18,7 +18,7 @@ module StripeHelpers
             ]
           }
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
   end
 
@@ -38,7 +38,7 @@ module StripeHelpers
           },
           last_payment_error: status == "payment_failed" ? { message: "Payment failed" } : nil
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
   end
 
@@ -52,7 +52,7 @@ module StripeHelpers
           object: "customer",
           email: email
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
   end
 
@@ -72,7 +72,7 @@ module StripeHelpers
             exp_year: 2025
           }
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
   end
 
@@ -87,7 +87,7 @@ module StripeHelpers
           object: "payment_method",
           customer: customer_id
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
   end
 
@@ -105,7 +105,7 @@ module StripeHelpers
           charge: charge_id,
           status: "succeeded"
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
   end
 
@@ -121,7 +121,7 @@ module StripeHelpers
           data: charges,
           has_more: false
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
   end
 
@@ -135,7 +135,7 @@ module StripeHelpers
           object: "setup_intent",
           status: status
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
   end
 
@@ -150,7 +150,7 @@ module StripeHelpers
             message: message
           }
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
   end
 end

@@ -270,7 +270,7 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
   end
 
   test "filters by multiple property types" do
-    service = PropertySearchService.new({ property_type: ["apartment", "house"] })
+    service = PropertySearchService.new({ property_type: [ "apartment", "house" ] })
     result = service.call
 
     assert_equal 2, result[:properties].count
@@ -292,7 +292,7 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
       user: @landlord
     )
 
-    service = PropertySearchService.new({ amenities: ["parking"] })
+    service = PropertySearchService.new({ amenities: [ "parking" ] })
     result = service.call
 
     assert_not_includes result[:properties], no_parking
@@ -300,7 +300,7 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
   end
 
   test "filters by pets allowed amenity" do
-    service = PropertySearchService.new({ amenities: ["pets"] })
+    service = PropertySearchService.new({ amenities: [ "pets" ] })
     result = service.call
 
     assert_equal 2, result[:properties].count
@@ -309,7 +309,7 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
   end
 
   test "filters by furnished amenity" do
-    service = PropertySearchService.new({ amenities: ["furnished"] })
+    service = PropertySearchService.new({ amenities: [ "furnished" ] })
     result = service.call
 
     assert_equal 1, result[:properties].count
@@ -317,7 +317,7 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
   end
 
   test "filters by multiple amenities" do
-    service = PropertySearchService.new({ amenities: ["gym", "pool", "balcony"] })
+    service = PropertySearchService.new({ amenities: [ "gym", "pool", "balcony" ] })
     result = service.call
 
     assert_equal 1, result[:properties].count
@@ -325,7 +325,7 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
   end
 
   test "amenity filtering uses case insensitive matching" do
-    service = PropertySearchService.new({ amenities: ["PARKING", "Pet_Friendly"] })
+    service = PropertySearchService.new({ amenities: [ "PARKING", "Pet_Friendly" ] })
     result = service.call
 
     assert result[:properties].count >= 2
@@ -368,7 +368,7 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
       min_price: 2000,
       max_price: 3000,
       bedrooms: 2,
-      amenities: ["parking"]
+      amenities: [ "parking" ]
     })
     result = service.call
 
@@ -430,7 +430,7 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
   # ============================================================================
 
   test "applies user preferences for property types" do
-    @tenant.update!(preferences: { preferred_property_types: ["apartment", "condo"] })
+    @tenant.update!(preferences: { preferred_property_types: [ "apartment", "condo" ] })
 
     service = PropertySearchService.new({}, user: @tenant)
     result = service.call
@@ -463,7 +463,7 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
   end
 
   test "does not apply personalization for landlord users" do
-    @landlord.update!(preferences: { preferred_property_types: ["apartment"] })
+    @landlord.update!(preferences: { preferred_property_types: [ "apartment" ] })
 
     service = PropertySearchService.new({}, user: @landlord)
     result = service.call
@@ -683,7 +683,7 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
       min_price: 2000,
       max_price: 5000,
       min_bedrooms: 2,
-      amenities: ["parking"],
+      amenities: [ "parking" ],
       sort: "price_asc"
     })
     result = service.call
@@ -706,13 +706,13 @@ class PropertySearchServiceTest < ActiveSupport::TestCase
 
   test "search with user personalization and filters" do
     @tenant.update!(preferences: {
-      preferred_property_types: ["apartment", "condo"],
+      preferred_property_types: [ "apartment", "condo" ],
       budget_max: 3000
     })
 
     service = PropertySearchService.new({
       city: "Seattle",
-      amenities: ["parking"]
+      amenities: [ "parking" ]
     }, user: @tenant)
 
     result = service.call

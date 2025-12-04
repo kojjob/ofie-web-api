@@ -226,10 +226,10 @@ class PropertiesController < ApplicationController
   def set_property
     # Only eager load what's actually used in the views
     case action_name
-    when 'show'
+    when "show"
       # For show page, we need user and photos, comments are loaded separately
       @property = Property.includes(:user).with_attached_photos.find(params[:id])
-    when 'edit'
+    when "edit"
       # For edit page, we only need photos
       @property = Property.with_attached_photos.find(params[:id])
     else

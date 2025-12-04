@@ -9,7 +9,7 @@ class PropertyCommentsController < ApplicationController
   def index
     @comments = @property.property_comments
                         .not_flagged
-                        .includes(:user, :comment_likes, replies: [:user, :comment_likes])
+                        .includes(:user, :comment_likes, replies: [ :user, :comment_likes ])
                         .top_level
                         .recent
                         .limit(10)

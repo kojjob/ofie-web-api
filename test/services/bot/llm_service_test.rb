@@ -100,7 +100,7 @@ module BotServices
       context = {
         user_preferences: {
           budget_max: 2500,
-          preferred_amenities: ["parking", "gym"]
+          preferred_amenities: [ "parking", "gym" ]
         }
       }
 
@@ -358,7 +358,7 @@ module BotServices
       # Should try Anthropic first, then OpenAI, then Google
       providers = service.send(:provider_order)
 
-      assert_equal [:anthropic, :openai, :google], providers
+      assert_equal [ :anthropic, :openai, :google ], providers
     end
 
     test "successfully uses fallback provider when primary fails" do
@@ -496,7 +496,7 @@ module BotServices
 
       # Stub stream_llm to simulate streaming chunks
       def service.stream_llm(&block)
-        ["The rental ", "process involves ", "several steps..."].each do |chunk|
+        [ "The rental ", "process involves ", "several steps..." ].each do |chunk|
           yield chunk
         end
       end

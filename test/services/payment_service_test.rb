@@ -78,9 +78,9 @@ class PaymentServiceTest < ActiveSupport::TestCase
           amount: 1550,
           currency: "usd",
           status: "succeeded",
-          charges: { data: [{ id: "ch_test123" }] }
+          charges: { data: [ { id: "ch_test123" } ] }
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
 
     result = @payment_service.create_payment_intent(payment: @payment)
@@ -98,9 +98,9 @@ class PaymentServiceTest < ActiveSupport::TestCase
         body: {
           id: "pi_test123",
           status: "succeeded",
-          charges: { data: [{ id: "ch_test123" }] }
+          charges: { data: [ { id: "ch_test123" } ] }
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
 
     result = @payment_service.create_payment_intent(payment: @payment)
@@ -117,9 +117,9 @@ class PaymentServiceTest < ActiveSupport::TestCase
         body: {
           id: "pi_test123",
           status: "succeeded",
-          charges: { data: [{ id: "ch_test123" }] }
+          charges: { data: [ { id: "ch_test123" } ] }
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
 
     result = @payment_service.create_payment_intent(payment: @payment, confirm: true)
@@ -184,7 +184,7 @@ class PaymentServiceTest < ActiveSupport::TestCase
 
   test "confirm_payment_intent handles Stripe errors" do
     stub_request(:post, "https://api.stripe.com/v1/payment_intents/pi_error/confirm")
-      .to_return(status: 402, body: { error: { message: "Payment error" } }.to_json, headers: { 'Content-Type' => 'application/json' })
+      .to_return(status: 402, body: { error: { message: "Payment error" } }.to_json, headers: { "Content-Type" => "application/json" })
 
     result = @payment_service.confirm_payment_intent("pi_error")
 
@@ -257,7 +257,7 @@ class PaymentServiceTest < ActiveSupport::TestCase
 
   test "add_payment_method handles Stripe errors" do
     stub_request(:get, "https://api.stripe.com/v1/payment_methods/pm_error")
-      .to_return(status: 404, body: { error: { message: "Payment method not found" } }.to_json, headers: { 'Content-Type' => 'application/json' })
+      .to_return(status: 404, body: { error: { message: "Payment method not found" } }.to_json, headers: { "Content-Type" => "application/json" })
 
     result = @payment_service.add_payment_method(user: @user, stripe_payment_method_id: "pm_error")
 
@@ -300,7 +300,7 @@ class PaymentServiceTest < ActiveSupport::TestCase
           charge: "ch_partial123",
           status: "succeeded"
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
 
     result = @payment_service.create_refund(payment: @payment, amount: partial_amount)
@@ -325,7 +325,7 @@ class PaymentServiceTest < ActiveSupport::TestCase
           status: "succeeded",
           amount: (@payment.amount * 100).to_i
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
 
     result = @payment_service.create_refund(payment: @payment, reason: "Customer not satisfied")
@@ -387,7 +387,7 @@ class PaymentServiceTest < ActiveSupport::TestCase
           data: [],
           has_more: false
         }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
+        headers: { "Content-Type" => "application/json" }
       )
 
     result = @payment_service.get_payment_history(user: @user, limit: 10, starting_after: "ch_last")
@@ -407,7 +407,7 @@ class PaymentServiceTest < ActiveSupport::TestCase
     # Stub with query parameter matching
     stub_request(:get, "https://api.stripe.com/v1/charges")
       .with(query: hash_including({}))
-      .to_return(status: 500, body: { error: { message: "Internal server error" } }.to_json, headers: { 'Content-Type' => 'application/json' })
+      .to_return(status: 500, body: { error: { message: "Internal server error" } }.to_json, headers: { "Content-Type" => "application/json" })
 
     result = @payment_service.get_payment_history(user: @user)
 
