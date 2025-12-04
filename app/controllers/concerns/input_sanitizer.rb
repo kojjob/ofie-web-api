@@ -12,11 +12,9 @@ module InputSanitizer
     # Skip sanitization for certain controllers/actions
     return if skip_sanitization_for_request?
 
-    # Get the permitted parameters based on the controller
-    permitted = params.permit!
-
-    # Sanitize the permitted parameters
-    sanitize_hash!(permitted)
+    # Sanitize the raw params hash directly without using permit!
+    # This approach sanitizes input strings without permitting all params for mass assignment
+    sanitize_hash!(params.to_unsafe_h) if params.respond_to?(:to_unsafe_h)
   end
 
   def sanitize_hash!(hash)

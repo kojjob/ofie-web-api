@@ -2,9 +2,9 @@ require "test_helper"
 
 class BatchPropertiesControllerTest < ActionDispatch::IntegrationTest
   def setup
-    @landlord = users(:landlord)
-    @tenant = users(:tenant)
-    @agent = users(:agent) if users(:agent)
+    @landlord = create(:user, :landlord, :verified)
+    @tenant = create(:user, :tenant, :verified)
+    @property = create(:property, user: @landlord)
 
     # Create test CSV files
     @valid_csv_content = <<~CSV
@@ -323,7 +323,7 @@ class BatchPropertiesControllerTest < ActionDispatch::IntegrationTest
       batch_property_upload: upload,
       row_number: 1,
       status: "success",
-      property_id: properties(:property_one).id,
+      property_id: @property.id,
       row_data: { title: "Success Property" }
     )
 

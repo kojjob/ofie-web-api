@@ -35,12 +35,12 @@ class BotTest < ActiveSupport::TestCase
   end
 
   test "can_message? should return true for any user" do
-    user = users(:tenant_user)
+    user = create(:user, :tenant)
     assert @bot.can_message?(user)
   end
 
   test "can_start_conversation_with? should return true for any user" do
-    user = users(:tenant_user)
+    user = create(:user, :tenant)
     assert @bot.can_start_conversation_with?(user)
   end
 
