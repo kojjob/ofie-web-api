@@ -167,7 +167,7 @@ class AiLeaseGeneratorService
       - Bathrooms: #{@property.bathrooms}
       - Square Feet: #{@property.square_feet}
       - Furnished: #{@property.furnished? ? 'Yes' : 'No'}
-      - Parking: #{@property.parking_spaces} space(s)
+      - Parking: #{@property.parking_available? ? 'Yes' : 'No'}
 
       LANDLORD INFORMATION:
       - Name: #{@landlord.full_name}

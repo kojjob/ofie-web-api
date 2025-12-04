@@ -40,6 +40,11 @@ class RentalApplication < ApplicationRecord
     status == "approved"
   end
 
+  # Delegate landlord to property owner for lease generation
+  def landlord
+    property&.user
+  end
+
   def income_to_rent_ratio
     return 0 if property.nil? || property.price.nil? || monthly_income.nil?
 
