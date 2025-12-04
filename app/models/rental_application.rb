@@ -40,6 +40,11 @@ class RentalApplication < ApplicationRecord
     status == "approved"
   end
 
+  # Check if application is approved
+  def approved?
+    status == "approved"
+  end
+
   # Delegate landlord to property owner for lease generation
   def landlord
     property&.user
