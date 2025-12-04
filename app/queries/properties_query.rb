@@ -178,9 +178,8 @@ class PropertiesQuery < ApplicationQuery
       :user,
       :property_favorites,
       :property_viewings,
-      :property_reviews,
-      images_attachments: :blob
-    )
+      :property_reviews
+    ).with_attached_photos
     self
   end
 

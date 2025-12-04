@@ -1,0 +1,300 @@
+<!-- Enhanced Header with Gradient Background -->
+<div class="relative bg-gradient-to-br from-emerald-50 via-white to-purple-50 border-b border-gray-200 overflow-hidden">
+  <!-- Decorative Elements -->
+  <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+  <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+
+  <div class="container mx-auto px-4 py-6 relative">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center space-x-2 text-sm mb-6">
+      <%= link_to root_path, class: "text-gray-600 hover:text-emerald-600 transition-colors flex items-center group" do %>
+        <svg class="w-4 h-4 mr-1 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+        </svg>
+        Home
+      <% end %>
+      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+      <%= link_to "Blog", blog_index_path, class: "text-gray-600 hover:text-emerald-600 transition-colors" %>
+      <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+      <span class="text-emerald-600 font-semibold">Create New Post</span>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="mb-8">
+      <div class="flex items-start justify-between">
+        <div class="flex-1">
+          <div class="flex items-center mb-4">
+            <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-3 shadow-lg mr-4">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                Create New Blog Post
+              </h1>
+              <p class="text-lg text-gray-600">
+                Share your real estate insights, expertise, and stories with the community
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats Card -->
+        <div class="hidden lg:block ml-8 bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+          <div class="text-center mb-3">
+            <div class="inline-flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full mb-2">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <p class="text-sm font-semibold text-gray-700">Quick Tips</p>
+          </div>
+          <ul class="space-y-2 text-xs text-gray-600">
+            <li class="flex items-start">
+              <svg class="w-4 h-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Use compelling headlines</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-4 h-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Add high-quality images</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-4 h-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Include actionable insights</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-4 h-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span>Preview before publishing</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="bg-gray-50 min-h-screen py-12">
+  <div class="container mx-auto px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid lg:grid-cols-12 gap-8">
+        <!-- Main Form Column -->
+        <div class="lg:col-span-8">
+          <!-- Progress Indicator -->
+          <div class="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-200">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-semibold text-gray-700 flex items-center">
+                <svg class="w-5 h-5 text-emerald-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                Your Post Progress
+              </h3>
+              <span class="text-xs text-gray-500">Fill in the details below</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full transition-all duration-500" style="width: 0%" id="progress-bar"></div>
+              </div>
+              <span class="text-xs font-semibold text-gray-600" id="progress-text">0%</span>
+            </div>
+          </div>
+
+          <!-- Form Card -->
+          <%= render 'form', post: @post %>
+        </div>
+
+        <!-- Sidebar Column -->
+        <div class="lg:col-span-4 space-y-6">
+          <!-- Writing Guidelines Card -->
+          <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden sticky top-6">
+            <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4">
+              <h3 class="text-white font-bold flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Writing Guidelines
+              </h3>
+            </div>
+            <div class="p-6 space-y-4">
+              <!-- Best Practices -->
+              <div>
+                <h4 class="font-semibold text-gray-900 mb-3 flex items-center text-sm">
+                  <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center mr-2">
+                    <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                  </div>
+                  Best Practices
+                </h4>
+                <ul class="space-y-2 text-sm text-gray-600 pl-8">
+                  <li class="flex items-start">
+                    <span class="text-emerald-500 mr-2">•</span>
+                    <span>Write clear, engaging headlines that grab attention</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-emerald-500 mr-2">•</span>
+                    <span>Use short paragraphs and bullet points for readability</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-emerald-500 mr-2">•</span>
+                    <span>Include data, statistics, and real examples</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-emerald-500 mr-2">•</span>
+                    <span>Add relevant images and media to break up text</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-emerald-500 mr-2">•</span>
+                    <span>End with a clear call-to-action</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="border-t border-gray-200 pt-4">
+                <h4 class="font-semibold text-gray-900 mb-3 flex items-center text-sm">
+                  <div class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center mr-2">
+                    <svg class="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                  </div>
+                  SEO Tips
+                </h4>
+                <ul class="space-y-2 text-sm text-gray-600 pl-8">
+                  <li class="flex items-start">
+                    <span class="text-purple-500 mr-2">•</span>
+                    <span>Use keywords naturally in your title and content</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-purple-500 mr-2">•</span>
+                    <span>Write compelling meta descriptions (excerpts)</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-purple-500 mr-2">•</span>
+                    <span>Add descriptive alt text to images</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-purple-500 mr-2">•</span>
+                    <span>Link to relevant internal and external resources</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Help Section -->
+              <div class="border-t border-gray-200 pt-4">
+                <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                  <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                      <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div class="ml-3">
+                      <h4 class="text-sm font-semibold text-blue-900 mb-1">Need Help?</h4>
+                      <p class="text-xs text-blue-700 mb-2">Check our writing guide for detailed tips and examples.</p>
+                      <a href="#" class="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center group">
+                        View Guide
+                        <svg class="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Posts Preview -->
+          <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+              <h3 class="font-bold text-gray-900 flex items-center">
+                <svg class="w-5 h-5 text-gray-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                Recent Posts
+              </h3>
+            </div>
+            <div class="p-4 space-y-3">
+              <div class="text-center py-8 text-gray-500">
+                <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                </svg>
+                <p class="text-sm">Start writing to see your posts here</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Auto-save notification (hidden by default) -->
+<div id="autosave-notification" class="hidden fixed bottom-6 right-6 bg-white rounded-xl shadow-2xl border border-gray-200 p-4 flex items-center space-x-3 transform transition-all duration-300">
+  <div class="flex-shrink-0">
+    <svg class="w-5 h-5 text-emerald-600 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+    </svg>
+  </div>
+  <div>
+    <p class="text-sm font-semibold text-gray-900">Saving draft...</p>
+    <p class="text-xs text-gray-500">Your work is being saved</p>
+  </div>
+</div>
+
+<style>
+  @keyframes blob {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+</style>
+
+<script>
+  // Simple progress tracking based on form completion
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+
+    if (form && progressBar) {
+      const updateProgress = () => {
+        const inputs = form.querySelectorAll('input[type="text"], textarea, select');
+        let filled = 0;
+
+        inputs.forEach(input => {
+          if (input.value.trim() !== '') filled++;
+        });
+
+        const percentage = Math.round((filled / inputs.length) * 100);
+        progressBar.style.width = percentage + '%';
+        progressText.textContent = percentage + '%';
+      };
+
+      // Update progress on input
+      form.addEventListener('input', updateProgress);
+      form.addEventListener('change', updateProgress);
+    }
+  });
+</script>

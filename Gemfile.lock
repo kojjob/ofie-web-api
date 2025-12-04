@@ -114,10 +114,10 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
-    csv (3.3.4)
-    database_cleaner-active_record (2.2.1)
+    csv (3.3.5)
+    database_cleaner-active_record (2.2.2)
       activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0.0)
+      database_cleaner-core (~> 2.0)
     database_cleaner-core (2.0.1)
     date (3.4.1)
     debug (1.10.0)
@@ -134,12 +134,13 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
-    factory_bot (6.5.4)
+    event_stream_parser (1.0.0)
+    factory_bot (6.5.5)
       activesupport (>= 6.1.0)
-    factory_bot_rails (6.5.0)
+    factory_bot_rails (6.5.1)
       factory_bot (~> 6.5)
       railties (>= 6.1.0)
-    faker (3.5.1)
+    faker (3.5.2)
       i18n (>= 1.8.11, < 2)
     faraday (2.13.1)
       faraday-net_http (>= 2.0, < 3.5)
@@ -159,8 +160,12 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    hashdiff (1.2.0)
+    hashdiff (1.2.1)
     hashie (5.0.0)
+    httparty (0.22.0)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     image_processing (1.14.0)
@@ -209,11 +214,16 @@ GEM
       addressable (~> 2.8)
       childprocess (~> 5.0)
       logger (~> 1.6)
-    lefthook (1.11.14)
+    lefthook (1.13.6)
     letter_opener (1.10.0)
       launchy (>= 2.2, < 4)
     lint_roller (1.1.0)
-    logger (1.7.0)
+    llm_ruby (0.3.2)
+      event_stream_parser (~> 1.0.0)
+      httparty (~> 0.22.0)
+      logger (~> 1.6.0)
+      zeitwerk (~> 2.6.0)
+    logger (1.6.6)
     loofah (2.24.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -314,7 +324,7 @@ GEM
     rack-cors (3.0.0)
       logger
       rack (>= 3.0.14)
-    rack-mini-profiler (4.0.0)
+    rack-mini-profiler (4.0.1)
       rack (>= 1.2.0)
     rack-protection (4.1.1)
       base64 (>= 0.1.0)
@@ -364,8 +374,8 @@ GEM
     regexp_parser (2.10.0)
     reline (0.6.1)
       io-console (~> 0.5)
-    rexml (3.4.1)
-    rouge (4.5.2)
+    rexml (3.4.4)
+    rouge (4.6.1)
     rswag-api (2.16.0)
       activesupport (>= 5.2, < 8.1)
       railties (>= 5.2, < 8.1)
@@ -404,19 +414,19 @@ GEM
     ruby-vips (2.2.3)
       ffi (~> 1.12)
       logger
-    rubyzip (2.4.1)
+    rubyzip (3.1.1)
     secure_headers (7.1.0)
     securerandom (0.4.1)
-    selenium-webdriver (4.34.0)
+    selenium-webdriver (4.35.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
-      rubyzip (>= 1.2.2, < 3.0)
+      rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
-    sentry-rails (5.25.0)
+    sentry-rails (5.28.0)
       railties (>= 5.0)
-      sentry-ruby (~> 5.25.0)
-    sentry-ruby (5.25.0)
+      sentry-ruby (~> 5.28.0)
+    sentry-ruby (5.28.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
     shoulda-matchers (6.5.0)
@@ -425,7 +435,7 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.13.1)
+    simplecov-html (0.13.2)
     simplecov_json_formatter (0.1.4)
     snaky_hash (2.0.3)
       hashie (>= 0.1.0, < 6)
@@ -490,7 +500,7 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
-    uniform_notifier (1.17.0)
+    uniform_notifier (1.18.0)
     uri (1.0.3)
     useragent (0.16.11)
     vcr (6.3.1)
@@ -512,7 +522,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yard (0.9.37)
-    zeitwerk (2.7.3)
+    zeitwerk (2.6.18)
 
 PLATFORMS
   aarch64-linux
@@ -521,6 +531,7 @@ PLATFORMS
   arm-linux-gnu
   arm-linux-musl
   arm64-darwin-24
+  arm64-darwin-25
   x86_64-linux
   x86_64-linux-gnu
   x86_64-linux-musl
@@ -538,8 +549,8 @@ DEPENDENCIES
   database_cleaner-active_record
   debug
   dockerfile-rails (>= 1.7)
-  factory_bot_rails
-  faker
+  factory_bot_rails (~> 6.4)
+  faker (~> 3.2)
   image_processing (~> 1.2)
   importmap-rails
   jbuilder
@@ -548,6 +559,7 @@ DEPENDENCIES
   kaminari (~> 1.2)
   lefthook
   letter_opener
+  llm_ruby (~> 0.3.2)
   mail
   memory_profiler
   omniauth
@@ -582,9 +594,9 @@ DEPENDENCIES
   timecop
   turbo-rails
   tzinfo-data
-  vcr
+  vcr (~> 6.2)
   versionist
-  webmock
+  webmock (~> 3.19)
 
 BUNDLED WITH
    2.6.9

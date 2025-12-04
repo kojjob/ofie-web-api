@@ -1,40 +1,57 @@
 FactoryBot.define do
   factory :user do
-    sequence(:email) { |n| "user#{n}@example.com" }
+    name { Faker::Name.name }
+    email { Faker::Internet.unique.email }
     password { "password123" }
     password_confirmation { "password123" }
-    full_name { Faker::Name.name }
-    phone_number { Faker::PhoneNumber.phone_number }
-    user_type { "individual" }
-    email_verified { true }
-    email_verified_at { Time.current }
-
-    trait :unverified do
-      email_verified { false }
-      email_verified_at { nil }
-    end
-
-    trait :admin do
-      user_type { "admin" }
-    end
-
-    trait :agent do
-      user_type { "agent" }
-      company_name { Faker::Company.name }
-    end
+    role { :tenant }
+    email_verified { false }
+    phone { "+1#{Faker::Number.number(digits: 10)}" }
+    bio { Faker::Lorem.paragraph }
+    language { %w[en es fr].sample }
+    timezone { "UTC" }
 
     trait :landlord do
-      user_type { "landlord" }
+      role { :landlord }
     end
 
-    trait :with_profile_image do
-      after(:create) do |user|
-        user.profile_image.attach(
-          io: File.open(Rails.root.join("test/fixtures/files/sample_avatar.jpg")),
-          filename: "avatar.jpg",
-          content_type: "image/jpeg"
-        )
-      end
+    trait :tenant do
+      role { :tenant }
+    end
+
+    trait :bot do
+      role { :bot }
+    end
+
+    trait :verified do
+      email_verified { true }
+    end
+
+    trait :oauth_user do
+      provider { "google" }
+      uid { Faker::Alphanumeric.alphanumeric(number: 20) }
+      email_verified { true }
+      password { nil }
+      password_confirmation { nil }
+    end
+
+    trait :with_stripe do
+      stripe_customer_id { "cus_#{Faker::Alphanumeric.alphanumeric(number: 14)}" }
+    end
+
+    trait :with_refresh_token do
+      refresh_token { SecureRandom.hex(32) }
+      refresh_token_expires_at { 30.days.from_now }
+    end
+
+    trait :with_password_reset do
+      password_reset_token { SecureRandom.urlsafe_base64(32) }
+      password_reset_sent_at { Time.current }
+    end
+
+    trait :with_email_verification do
+      email_verification_token { SecureRandom.urlsafe_base64(32) }
+      email_verification_sent_at { Time.current }
     end
   end
 end

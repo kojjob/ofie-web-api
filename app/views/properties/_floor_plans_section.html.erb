@@ -1,0 +1,53 @@
+<div class="space-y-4" id="floor-plans-accordion">
+  <% floor_plans = @property.floor_plans.presence || [
+    { name: 'First Floor', rooms: 4, baths: 1, size: 120, description: 'Spacious first floor with open floor plan', image: nil },
+    { name: 'Second Floor', rooms: 3, baths: 1, size: 90, description: 'Comfortable second floor with bedrooms', image: nil }
+  ] %>
+
+  <% floor_plans.each_with_index do |floor_plan, index| %>
+    <div class="border border-gray-200 rounded-lg overflow-hidden">
+      <button type="button"
+              class="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between"
+              data-accordion-target="#floor-plan-<%= index %>"
+              aria-expanded="false">
+        <div class="flex items-center space-x-4">
+          <span class="text-lg font-bold text-gray-900"><%= floor_plan[:name] %></span>
+          <div class="flex items-center space-x-4 text-sm text-gray-600">
+            <span><i class="fas fa-door-open mr-1"></i>Rooms: <%= floor_plan[:rooms] %></span>
+            <span><i class="fas fa-bath mr-1"></i>Baths: <%= floor_plan[:baths] %></span>
+            <span><i class="fas fa-ruler-combined mr-1"></i>Size: <%= floor_plan[:size] %> Sqft</span>
+          </div>
+        </div>
+        <i class="fas fa-chevron-down transform transition-transform duration-200" data-accordion-icon></i>
+      </button>
+
+      <div id="floor-plan-<%= index %>" class="hidden" data-accordion-body>
+        <div class="p-6">
+          <% if floor_plan[:image] %>
+            <%= image_tag floor_plan[:image], class: "w-full h-auto mb-4 rounded-lg", alt: floor_plan[:name] %>
+          <% else %>
+            <div class="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
+              <p class="text-gray-400">Floor plan image not available</p>
+            </div>
+          <% end %>
+          <p class="text-gray-600"><%= floor_plan[:description] %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  // Simple accordion functionality
+  document.querySelectorAll('[data-accordion-target]').forEach(button => {
+    button.addEventListener('click', () => {
+      const target = document.querySelector(button.dataset.accordionTarget);
+      const icon = button.querySelector('[data-accordion-icon]');
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+      button.setAttribute('aria-expanded', !isExpanded);
+      target.classList.toggle('hidden');
+      icon.classList.toggle('rotate-180');
+    });
+  });
+</script>

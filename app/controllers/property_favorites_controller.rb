@@ -5,7 +5,7 @@ class PropertyFavoritesController < ApplicationController
 
   # GET /favorites
   def index
-    @favorites = current_user.property_favorites.includes(:property).order(created_at: :desc)
+    @favorites = current_user.property_favorites.includes(property: { photos_attachments: :blob }).order(created_at: :desc)
     @properties = @favorites.map(&:property)
 
     respond_to do |format|

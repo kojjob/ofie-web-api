@@ -7,7 +7,7 @@ SecureHeaders::Configuration.default do |config|
     img_src: %w['self' data: https: blob:],
     script_src: %w['self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://maps.googleapis.com],
     style_src: %w['self' 'unsafe-inline' https://fonts.googleapis.com],
-    connect_src: %w['self' wss: https://api.stripe.com https://*.googleapis.com],
+    connect_src: %w['self' ws://localhost:* wss://localhost:* wss: https://api.stripe.com https://*.googleapis.com],
     frame_src: %w['self' https://js.stripe.com https://hooks.stripe.com],
     frame_ancestors: %w['none'],
     object_src: %w['none'],
@@ -16,8 +16,12 @@ SecureHeaders::Configuration.default do |config|
     report_uri: %w[/csp-report]
   }
 
-  # Strict Transport Security
-  config.hsts = "max-age=31536000; includeSubDomains; preload"
+  # Strict Transport Security - Disabled in development
+  if Rails.env.production?
+    config.hsts = "max-age=31536000; includeSubDomains; preload"
+  else
+    config.hsts = SecureHeaders::OPT_OUT
+  end
 
   # Prevent clickjacking
   config.x_frame_options = "DENY"
@@ -45,14 +49,6 @@ SecureHeaders::Configuration.default do |config|
   # }
 end
 
-# Override for development environment
-if Rails.env.development?
-  SecureHeaders::Configuration.override(:development) do |config|
-    config.csp[:script_src] << "'unsafe-eval'"
-    config.csp[:connect_src] << "ws://localhost:*"
-    config.hsts = SecureHeaders::OPT_OUT
-  end
-end
 
 # Override for API endpoints (more permissive CSP)
 SecureHeaders::Configuration.named_append(:api) do |config|

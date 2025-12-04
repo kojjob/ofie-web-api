@@ -70,6 +70,9 @@ gem "sprockets-rails"
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
 
+# AI integration for lease generation with multiple LLM providers
+gem "llm_ruby", "~> 0.3.2"
+
 # Security enhancements
 gem "rack-attack"
 gem "secure_headers"
@@ -78,16 +81,12 @@ gem "secure_headers"
 gem "rswag-api"
 gem "rswag-ui"
 
-# Background job monitoring
-# Using Solid Queue (Rails 8 native) instead of Sidekiq
-
 # Application monitoring
 gem "sentry-ruby"
 gem "sentry-rails"
 
 # API versioning
 gem "versionist"
-
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ], require: "debug/prelude"
@@ -98,17 +97,17 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  # Factory pattern for test data
-  gem "factory_bot_rails"
+  # Test fixtures replacement with a straightforward definition syntax
+  gem "factory_bot_rails", "~> 6.4"
 
-  # Generate fake data for tests
-  gem "faker"
+  # Test data faker for generating realistic test data
+  gem "faker", "~> 3.2"
 
-  # Stub HTTP requests in tests
-  gem "webmock"
+  # HTTP request stubbing for external API testing
+  gem "webmock", "~> 3.19"
 
-  # Record HTTP interactions for tests
-  gem "vcr"
+  # Record and replay HTTP interactions for tests
+  gem "vcr", "~> 6.2"
 end
 
 group :test do

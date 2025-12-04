@@ -20,7 +20,8 @@ Rails.application.configure do
 
   # Show full error reports.
   config.consider_all_requests_local = true
-  config.cache_store = :null_store
+  # Use memory store for caching in tests (instead of null_store) to enable cache testing
+  config.cache_store = :memory_store
 
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable
@@ -38,6 +39,9 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "example.com" }
+
+  # Set base URL for payment service return URLs
+  config.base_url = "http://localhost:3000"
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr

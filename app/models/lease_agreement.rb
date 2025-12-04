@@ -25,6 +25,10 @@ class LeaseAgreement < ApplicationRecord
   scope :by_tenant, ->(tenant_id) { where(tenant_id: tenant_id) }
   scope :by_property, ->(property_id) { where(property_id: property_id) }
   scope :expiring_soon, ->(days = 30) { where(lease_end_date: Date.current..days.days.from_now) }
+  scope :ai_generated, -> { where(ai_generated: true) }
+  scope :manually_created, -> { where(ai_generated: false) }
+  scope :reviewed_by_landlord, -> { where(reviewed_by_landlord: true) }
+  scope :pending_review, -> { where(reviewed_by_landlord: false, ai_generated: true) }
 
   before_validation :generate_lease_number, on: :create
   before_validation :set_security_deposit_amount, on: :create

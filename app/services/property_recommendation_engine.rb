@@ -60,6 +60,7 @@ class PropertyRecommendationEngine
                                  .group("properties.id")
                                  .order("COUNT(property_viewings.id) DESC")
                                  .limit(limit)
+                                 .to_a
 
     trending_properties
   end
@@ -68,10 +69,10 @@ class PropertyRecommendationEngine
     return get_trending_properties(limit) unless @user.tenant?
 
     # Get user preferences from past activity
-    preferences = extract_user_preferences
+    preferences = get_user_preferences
 
     # Build recommendation query
-    recommendations = @base_query.includes(:property_viewings, :property_reviews, :property_favorites)
+    recommendations = @base_query.includes(:property_viewings, :property_reviews)
 
     # Apply preference filters
     recommendations = apply_preference_filters(recommendations, preferences)
@@ -209,8 +210,8 @@ class PropertyRecommendationEngine
 
     preferences = {}
 
-    # Extract from user profile
-    preferences.merge!(@user.preferences || {})
+    # Note: User profile preferences would go here if the User model had those fields
+    # For now, we extract preferences from user behavior only
 
     # Extract from rental applications
     recent_applications = @user.tenant_rental_applications.includes(:property).limit(5)
@@ -227,7 +228,7 @@ class PropertyRecommendationEngine
     end
 
     # Extract from favorites
-    favorites = @user.favorite_properties.includes(:property)
+    favorites = @user.favorite_properties
     if favorites.any?
       preferences[:favorite_patterns] = analyze_favorite_patterns(favorites)
     end
@@ -539,8 +540,8 @@ class PropertyRecommendationEngine
   end
 
   def analyze_favorite_patterns(favorites)
-    property_types = favorites.map { |fav| fav.property_type }.group_by(&:itself).transform_values(&:count)
-    price_ranges = favorites.map { |fav| fav.price }.group_by { |price|
+    property_types = favorites.map(&:property_type).group_by(&:itself).transform_values(&:count)
+    price_ranges = favorites.map(&:price).group_by { |price|
       case price
       when 0..1000 then "budget"
       when 1001..2000 then "moderate"
@@ -553,5 +554,49 @@ class PropertyRecommendationEngine
       preferred_types: property_types,
       preferred_price_ranges: price_ranges
     }
+  end
+
+  def apply_preference_filters(query, preferences)
+    filtered_query = query
+
+    # Apply budget filter if present
+    if preferences[:budget_max]
+      filtered_query = filtered_query.where("price <= ?", preferences[:budget_max])
+    elsif preferences[:preferred_price_range]
+      price_range = preferences[:preferred_price_range]
+      filtered_query = filtered_query.where(price: price_range[:min]..price_range[:max])
+    end
+
+    # Apply location filter if present
+    if preferences[:preferred_locations]&.any?
+      filtered_query = filtered_query.where(city: preferences[:preferred_locations])
+    end
+
+    # Apply property type filter if present
+    if preferences[:preferred_property_types]&.any?
+      filtered_query = filtered_query.where(property_type: preferences[:preferred_property_types])
+    end
+
+    filtered_query.to_a
+  end
+
+  def score_recommendations(properties, preferences)
+    properties.map do |property|
+      # Calculate comprehensive score
+      preference_score = calculate_preference_score(property, preferences)
+      property.define_singleton_method(:preference_score) { preference_score }
+
+      # Add other scoring components
+      collaborative_score = 0 # Simplified for now
+      property.define_singleton_method(:collaborative_score) { collaborative_score }
+
+      behavioral_score = 0 # Simplified for now
+      property.define_singleton_method(:behavioral_score) { behavioral_score }
+
+      market_score = calculate_market_score(property)
+      property.define_singleton_method(:market_score) { market_score }
+
+      property
+    end.sort_by { |property| -calculate_total_score(property) }
   end
 end

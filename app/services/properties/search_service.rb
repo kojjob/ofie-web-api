@@ -32,7 +32,8 @@ module Properties
     attr_reader :params, :user, :filters
 
     def base_query
-      Property.includes(:user, :property_favorites, images_attachments: :blob)
+      Property.includes(:user, :property_favorites)
+              .with_attached_photos
               .where(status: "available")
     end
 

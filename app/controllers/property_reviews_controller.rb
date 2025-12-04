@@ -1,5 +1,5 @@
 class PropertyReviewsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_request
   before_action :set_property, only: [ :index, :create ]
   before_action :set_review, only: [ :show, :edit, :update, :destroy, :mark_helpful ]
   before_action :ensure_tenant_for_create, only: [ :create ]

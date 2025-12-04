@@ -1,59 +1,115 @@
 FactoryBot.define do
   factory :property do
-    association :user
-    title { Faker::Lorem.sentence(word_count: 4) }
+    association :user, factory: :user, role: :landlord
+    title { Faker::Lorem.sentence(word_count: 3) }
     description { Faker::Lorem.paragraph(sentence_count: 5) }
-    price { Faker::Number.between(from: 50000, to: 1000000) }
-    bedrooms { Faker::Number.between(from: 1, to: 6) }
-    bathrooms { Faker::Number.between(from: 1, to: 4) }
-    area { Faker::Number.between(from: 500, to: 5000) }
-    property_type { %w[apartment house condo townhouse villa].sample }
-    listing_type { %w[sale rent].sample }
-    status { "available" }
-
-    # Address fields
     address { Faker::Address.street_address }
     city { Faker::Address.city }
-    state { Faker::Address.state }
-    country { "USA" }
-    postal_code { Faker::Address.zip_code }
+    price { Faker::Number.between(from: 500, to: 5000) }
+    bedrooms { Faker::Number.between(from: 1, to: 5) }
+    bathrooms { Faker::Number.between(from: 1, to: 3) }
+    square_feet { Faker::Number.between(from: 500, to: 3000) }
+    property_type { :apartment }
+    availability_status { :available }
+    status { :active }
+
+    # Amenities
+    parking_available { [true, false].sample }
+    pets_allowed { [true, false].sample }
+    furnished { [true, false].sample }
+    utilities_included { [true, false].sample }
+    laundry { [true, false].sample }
+    gym { [true, false].sample }
+    pool { [true, false].sample }
+    balcony { [true, false].sample }
+    air_conditioning { true }
+    heating { true }
+    internet_included { [true, false].sample }
+
+    # Location
     latitude { Faker::Address.latitude }
     longitude { Faker::Address.longitude }
 
-    # Features
-    features { [ "parking", "swimming_pool", "gym", "security" ].sample(2) }
+    trait :house do
+      property_type { :house }
+      bedrooms { Faker::Number.between(from: 3, to: 5) }
+      bathrooms { Faker::Number.between(from: 2, to: 4) }
+      square_feet { Faker::Number.between(from: 1500, to: 4000) }
+    end
 
-    trait :sold do
-      status { "sold" }
+    trait :condo do
+      property_type { :condo }
+    end
+
+    trait :townhouse do
+      property_type { :townhouse }
+      bedrooms { Faker::Number.between(from: 2, to: 4) }
+    end
+
+    trait :studio do
+      property_type { :studio }
+      bedrooms { 0 }
+      bathrooms { 1 }
+      square_feet { Faker::Number.between(from: 300, to: 600) }
+    end
+
+    trait :loft do
+      property_type { :loft }
+      bedrooms { Faker::Number.between(from: 1, to: 2) }
+    end
+
+    trait :available do
+      availability_status { :available }
+      status { :active }
     end
 
     trait :rented do
-      status { "rented" }
-      listing_type { "rent" }
+      availability_status { :rented }
     end
 
     trait :pending do
-      status { "pending" }
+      availability_status { :pending }
     end
 
-    trait :with_photos do
-      after(:create) do |property|
-        3.times do |i|
-          property.photos.attach(
-            io: File.open(Rails.root.join("test/fixtures/files/property_#{i + 1}.jpg")),
-            filename: "property_#{i + 1}.jpg",
-            content_type: "image/jpeg"
-          )
-        end
-      end
+    trait :maintenance do
+      availability_status { :maintenance }
     end
 
-    trait :featured do
-      featured { true }
+    trait :inactive do
+      status { :inactive }
     end
 
-    trait :with_virtual_tour do
-      virtual_tour_url { "https://example.com/virtual-tour/#{Faker::Alphanumeric.alphanumeric(number: 10)}" }
+    trait :draft do
+      status { :draft }
+    end
+
+    trait :archived do
+      status { :archived }
+    end
+
+    trait :with_parking do
+      parking_available { true }
+    end
+
+    trait :pet_friendly do
+      pets_allowed { true }
+    end
+
+    trait :furnished do
+      furnished { true }
+    end
+
+    trait :utilities_included do
+      utilities_included { true }
+    end
+
+    trait :luxury do
+      price { Faker::Number.between(from: 3000, to: 10000) }
+      square_feet { Faker::Number.between(from: 2000, to: 5000) }
+      gym { true }
+      pool { true }
+      parking_available { true }
+      balcony { true }
     end
   end
 end

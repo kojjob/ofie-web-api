@@ -123,6 +123,7 @@ Rails.application.routes.draw do
           post :approve
           post :reject
           post :under_review
+          post :generate_lease
         end
       end
 
@@ -218,6 +219,9 @@ Rails.application.routes.draw do
         get :recent
       end
     end
+
+    # Add nested property_reviews routes
+    resources :property_reviews, only: [ :index, :create ]
 
     # Add nested rental_applications routes
     resources :rental_applications, only: [ :new, :create ]
@@ -324,9 +328,13 @@ Rails.application.routes.draw do
   # Rental Applications routes (Web)
   resources :rental_applications, only: [ :index, :show, :edit, :update, :destroy ] do
     member do
+      get :approve
       post :approve
+      get :reject
       post :reject
+      get :under_review
       post :under_review
+      post :generate_lease
     end
 
     # Nested lease agreements routes
@@ -378,6 +386,15 @@ Rails.application.routes.draw do
   get "/landlord-tools", to: "tools#landlord_tools", as: "landlord_tools"
   get "/careers", to: "home#careers", as: "careers"
   get "/press", to: "home#press", as: "press"
+
+  # Blog routes
+  get "/blog", to: "blog#index", as: "blog_index"
+  get "/blog/new", to: "blog#new", as: "new_blog_post"
+  post "/blog", to: "blog#create"
+  get "/blog/:slug", to: "blog#show", as: "blog_post"
+  get "/blog/:slug/edit", to: "blog#edit", as: "edit_blog_post"
+  patch "/blog/:slug", to: "blog#update"
+  delete "/blog/:slug", to: "blog#destroy", as: "destroy_blog_post"
 
   # Defines the root path route ("/")
   root "home#index"

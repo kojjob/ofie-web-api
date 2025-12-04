@@ -15,4 +15,8 @@ Turbo.session.drive = true
 application.debug = false
 window.Stimulus = application
 
+// Import Trix and ActionText for rich text editing
+import "trix"
+import "@rails/actiontext"
+
 export { application }

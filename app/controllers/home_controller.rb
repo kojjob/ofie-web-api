@@ -32,7 +32,7 @@ class HomeController < ApplicationController
 
     # Featured properties for the landing page
     @featured_properties = Property.where(availability_status: "available")
-                                  .includes(:photos_attachments)
+                                  .with_attached_photos
                                   .limit(6)
                                   .order(created_at: :desc)
 
@@ -183,6 +183,16 @@ class HomeController < ApplicationController
 
     add_breadcrumb("Home", root_path)
     add_breadcrumb("Neighborhoods")
+
+    # Get all cities with property counts
+    @neighborhoods = Property.where(availability_status: "available")
+                             .group(:city)
+                             .select("city, COUNT(*) as property_count,
+                                     AVG(price) as avg_rent,
+                                     MIN(price) as min_rent,
+                                     MAX(price) as max_rent")
+                             .having("city IS NOT NULL")
+                             .order("property_count DESC")
   end
 
   def renter_resources

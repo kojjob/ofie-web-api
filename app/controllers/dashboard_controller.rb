@@ -13,7 +13,7 @@ class DashboardController < ApplicationController
 
   def landlord_dashboard
     # Eager load all necessary associations to avoid N+1 queries
-    @properties = current_user.properties.includes(photos_attachments: :blob)
+    @properties = current_user.properties.with_attached_photos
     # Create a separate limited collection for the dashboard view
     @properties_for_display = @properties.limit(6)
 
@@ -27,7 +27,7 @@ class DashboardController < ApplicationController
     }
     @recent_applications = RentalApplication.joins(:property)
                                           .where(properties: { user_id: current_user.id })
-                                          .includes(:user, property: { photos_attachments: :blob })
+                                          .includes(:tenant, :property)
                                           .order(created_at: :desc)
                                           .limit(5)
     @upcoming_payments = Payment.joins(lease_agreement: :property)
@@ -44,14 +44,16 @@ class DashboardController < ApplicationController
   end
 
   def tenant_dashboard
-    @lease_agreements = current_user.lease_agreements.includes(property: [:user, photos_attachments: :blob])
+    # Use nested includes instead of merge for proper eager loading
+    @lease_agreements = current_user.tenant_lease_agreements
+                                   .includes(property: [ :user, { photos_attachments: :blob } ])
     @stats = {
       active_leases: @lease_agreements.where(status: "active").count,
-      applications_submitted: current_user.rental_applications.count,
+      applications_submitted: current_user.tenant_rental_applications.count,
       pending_payments: current_user.payments.where(status: "pending").count,
       favorite_properties: current_user.property_favorites.count
     }
-    @recent_applications = current_user.rental_applications
+    @recent_applications = current_user.tenant_rental_applications
                                       .includes(property: { photos_attachments: :blob })
                                       .order(created_at: :desc)
                                       .limit(5)
@@ -92,7 +94,7 @@ class DashboardController < ApplicationController
     # Properties management page for landlords
     authorize_landlord!
 
-    @properties = current_user.properties.includes(photos_attachments: :blob).order(created_at: :desc)
+    @properties = current_user.properties.with_attached_photos.order(created_at: :desc)
     @stats = {
       total_properties: @properties.count,
       available_properties: @properties.where(availability_status: "available").count,
@@ -272,9 +274,9 @@ class DashboardController < ApplicationController
         address: application.property.address
       },
       applicant: {
-        id: application.user.id,
-        name: application.user.name,
-        email: application.user.email
+        id: application.tenant.id,
+        name: application.tenant.name,
+        email: application.tenant.email
       }
     }
   end

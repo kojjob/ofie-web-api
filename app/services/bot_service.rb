@@ -2,16 +2,27 @@
 class BotService
   attr_reader :user, :query, :conversation, :context
 
-  def initialize(user:, query:, conversation: nil, context: {})
+  # Enable LLM-powered responses by default (can be disabled via config or flag)
+  USE_LLM = ENV.fetch("BOT_USE_LLM", "true") == "true"
+
+  def initialize(user:, query:, conversation: nil, context: {}, use_llm: USE_LLM)
     @user = user
     @query = query.to_s.strip.downcase
     @conversation = conversation
     @context = context
+    @use_llm = use_llm
   end
 
   def process_query
     return default_greeting if query.blank?
 
+    # Try LLM-powered response first if enabled
+    if @use_llm && llm_available?
+      llm_result = try_llm_response
+      return format_llm_response(llm_result) if llm_result[:success]
+    end
+
+    # Fall back to rule-based response
     intent = classify_intent
     response = generate_response(intent)
 
@@ -19,7 +30,8 @@ class BotService
       intent: intent,
       response: response,
       quick_actions: suggest_quick_actions(intent),
-      confidence: calculate_confidence(intent)
+      confidence: calculate_confidence(intent),
+      source: :rule_based
     }
   end
 
@@ -312,5 +324,55 @@ class BotService
 
   def calculate_confidence(intent)
     intent == :unknown ? 0.3 : 0.8
+  end
+
+  # LLM integration helpers
+  def llm_available?
+    defined?(BotServices::LlmService) &&
+      (ENV["ANTHROPIC_API_KEY"].present? ||
+       ENV["OPENAI_API_KEY"].present? ||
+       ENV["GOOGLE_API_KEY"].present?)
+  end
+
+  def try_llm_response
+    # Enhance context with classified intent for better LLM prompting
+    intent = classify_intent
+    enhanced_context = context.merge(
+      detected_intent: intent,
+      entities: extract_all_entities
+    )
+
+    BotServices::LlmService.new(
+      user: user,
+      query: query,
+      conversation: conversation,
+      context: enhanced_context
+    ).generate_response
+  rescue => e
+    Rails.logger.error "[BotService] LLM integration error: #{e.message}"
+    { success: false, error: e.message }
+  end
+
+  def format_llm_response(llm_result)
+    # Classify intent for quick actions even with LLM response
+    intent = classify_intent
+
+    {
+      intent: intent,
+      response: llm_result[:response],
+      quick_actions: suggest_quick_actions(intent),
+      confidence: 0.9, # Higher confidence for LLM responses
+      source: llm_result[:source],
+      cached: llm_result[:cached] || false
+    }
+  end
+
+  def extract_all_entities
+    {
+      bedrooms: extract_number_before(["bedroom", "bed", "br"]),
+      bathrooms: extract_number_before(["bathroom", "bath", "ba"]),
+      max_price: extract_price,
+      property_type: extract_property_type
+    }.compact
   end
 end

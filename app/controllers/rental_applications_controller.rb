@@ -1,8 +1,9 @@
 class RentalApplicationsController < ApplicationController
   before_action :authenticate_request
-  before_action :set_rental_application, only: [ :show, :edit, :update, :destroy, :approve, :reject, :under_review ]
+  before_action :set_rental_application, only: [ :show, :edit, :update, :destroy, :approve, :reject, :under_review, :generate_lease ]
   before_action :set_property, only: [ :new, :create ]
   before_action :authorize_access, only: [ :show, :edit, :update, :destroy, :approve, :reject, :under_review ]
+  before_action :authorize_lease_generation, only: [ :generate_lease ]
 
   # GET /rental_applications
   def index
@@ -28,7 +29,7 @@ class RentalApplicationsController < ApplicationController
   # GET /properties/:property_id/rental_applications/new
   def new
     # Check if user already has a pending application for this property
-    existing_application = current_user.rental_applications
+    existing_application = current_user.tenant_rental_applications
                                       .where(property: @property)
                                       .where(status: [ "pending", "under_review" ])
                                       .first
@@ -155,7 +156,6 @@ class RentalApplicationsController < ApplicationController
     end
 
     @rental_application.reviewed_by = current_user
-    @rental_application.review_notes = params[:review_notes]
 
     respond_to do |format|
       if @rental_application.approve!
@@ -201,7 +201,6 @@ class RentalApplicationsController < ApplicationController
     end
 
     @rental_application.reviewed_by = current_user
-    @rental_application.review_notes = params[:review_notes]
 
     respond_to do |format|
       if @rental_application.reject!
@@ -247,7 +246,6 @@ class RentalApplicationsController < ApplicationController
     end
 
     @rental_application.reviewed_by = current_user
-    @rental_application.review_notes = params[:review_notes]
 
     respond_to do |format|
       if @rental_application.under_review!
@@ -271,6 +269,58 @@ class RentalApplicationsController < ApplicationController
         format.json {
           render json: { error: "Failed to update application status" },
           status: :unprocessable_entity
+        }
+      end
+    end
+  end
+
+  # POST /rental_applications/:id/generate_lease
+  def generate_lease
+    # Check if lease already exists
+    if @rental_application.lease_agreement.present?
+      respond_to do |format|
+        format.html {
+          redirect_to rental_application_path(@rental_application),
+          alert: "A lease agreement already exists for this application."
+        }
+        format.json {
+          render json: {
+            error: "Lease already exists",
+            lease_agreement_id: @rental_application.lease_agreement.id
+          }, status: :unprocessable_entity
+        }
+      end
+      return
+    end
+
+    # Generate lease using AI service
+    generator = AiLeaseGeneratorService.new(@rental_application)
+    lease_agreement = generator.generate
+
+    respond_to do |format|
+      if lease_agreement
+        send_lease_generated_notification(lease_agreement)
+
+        format.html {
+          redirect_to edit_lease_agreement_path(lease_agreement),
+          notice: "Lease agreement generated successfully! Please review and customize as needed."
+        }
+        format.json {
+          render json: {
+            message: "Lease agreement generated successfully",
+            lease_agreement: lease_agreement_json(lease_agreement)
+          }, status: :created
+        }
+      else
+        format.html {
+          redirect_to rental_application_path(@rental_application),
+          alert: "Failed to generate lease agreement: #{generator.errors.join(', ')}"
+        }
+        format.json {
+          render json: {
+            error: "Lease generation failed",
+            details: generator.errors
+          }, status: :unprocessable_entity
         }
       end
     end
@@ -315,11 +365,9 @@ class RentalApplicationsController < ApplicationController
 
   def rental_application_params
     params.require(:rental_application).permit(
-      :move_in_date, :monthly_income, :employment_status, :employer_name,
-      :employment_duration, :previous_address, :previous_landlord_contact,
-      :reason_for_moving, :references_contact, :additional_notes,
-      :pets_description, :emergency_contact_name, :emergency_contact_phone,
-      :background_check_consent, :credit_check_consent
+      :move_in_date, :monthly_income, :employment_status,
+      :previous_address, :references_contact, :additional_notes,
+      :credit_score
     )
   end
 
@@ -329,7 +377,7 @@ class RentalApplicationsController < ApplicationController
       RentalApplication.joins(:property).where(properties: { user_id: current_user.id })
     else
       # Tenant sees their own applications
-      current_user.rental_applications
+      current_user.tenant_rental_applications
     end
   end
 
@@ -410,19 +458,10 @@ class RentalApplicationsController < ApplicationController
 
     if include_details
       json.merge!({
-        employer_name: application.employer_name,
-        employment_duration: application.employment_duration,
         previous_address: application.previous_address,
-        previous_landlord_contact: application.previous_landlord_contact,
-        reason_for_moving: application.reason_for_moving,
         references_contact: application.references_contact,
         additional_notes: application.additional_notes,
-        pets_description: application.pets_description,
-        emergency_contact_name: application.emergency_contact_name,
-        emergency_contact_phone: application.emergency_contact_phone,
-        background_check_consent: application.background_check_consent,
-        credit_check_consent: application.credit_check_consent,
-        review_notes: application.review_notes,
+        credit_score: application.credit_score,
         reviewed_at: application.reviewed_at,
         reviewed_by: application.reviewed_by&.name,
         property: {
@@ -465,6 +504,85 @@ class RentalApplicationsController < ApplicationController
         id: application.tenant.id,
         name: application.tenant.name,
         email: application.tenant.email
+      }
+    }
+  end
+
+  def authorize_lease_generation
+    unless can_manage_application?(@rental_application)
+      respond_to do |format|
+        format.html {
+          redirect_to rental_application_path(@rental_application),
+          alert: "You don't have permission to generate a lease for this application."
+        }
+        format.json {
+          render json: { error: "Unauthorized" }, status: :unauthorized
+        }
+      end
+      return
+    end
+
+    unless @rental_application.approved?
+      respond_to do |format|
+        format.html {
+          redirect_to rental_application_path(@rental_application),
+          alert: "Application must be approved before generating a lease."
+        }
+        format.json {
+          render json: { error: "Application must be approved" }, status: :unprocessable_entity
+        }
+      end
+    end
+  end
+
+  def send_lease_generated_notification(lease_agreement)
+    # Send notification to tenant about lease generation
+    if @rental_application.tenant != current_user
+      Notification.create!(
+        user: @rental_application.tenant,
+        notifiable: lease_agreement,
+        notification_type: "lease_generated",
+        message: "A lease agreement has been generated for your rental application.",
+        data: {
+          application_id: @rental_application.id,
+          property_address: @rental_application.property.full_address,
+          ai_generated: lease_agreement.ai_generated
+        }
+      )
+    end
+  end
+
+  def lease_agreement_json(lease_agreement)
+    {
+      id: lease_agreement.id,
+      status: lease_agreement.status,
+      lease_start_date: lease_agreement.lease_start_date,
+      lease_end_date: lease_agreement.lease_end_date,
+      monthly_rent: lease_agreement.monthly_rent,
+      security_deposit_amount: lease_agreement.security_deposit_amount,
+      ai_generated: lease_agreement.ai_generated,
+      llm_provider: lease_agreement.llm_provider,
+      llm_model: lease_agreement.llm_model,
+      generation_cost: lease_agreement.generation_cost,
+      reviewed_by_landlord: lease_agreement.reviewed_by_landlord,
+      created_at: lease_agreement.created_at,
+      rental_application: {
+        id: @rental_application.id,
+        status: @rental_application.status
+      },
+      property: {
+        id: lease_agreement.property.id,
+        address: lease_agreement.property.full_address
+      },
+      tenant: {
+        id: lease_agreement.tenant.id,
+        name: lease_agreement.tenant.full_name,
+        email: lease_agreement.tenant.email
+      },
+      landlord: {
+        id: lease_agreement.landlord.id,
+        name: lease_agreement.landlord.full_name,
+        email: lease_agreement.landlord.email
       }
     }
   end

@@ -1,5 +1,5 @@
 class Api::V1::PaymentMethodsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_request
   before_action :set_payment_method, only: [ :show, :update, :destroy, :make_default ]
 
   # GET /api/v1/payment_methods

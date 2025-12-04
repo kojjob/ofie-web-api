@@ -1,0 +1,20 @@
+<div class="space-y-6">
+  <% valuations = [
+    { category: 'Medical', percentage: 85, color: 'green' },
+    { category: 'Traffic', percentage: 80, color: 'blue' },
+    { category: 'Pollution', percentage: 49, color: 'yellow' }
+  ] %>
+
+  <% valuations.each do |val| %>
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        <span class="text-gray-900 font-medium"><%= val[:category] %></span>
+        <span class="text-gray-600 font-semibold"><%= val[:percentage] %>%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-2.5">
+        <div class="bg-<%= val[:color] %>-600 h-2.5 rounded-full transition-all duration-500"
+             style="width: <%= val[:percentage] %>%"></div>
+      </div>
+    </div>
+  <% end %>
+</div>

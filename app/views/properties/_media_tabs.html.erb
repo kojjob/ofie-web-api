@@ -1,0 +1,68 @@
+<div class="border-b border-gray-200">
+  <nav class="flex -mb-px">
+    <% if @property.video_url.present? %>
+      <button type="button"
+              class="media-tab-btn px-6 py-4 text-sm font-medium border-b-2 border-green-500 text-green-600"
+              data-tab="video">
+        <i class="fas fa-video mr-2"></i>Property Video
+      </button>
+    <% end %>
+    <% if @property.virtual_tour_url.present? %>
+      <button type="button"
+              class="media-tab-btn px-6 py-4 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              data-tab="virtual-tour">
+        <i class="fas fa-vr-cardboard mr-2"></i>Virtual Tour
+      </button>
+    <% end %>
+  </nav>
+</div>
+
+<div class="p-6">
+  <% if @property.video_url.present? %>
+    <div id="video-tab-content" class="media-tab-content">
+      <h3 class="text-xl font-bold text-gray-900 mb-4">Video</h3>
+      <div class="aspect-w-16 aspect-h-9">
+        <iframe src="<%= @property.video_url %>"
+                class="w-full h-96 rounded-lg"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @property.virtual_tour_url.present? %>
+    <div id="virtual-tour-tab-content" class="media-tab-content <%= 'hidden' if @property.video_url.present? %>">
+      <h3 class="text-xl font-bold text-gray-900 mb-4">Virtual Tour</h3>
+      <div class="aspect-w-16 aspect-h-9">
+        <iframe src="<%= @property.virtual_tour_url %>"
+                class="w-full h-96 rounded-lg"
+                frameborder="0"
+                allowfullscreen></iframe>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  // Tab switching functionality
+  document.querySelectorAll('.media-tab-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const tabName = button.dataset.tab;
+
+      // Update button states
+      document.querySelectorAll('.media-tab-btn').forEach(btn => {
+        btn.classList.remove('border-green-500', 'text-green-600');
+        btn.classList.add('border-transparent', 'text-gray-500');
+      });
+      button.classList.remove('border-transparent', 'text-gray-500');
+      button.classList.add('border-green-500', 'text-green-600');
+
+      // Update content visibility
+      document.querySelectorAll('.media-tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      document.getElementById(`${tabName}-tab-content`).classList.remove('hidden');
+    });
+  });
+</script>
