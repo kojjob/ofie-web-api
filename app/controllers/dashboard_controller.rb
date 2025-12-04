@@ -44,7 +44,9 @@ class DashboardController < ApplicationController
   end
 
   def tenant_dashboard
-    @lease_agreements = current_user.tenant_lease_agreements.includes(:property).merge(Property.with_attached_photos.includes(:user))
+    # Use nested includes instead of merge for proper eager loading
+    @lease_agreements = current_user.tenant_lease_agreements
+                                   .includes(property: [ :user, { photos_attachments: :blob } ])
     @stats = {
       active_leases: @lease_agreements.where(status: "active").count,
       applications_submitted: current_user.tenant_rental_applications.count,
@@ -52,8 +54,7 @@ class DashboardController < ApplicationController
       favorite_properties: current_user.property_favorites.count
     }
     @recent_applications = current_user.tenant_rental_applications
-                                      .includes(:property)
-                                      .merge(Property.with_attached_photos)
+                                      .includes(property: { photos_attachments: :blob })
                                       .order(created_at: :desc)
                                       .limit(5)
     @upcoming_payments = current_user.payments
@@ -63,8 +64,7 @@ class DashboardController < ApplicationController
                                     .order(:due_date)
                                     .limit(5)
     @favorite_properties = current_user.property_favorites
-                                      .includes(:property)
-                                      .merge(Property.with_attached_photos)
+                                      .includes(property: { photos_attachments: :blob })
                                       .limit(6)
 
     respond_to do |format|
