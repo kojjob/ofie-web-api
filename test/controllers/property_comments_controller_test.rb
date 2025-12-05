@@ -122,9 +122,10 @@ class PropertyCommentsControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    reply = PropertyComment.last
-    assert_equal @comment, reply.parent
-    assert_equal @property, reply.property
+    reply = PropertyComment.order(created_at: :desc).first
+    assert_not_nil reply.parent, "Reply should have a parent comment"
+    assert_equal @comment.id, reply.parent_id
+    assert_equal @property.id, reply.property_id
     assert reply.reply?
   end
 
