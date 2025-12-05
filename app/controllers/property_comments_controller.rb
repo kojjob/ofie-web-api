@@ -65,6 +65,7 @@ class PropertyCommentsController < ApplicationController
                               .top_level
                               .recent
                               .limit(10)
+          @new_comment = @comment  # Use the failed comment to show validation errors
           render :index, status: :unprocessable_entity
         }
         format.json {

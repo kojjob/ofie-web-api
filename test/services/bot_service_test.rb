@@ -45,13 +45,14 @@ class BotServiceTest < ActiveSupport::TestCase
   # BLANK QUERY HANDLING
   # ============================================================================
 
-  test "returns greeting string for blank query" do
+  test "returns greeting hash for blank query" do
     bot_service = BotService.new(user: @tenant, query: "", conversation: @conversation)
     response = bot_service.process_query
 
-    assert response.is_a?(String)
-    assert response.include?("Hello")
-    assert response.include?("Ofie assistant")
+    assert response.is_a?(Hash)
+    assert_equal :greeting, response[:intent]
+    assert response[:response].include?("Hello")
+    assert response[:response].include?("Ofie assistant")
   end
 
   test "returns different greeting for tenant vs landlord" do
@@ -61,8 +62,8 @@ class BotServiceTest < ActiveSupport::TestCase
     tenant_response = tenant_service.process_query
     landlord_response = landlord_service.process_query
 
-    assert tenant_response.include?("find properties")
-    assert landlord_response.include?("manage your properties")
+    assert tenant_response[:response].include?("find properties")
+    assert landlord_response[:response].include?("manage your properties")
   end
 
   # ============================================================================
@@ -362,16 +363,18 @@ class BotServiceTest < ActiveSupport::TestCase
     bot_service = BotService.new(user: @tenant, query: nil, conversation: @conversation)
     response = bot_service.process_query
 
-    assert response.is_a?(String)
-    assert response.include?("Hello")
+    assert response.is_a?(Hash)
+    assert_equal :greeting, response[:intent]
+    assert response[:response].include?("Hello")
   end
 
   test "handles whitespace-only query as blank query" do
     bot_service = BotService.new(user: @tenant, query: "   ", conversation: @conversation)
     response = bot_service.process_query
 
-    assert response.is_a?(String)
-    assert response.include?("Hello")
+    assert response.is_a?(Hash)
+    assert_equal :greeting, response[:intent]
+    assert response[:response].include?("Hello")
   end
 
   test "strips and lowercases query on initialization" do

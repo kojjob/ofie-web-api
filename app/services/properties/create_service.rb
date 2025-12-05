@@ -34,8 +34,7 @@ module Properties
 
     def property_params
       params.except(:images).merge(
-        status: params[:status] || "available",
-        listed_at: Time.current
+        status: params[:status] || "active"
       )
     end
 

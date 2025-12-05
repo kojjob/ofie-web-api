@@ -14,7 +14,17 @@ class BotService
   end
 
   def process_query
-    return default_greeting if query.blank?
+    # Return greeting hash when query is blank
+    if query.blank?
+      greeting_text = default_greeting
+      return {
+        intent: :greeting,
+        response: greeting_text,
+        quick_actions: suggest_quick_actions(:greeting),
+        confidence: 1.0,
+        source: :rule_based
+      }
+    end
 
     # Try LLM-powered response first if enabled
     if @use_llm && llm_available?
