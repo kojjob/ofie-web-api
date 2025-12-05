@@ -25,6 +25,12 @@ class BlogController < ApplicationController
                         .where.not(id: @post.id)
                         .recent
                         .limit(3)
+
+    # Sidebar data - latest listings for the sidebar widget
+    @latest_properties = Property.available.recent.includes(:user).with_attached_photos.limit(4)
+
+    # Categories for sidebar
+    @categories = Post.published.distinct.pluck(:category).compact.sort
   end
 
   def new
