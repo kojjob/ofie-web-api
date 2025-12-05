@@ -2,20 +2,23 @@ require "test_helper"
 
 class ConversationTest < ActiveSupport::TestCase
   def setup
-    @landlord = users(:landlord)
-    @tenant = users(:tenant)
-    @property = properties(:property_one)
-    @conversation = conversations(:conversation_one)
+    @landlord = create(:user, :landlord)
+    @tenant = create(:user, :tenant)
+    @another_tenant = create(:user, :tenant)
+    @another_landlord = create(:user, :landlord)
+    @property = create(:property, user: @landlord)
+    @property_two = create(:property, user: @another_landlord)
+    @conversation = create(:conversation, landlord: @landlord, tenant: @tenant, property: @property)
   end
 
   test "should be valid with valid attributes" do
     # Clean up any existing conversations to avoid uniqueness conflicts
-    Conversation.where(landlord: @landlord, tenant: @tenant, property: @property).destroy_all
+    Conversation.where(landlord: @landlord, tenant: @tenant, property: @property).where.not(id: @conversation.id).destroy_all
 
     conversation = Conversation.new(
-      landlord: @landlord,
-      tenant: @tenant,
-      property: @property,
+      landlord: @another_landlord,
+      tenant: @another_tenant,
+      property: @property_two,
       subject: "Test conversation",
       status: "active"
     )
@@ -63,18 +66,7 @@ class ConversationTest < ActiveSupport::TestCase
   end
 
   test "should enforce uniqueness of landlord, tenant, and property combination" do
-    # Clean up any existing conversations
-    Conversation.where(landlord: @landlord, tenant: @tenant, property: @property).destroy_all
-
-    # Create first conversation
-    conversation1 = Conversation.create!(
-      landlord: @landlord,
-      tenant: @tenant,
-      property: @property,
-      subject: "First conversation"
-    )
-
-    # Try to create duplicate
+    # Try to create duplicate with same landlord, tenant, property
     conversation2 = Conversation.new(
       landlord: @landlord,
       tenant: @tenant,
@@ -87,10 +79,11 @@ class ConversationTest < ActiveSupport::TestCase
   end
 
   test "should have default status of active" do
+    new_property = create(:property, user: @another_landlord)
     conversation = Conversation.new(
-      landlord: @landlord,
-      tenant: @tenant,
-      property: @property,
+      landlord: @another_landlord,
+      tenant: @another_tenant,
+      property: new_property,
       subject: "Test conversation"
     )
     assert_equal "active", conversation.status
@@ -105,7 +98,7 @@ class ConversationTest < ActiveSupport::TestCase
   end
 
   test "should return nil for non-participant" do
-    other_user = users(:another_tenant)
+    other_user = @another_tenant
     assert_nil @conversation.other_participant(other_user)
   end
 
@@ -114,13 +107,13 @@ class ConversationTest < ActiveSupport::TestCase
     @conversation.messages.destroy_all
 
     # Create some messages
-    message1 = Message.create!(
+    Message.create!(
       conversation: @conversation,
       sender: @landlord,
       content: "Hello",
       read: false
     )
-    message2 = Message.create!(
+    Message.create!(
       conversation: @conversation,
       sender: @landlord,
       content: "How are you?",
@@ -165,24 +158,10 @@ class ConversationTest < ActiveSupport::TestCase
   end
 
   test "active scope should return active conversations" do
-    # Clean up existing conversations to avoid uniqueness conflicts
-    Conversation.destroy_all
+    active_conversation = create(:conversation, landlord: @another_landlord, tenant: @another_tenant, property: @property_two, status: "active")
 
-    active_conversation = Conversation.create!(
-      landlord: @landlord,
-      tenant: users(:another_tenant),
-      property: properties(:property_two),
-      subject: "Active conversation",
-      status: "active"
-    )
-
-    archived_conversation = Conversation.create!(
-      landlord: users(:another_landlord),
-      tenant: users(:another_tenant),
-      property: @property,
-      subject: "Archived conversation",
-      status: "archived"
-    )
+    new_property = create(:property, user: @landlord)
+    archived_conversation = create(:conversation, landlord: @landlord, tenant: @another_tenant, property: new_property, status: "archived")
 
     active_conversations = Conversation.active
     assert_includes active_conversations, active_conversation
@@ -193,7 +172,7 @@ class ConversationTest < ActiveSupport::TestCase
     user_conversations = Conversation.for_user(@landlord)
     assert_includes user_conversations, @conversation
 
-    other_user = users(:another_tenant)
+    other_user = @another_tenant
     other_conversations = Conversation.for_user(other_user)
     assert_not_includes other_conversations, @conversation
   end

@@ -200,22 +200,18 @@ class Api::V1::BotController < ApplicationController
   private
 
   def set_bot
-    # Always create a virtual bot for responses since we support guest users
-    @bot = OpenStruct.new(
-      id: "ofie-assistant",
-      name: "Ofie Assistant",
-      role: "bot"
-    )
-
-    # Try to get the primary bot if it exists and user is authenticated
-    if current_user.present?
-      begin
-        primary_bot = Bot.primary_bot
-        @bot = primary_bot if primary_bot
-      rescue => e
-        Rails.logger.warn "Could not load primary bot: #{e.message}"
-        # Keep using the virtual bot
-      end
+    # Try to get the primary bot from the database first
+    # This is needed for authenticated users to create conversations
+    begin
+      @bot = Bot.primary_bot
+    rescue => e
+      Rails.logger.warn "Could not load primary bot: #{e.message}"
+      # Fall back to a virtual bot for responses (guest users only, no conversation creation)
+      @bot = OpenStruct.new(
+        id: "ofie-assistant",
+        name: "Ofie Assistant",
+        role: "bot"
+      )
     end
   end
 
@@ -228,9 +224,17 @@ class Api::V1::BotController < ApplicationController
     return nil unless request.headers["Authorization"].present?
 
     begin
-      super
-    rescue => e
+      # Use JWT authentication directly since this controller handles API requests
+      header = request.headers["Authorization"]
+      token = header.split(" ").last if header
+      if token && (decoded_token = User.decode_token(token))
+        User.find(decoded_token[0]["user_id"])
+      end
+    rescue ActiveRecord::RecordNotFound, JWT::DecodeError => e
       Rails.logger.debug "Authentication failed for bot request: #{e.message}"
+      nil
+    rescue => e
+      Rails.logger.debug "Unexpected authentication error for bot request: #{e.message}"
       nil
     end
   end
@@ -256,7 +260,7 @@ class Api::V1::BotController < ApplicationController
     end
 
     # Use a default property if none specified
-    property ||= Property.active.first
+    property ||= Property.first
 
     conversation = Conversation.create!(
       landlord: landlord,

@@ -1,0 +1,128 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# Published blog post
+published_post:
+  title: "10 Tips for First-Time Renters"
+  slug: "10-tips-for-first-time-renters"
+  excerpt: "Essential advice for those entering the rental market for the first time."
+  author: landlord
+  category: "Tenant Guide"
+  tags: "renting, tips, beginners"
+  published: true
+  published_at: <%= 2.days.ago %>
+  views_count: 150
+  likes_count: 25
+  shares_count: 10
+  featured: false
+  meta_title: "10 Tips for First-Time Renters | Ofie Blog"
+  meta_description: "Essential advice for those entering the rental market for the first time. Learn what to look for and avoid common mistakes."
+  meta_keywords: "renting, tips, beginners, first-time renters"
+  schema_type: "Article"
+  reading_time_minutes: 5
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 2.days.ago %>
+
+# Featured blog post
+featured_post:
+  title: "Property Market Trends 2024"
+  slug: "property-market-trends-2024"
+  excerpt: "An in-depth analysis of the current property market and what to expect in the coming months."
+  author: landlord
+  category: "Market Insights"
+  tags: "market, trends, analysis, 2024"
+  published: true
+  published_at: <%= 1.day.ago %>
+  views_count: 500
+  likes_count: 75
+  shares_count: 30
+  featured: true
+  meta_title: "Property Market Trends 2024 | Expert Analysis"
+  meta_description: "Expert analysis of current property market trends. Discover what's happening in the real estate market."
+  meta_keywords: "property market, trends, 2024, real estate"
+  og_title: "Property Market Trends 2024"
+  og_description: "An in-depth analysis of the current property market and what to expect."
+  schema_type: "NewsArticle"
+  reading_time_minutes: 8
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 1.day.ago %>
+
+# Draft post (not published)
+draft_post:
+  title: "Coming Soon: New Features"
+  slug: "coming-soon-new-features"
+  excerpt: "Exciting new features are on the way."
+  author: landlord
+  category: "Property Tips"
+  tags: "updates, features"
+  published: false
+  published_at: <%= nil %>
+  views_count: 0
+  likes_count: 0
+  shares_count: 0
+  featured: false
+  schema_type: "BlogPosting"
+  reading_time_minutes: 3
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+# Scheduled post (published_at in future)
+scheduled_post:
+  title: "Future of Smart Homes"
+  slug: "future-of-smart-homes"
+  excerpt: "What smart home technology means for renters and landlords."
+  author: another_landlord
+  category: "Home Improvement"
+  tags: "smart home, technology, future"
+  published: true
+  published_at: <%= 1.week.from_now %>
+  views_count: 0
+  likes_count: 0
+  shares_count: 0
+  featured: false
+  schema_type: "Article"
+  reading_time_minutes: 6
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+# Popular post with high engagement
+popular_post:
+  title: "How to Negotiate Your Rent"
+  slug: "how-to-negotiate-your-rent"
+  excerpt: "Practical strategies for negotiating better rental terms."
+  author: landlord
+  category: "Tenant Guide"
+  tags: "negotiation, rent, tips, savings"
+  published: true
+  published_at: <%= 1.month.ago %>
+  views_count: 2500
+  likes_count: 350
+  shares_count: 120
+  featured: false
+  meta_title: "How to Negotiate Your Rent - Expert Tips"
+  meta_description: "Learn effective strategies for negotiating your rent. Save money with these proven techniques."
+  meta_keywords: "negotiate rent, rental tips, save money"
+  og_title: "Master the Art of Rent Negotiation"
+  og_description: "Practical strategies that help renters save hundreds on their monthly rent."
+  schema_type: "HowTo"
+  reading_time_minutes: 10
+  created_at: <%= 2.months.ago %>
+  updated_at: <%= 1.month.ago %>
+
+# Post by different author
+other_author_post:
+  title: "Landlord Responsibilities Guide"
+  slug: "landlord-responsibilities-guide"
+  excerpt: "A comprehensive guide to landlord obligations and best practices."
+  author: another_landlord
+  category: "Landlord Resources"
+  tags: "landlord, responsibilities, guide"
+  published: true
+  published_at: <%= 5.days.ago %>
+  views_count: 200
+  likes_count: 40
+  shares_count: 15
+  featured: false
+  schema_type: "Article"
+  reading_time_minutes: 7
+  created_at: <%= 1.week.ago %>
+  updated_at: <%= 5.days.ago %>

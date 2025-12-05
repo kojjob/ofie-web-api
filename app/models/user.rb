@@ -33,6 +33,9 @@ class User < ApplicationRecord
   # Batch property upload associations
   has_many :batch_property_uploads, dependent: :destroy
 
+  # Blog posts association (inverse of Post.belongs_to :author)
+  has_many :posts, foreign_key: "author_id", dependent: :destroy
+
   # Define roles as an enum for easy management and validation
   enum :role, { tenant: "tenant", landlord: "landlord", bot: "bot" }
 

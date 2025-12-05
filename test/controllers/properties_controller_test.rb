@@ -2,7 +2,8 @@ require "test_helper"
 
 class PropertiesControllerTest < ActionDispatch::IntegrationTest
   def setup
-    @user = users(:landlord)
+    @user = create(:user, :landlord, password: "password123")
+    @property = create(:property, user: @user)
     post login_url, params: { email: @user.email, password: "password123" }
   end
 
@@ -12,8 +13,7 @@ class PropertiesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get show" do
-    property = properties(:property_one)
-    get property_url(property)
+    get property_url(@property)
     assert_response :success
   end
 
@@ -42,21 +42,18 @@ class PropertiesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should get edit" do
-    property = properties(:property_one)
-    get edit_property_url(property)
+    get edit_property_url(@property)
     assert_response :success
   end
 
   test "should update property" do
-    property = properties(:property_one)
-    patch property_url(property), params: { property: { title: "Updated Title" } }
-    assert_redirected_to property_url(property)
+    patch property_url(@property), params: { property: { title: "Updated Title" } }
+    assert_redirected_to property_url(@property)
   end
 
   test "should destroy property" do
-    property = properties(:property_one)
     assert_difference("Property.count", -1) do
-      delete property_url(property)
+      delete property_url(@property)
     end
     assert_redirected_to properties_url
   end
