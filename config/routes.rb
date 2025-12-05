@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   # API routes
   namespace :api do
     # Non-versioned API endpoints
-    resources :property_inquiries, only: [:create]
+    resources :property_inquiries, only: [ :create ]
 
     namespace :v1 do
       # Authentication routes
