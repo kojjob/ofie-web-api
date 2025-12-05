@@ -37,6 +37,12 @@ class DashboardController < ApplicationController
                                .order(:due_date)
                                .limit(5)
 
+    # Load property inquiries for landlord
+    @property_inquiries = PropertyInquiry.for_landlord(current_user.id)
+                                        .includes(:property)
+                                        .recent
+                                        .limit(5)
+
     respond_to do |format|
       format.html
       format.json { render json: @stats }
@@ -128,6 +134,13 @@ class DashboardController < ApplicationController
         else
                                  0
         end
+        @unread_inquiries_count = if defined?(PropertyInquiry)
+                                    PropertyInquiry.for_landlord(current_user.id)
+                                                   .unread
+                                                   .count
+        else
+                                    0
+        end
       else
         @favorites_count = if current_user.respond_to?(:property_favorites)
                              current_user.property_favorites.count
@@ -172,6 +185,7 @@ class DashboardController < ApplicationController
       Rails.logger.error "Error loading sidebar data: #{e.message}"
       @pending_applications_count = 0
       @active_leases_count = 0
+      @unread_inquiries_count = 0
       @favorites_count = 0
       @overdue_payments_count = 0
       @unread_messages_count = 0
