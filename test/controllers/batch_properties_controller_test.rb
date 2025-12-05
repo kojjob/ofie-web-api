@@ -5,6 +5,20 @@ class BatchPropertiesControllerTest < ActionDispatch::IntegrationTest
     @landlord = create(:user, :landlord, :verified)
     @tenant = create(:user, :tenant, :verified)
     @property = create(:property, user: @landlord)
+
+    # Create test CSV files
+    @valid_csv_content = <<~CSV
+      title,description,address,city,state,postal_code,price,bedrooms,bathrooms,area,property_type,listing_type
+      "Modern Downtown Condo","Luxury 2BR condo with amazing views","123 Main St","San Francisco","CA","94105",3500,2,2,1200,apartment,rent
+      "Spacious Family Home","Beautiful 4BR house in quiet neighborhood","456 Oak Ave","San Francisco","CA","94110",750000,4,3,2500,house,sale
+    CSV
+
+    @invalid_csv_content = <<~CSV
+      title,price
+      "Incomplete Property",
+    CSV
+
+    @malformed_csv_content = "This is not, a valid CSV\nfile at all"
   end
 
   # Template Download Tests
