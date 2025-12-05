@@ -10,6 +10,9 @@ Rails.application.routes.draw do
 
   # API routes
   namespace :api do
+    # Non-versioned API endpoints
+    resources :property_inquiries, only: [:create]
+
     namespace :v1 do
       # Authentication routes
       post "/auth/login", to: "auth#login"
@@ -253,6 +256,16 @@ Rails.application.routes.draw do
     collection do
       patch :mark_all_read
       get :unread_count
+    end
+  end
+
+  # Property Inquiries routes (Web - Landlord Management)
+  resources :property_inquiries, only: [ :index, :show ] do
+    member do
+      post :mark_read
+      post :mark_responded
+      post :archive
+      post :unarchive
     end
   end
 
