@@ -5,8 +5,8 @@ class PropertyInquiriesController < ApplicationController
   layout "dashboard"
   before_action :authenticate_request
   before_action :authorize_landlord!
-  before_action :set_inquiry, only: [:show, :mark_read, :mark_responded, :archive, :unarchive]
-  before_action :authorize_inquiry_access, only: [:show, :mark_read, :mark_responded, :archive, :unarchive]
+  before_action :set_inquiry, only: [ :show, :mark_read, :mark_responded, :archive, :unarchive ]
+  before_action :authorize_inquiry_access, only: [ :show, :mark_read, :mark_responded, :archive, :unarchive ]
 
   # GET /property_inquiries
   def index

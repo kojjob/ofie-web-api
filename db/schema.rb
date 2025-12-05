@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_05_010447) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_trgm"
@@ -47,7 +47,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", force: :cascade do |t|
+  create_table "active_storage_variant_records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
@@ -395,8 +395,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
     t.integer "comments_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "meta_title", limit: 70
+    t.text "meta_description"
+    t.string "meta_keywords"
+    t.string "og_title"
+    t.text "og_description"
+    t.string "og_image_url"
+    t.string "canonical_url"
+    t.integer "reading_time_minutes", default: 1
+    t.boolean "featured", default: false
+    t.integer "likes_count", default: 0
+    t.integer "shares_count", default: 0
+    t.string "schema_type", default: "BlogPosting"
     t.index ["author_id"], name: "index_posts_on_author_id"
     t.index ["category"], name: "index_posts_on_category"
+    t.index ["featured"], name: "index_posts_on_featured"
+    t.index ["meta_keywords"], name: "index_posts_on_meta_keywords"
     t.index ["published"], name: "index_posts_on_published"
     t.index ["published_at"], name: "index_posts_on_published_at"
     t.index ["slug"], name: "index_posts_on_slug", unique: true
@@ -443,6 +457,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
     t.text "additional_rules"
     t.integer "comments_count", default: 0, null: false
     t.integer "reviews_count", default: 0, null: false
+    t.integer "photos_count", default: 0, null: false
     t.index "to_tsvector('english'::regconfig, (((((((COALESCE(title, ''::character varying))::text || ' '::text) || COALESCE(description, ''::text)) || ' '::text) || (COALESCE(address, ''::character varying))::text) || ' '::text) || (COALESCE(city, ''::character varying))::text))", name: "index_properties_full_text_search", using: :gin
     t.index ["address"], name: "index_properties_on_address_gin", opclass: :gin_trgm_ops, using: :gin
     t.index ["availability_status"], name: "index_properties_on_availability_status"
@@ -500,6 +515,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
     t.index ["user_id", "created_at"], name: "index_property_favorites_on_user_and_created"
     t.index ["user_id", "property_id"], name: "index_property_favorites_on_user_id_and_property_id", unique: true
     t.index ["user_id"], name: "index_property_favorites_on_user_id"
+  end
+
+  create_table "property_inquiries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "property_id", null: false
+    t.uuid "user_id"
+    t.string "name", null: false
+    t.string "email", null: false
+    t.string "phone"
+    t.text "message", null: false
+    t.boolean "gdpr_consent", default: false
+    t.integer "status", default: 0, null: false
+    t.datetime "read_at"
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_property_inquiries_on_created_at"
+    t.index ["email"], name: "index_property_inquiries_on_email"
+    t.index ["property_id"], name: "index_property_inquiries_on_property_id"
+    t.index ["status"], name: "index_property_inquiries_on_status"
+    t.index ["user_id"], name: "index_property_inquiries_on_user_id"
   end
 
   create_table "property_reviews", force: :cascade do |t|
@@ -661,6 +697,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_015612) do
   add_foreign_key "property_comments", "users", name: "property_comments_user_id_fkey"
   add_foreign_key "property_favorites", "properties"
   add_foreign_key "property_favorites", "users"
+  add_foreign_key "property_inquiries", "properties"
+  add_foreign_key "property_inquiries", "users"
   add_foreign_key "property_reviews", "properties"
   add_foreign_key "property_reviews", "users"
   add_foreign_key "property_viewings", "properties"
