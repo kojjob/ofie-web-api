@@ -2,8 +2,10 @@ require "test_helper"
 
 class PropertyCommentTest < ActiveSupport::TestCase
   def setup
-    @user = users(:one)
-    @property = properties(:one)
+    @user = create(:user, :tenant)
+    @other_user = create(:user, :tenant)
+    @landlord = create(:user, :landlord)
+    @property = create(:property, user: @landlord)
     @comment = PropertyComment.new(
       user: @user,
       property: @property,
@@ -53,7 +55,7 @@ class PropertyCommentTest < ActiveSupport::TestCase
     @comment.save!
 
     reply = PropertyComment.new(
-      user: users(:two),
+      user: @other_user,
       property: @property,
       content: "This is a reply to the comment.",
       parent: @comment
@@ -72,7 +74,7 @@ class PropertyCommentTest < ActiveSupport::TestCase
     @comment.save!
 
     reply = PropertyComment.create!(
-      user: users(:two),
+      user: @other_user,
       property: @property,
       content: "This is a reply to the comment.",
       parent: @comment
@@ -90,23 +92,13 @@ class PropertyCommentTest < ActiveSupport::TestCase
   end
 
   test "should require parent to belong to same property" do
-    other_property = Property.create!(
-      title: "Other Property",
-      description: "Another property",
-      price: 1000,
-      bedrooms: 1,
-      bathrooms: 1,
-      address: "456 Other St",
-      city: "Other City",
-      state: "OS",
-      zip_code: "54321",
-      user: users(:two)
-    )
+    other_landlord = create(:user, :landlord)
+    other_property = create(:property, user: other_landlord, title: "Other Property")
 
     @comment.save!
 
     reply = PropertyComment.new(
-      user: users(:two),
+      user: @other_user,
       property: other_property,
       content: "This is a reply to a comment on a different property.",
       parent: @comment
@@ -121,7 +113,7 @@ class PropertyCommentTest < ActiveSupport::TestCase
     assert_equal 0, @comment.likes_count
 
     # Create a like
-    like = CommentLike.create!(user: users(:two), property_comment: @comment)
+    like = CommentLike.create!(user: @other_user, property_comment: @comment)
     @comment.reload
     assert_equal 1, @comment.likes_count
 
@@ -133,7 +125,7 @@ class PropertyCommentTest < ActiveSupport::TestCase
 
   test "should toggle likes correctly" do
     @comment.save!
-    user = users(:two)
+    user = @other_user
 
     # Like the comment
     result = @comment.toggle_like!(user)
@@ -153,7 +145,7 @@ class PropertyCommentTest < ActiveSupport::TestCase
 
     assert_not @comment.flagged?
 
-    @comment.flag!("Inappropriate content", users(:two))
+    @comment.flag!("Inappropriate content", @other_user)
     assert @comment.flagged?
     assert_equal "Inappropriate content", @comment.flagged_reason
     assert_not_nil @comment.flagged_at
@@ -180,7 +172,7 @@ class PropertyCommentTest < ActiveSupport::TestCase
     assert @comment.can_be_edited_by?(@user)
 
     # Other users cannot edit
-    assert_not @comment.can_be_edited_by?(users(:two))
+    assert_not @comment.can_be_edited_by?(@other_user)
 
     # Owner cannot edit after 15 minutes
     @comment.update!(created_at: 20.minutes.ago)
@@ -197,6 +189,6 @@ class PropertyCommentTest < ActiveSupport::TestCase
     assert @comment.can_be_deleted_by?(@property.user)
 
     # Other users cannot delete
-    assert_not @comment.can_be_deleted_by?(users(:two))
+    assert_not @comment.can_be_deleted_by?(@other_user)
   end
 end

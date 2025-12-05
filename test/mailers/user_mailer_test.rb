@@ -2,7 +2,7 @@ require "test_helper"
 
 class UserMailerTest < ActionMailer::TestCase
   def setup
-    @user = users(:tenant)
+    @user = create(:user, :tenant, :with_email_verification, :with_password_reset)
   end
 
   test "email_verification" do
